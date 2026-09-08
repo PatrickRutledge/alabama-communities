@@ -10,7 +10,7 @@
   --rule:#d6d9d0; --rule-2:#c2c6ba;
   --accent:#1c5cab; --accent-soft:#2a78d6; --clay:#c1502a;
   --pos:#184f95; --neg:#a52322;
-  --cell-ink:#12171c;
+  --cell-ink:#12171c; --nodata:#e2e4dd;
   --seq1:#cde2fb;--seq2:#9ec5f4;--seq3:#6da7ec;--seq4:#3987e5;--seq5:#256abf;--seq6:#184f95;--seq7:#0d366b;
 }
 @media (prefers-color-scheme: dark){
@@ -21,7 +21,7 @@
     --rule:#2c3237; --rule-2:#3b434a;
     --accent:#3987e5; --accent-soft:#5598e7; --clay:#d95926;
     --pos:#5598e7; --neg:#e66767;
-    --cell-ink:#eef1ec;
+    --cell-ink:#eef1ec; --nodata:#2a3036;
     --seq1:#16304f;--seq2:#1c4573;--seq3:#235a97;--seq4:#2a78d6;--seq5:#5598e7;--seq6:#86b6ef;--seq7:#b7d3f6;
   }
 }
@@ -32,14 +32,14 @@
   --rule:#2c3237; --rule-2:#3b434a;
   --accent:#3987e5; --accent-soft:#5598e7; --clay:#d95926;
   --pos:#5598e7; --neg:#e66767;
-  --cell-ink:#eef1ec;
+  --cell-ink:#eef1ec; --nodata:#2a3036;
   --seq1:#16304f;--seq2:#1c4573;--seq3:#235a97;--seq4:#2a78d6;--seq5:#5598e7;--seq6:#86b6ef;--seq7:#b7d3f6;
 }
 *{box-sizing:border-box}
 body{background:var(--paper);color:var(--ink);
   font-family:"Source Serif 4",Georgia,"Times New Roman",serif;
   font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
-.wrap{max-width:1240px;margin:0 auto;padding:0 24px 72px}
+.wrap{max-width:1300px;margin:0 auto;padding:0 24px 72px}
 h1,h2,h3,.ui{font-family:"Libre Franklin","Helvetica Neue",Arial,sans-serif}
 .mono,td.num,th.num,.kpi-v,.tag{font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;font-variant-numeric:tabular-nums}
 
@@ -49,31 +49,31 @@ header.mast{border-bottom:3px solid var(--ink);margin-top:28px;padding-bottom:14
 .eyebrow b{color:var(--accent);font-weight:600}
 h1{font-size:clamp(30px,5.2vw,52px);font-weight:800;letter-spacing:-.022em;line-height:1.02;
   margin:10px 0 8px;text-wrap:balance}
-.dek{font-size:17px;color:var(--ink-2);max-width:64ch;margin:0}
+.dek{font-size:17px;color:var(--ink-2);max-width:66ch;margin:0}
 .mast-rule{display:flex;gap:16px;flex-wrap:wrap;margin-top:14px;font-size:12px;color:var(--ink-3);
   font-family:"IBM Plex Mono",monospace}
 .mast-rule span{border-left:2px solid var(--rule-2);padding-left:8px}
 
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
   border-bottom:1px solid var(--rule);margin:0 0 30px}
 .kpi{padding:18px 18px 16px 0;border-right:1px solid var(--rule)}
 .kpi:last-child{border-right:0}
 .kpi-l{font-family:"Libre Franklin",sans-serif;font-size:10.5px;font-weight:600;letter-spacing:.1em;
   text-transform:uppercase;color:var(--ink-3);margin-bottom:6px}
-.kpi-v{font-size:26px;font-weight:600;letter-spacing:-.02em;line-height:1}
+.kpi-v{font-size:25px;font-weight:600;letter-spacing:-.02em;line-height:1}
 .kpi-s{font-size:12.5px;color:var(--ink-2);margin-top:5px;font-family:"Libre Franklin",sans-serif}
 
 section{margin:0 0 46px}
 h2{font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);
   margin:0 0 4px;display:flex;align-items:center;gap:10px}
 h2::after{content:"";flex:1;height:2px;background:var(--ink);opacity:.16}
-.sub{font-size:14.5px;color:var(--ink-2);margin:0 0 18px;max-width:70ch}
+.sub{font-size:14.5px;color:var(--ink-2);margin:0 0 18px;max-width:74ch}
 
 .caveat{background:var(--surface);border:1px solid var(--rule);border-left:4px solid var(--clay);
   padding:20px 22px;margin:0 0 44px}
 .caveat h3{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;margin:0 0 12px;color:var(--clay)}
 .caveat ul{margin:0;padding-left:0;list-style:none;display:grid;gap:11px}
-.caveat li{padding-left:20px;position:relative;font-size:14.5px;max-width:96ch}
+.caveat li{padding-left:20px;position:relative;font-size:14.5px;max-width:98ch}
 .caveat li::before{content:"";position:absolute;left:2px;top:.62em;width:7px;height:2px;background:var(--clay)}
 .caveat b{font-weight:600}
 .caveat .ok::before{background:var(--accent)}
@@ -85,32 +85,68 @@ h2::after{content:"";flex:1;height:2px;background:var(--ink);opacity:.16}
   text-transform:uppercase;color:var(--ink-3)}
 select,input[type=search]{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--ink);
   background:var(--surface);border:1px solid var(--rule-2);padding:7px 10px;border-radius:2px;min-width:150px}
-input[type=range]{accent-color:var(--accent);width:150px}
-select:focus-visible,input:focus-visible,button:focus-visible,path:focus-visible,.chip:focus-visible{
-  outline:2px solid var(--accent);outline-offset:2px}
+#measure{min-width:290px}
+select:focus-visible,input:focus-visible,button:focus-visible,path:focus-visible,.chip:focus-visible,
+.rankrow:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .chip{font-family:"Libre Franklin",sans-serif;font-size:11.5px;font-weight:600;letter-spacing:.03em;
   padding:6px 11px;border:1px solid var(--rule-2);background:var(--surface);color:var(--ink-2);
   border-radius:2px;cursor:pointer}
 .chip[aria-pressed=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.chip .n{opacity:.55;font-family:"IBM Plex Mono",monospace;font-size:10px;margin-left:5px}
 
-.mapgrid{display:grid;grid-template-columns:minmax(260px,340px) 1fr;gap:34px;align-items:start}
-@media(max-width:820px){.mapgrid{grid-template-columns:1fr}}
-.mapbox{background:var(--surface);border:1px solid var(--rule);padding:14px}
-.mapbox svg{display:block;width:100%;height:auto}
-.mapbox path{stroke:var(--surface);stroke-width:.8;cursor:pointer}
-.mapbox path:hover{stroke:var(--ink);stroke-width:1.6}
-.mapbox path.sel{stroke:var(--ink);stroke-width:2.2}
-.legend{display:flex;align-items:center;gap:8px;margin-top:12px;font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--ink-3)}
-.legend .swatches{display:flex;flex:1;height:9px}
+/* map explorer */
+.explorer{display:grid;grid-template-columns:minmax(300px,1fr) minmax(340px,1.15fr);gap:30px;align-items:start}
+@media(max-width:900px){.explorer{grid-template-columns:1fr}}
+.mapbox{background:var(--surface);border:1px solid var(--rule);padding:16px}
+.mapbox svg#map{display:block;width:100%;height:auto;max-height:78vh}
+#map path{stroke:var(--surface);stroke-width:.8;cursor:pointer}
+#map path:hover{stroke:var(--ink);stroke-width:1.8}
+#map path.sel{stroke:var(--ink);stroke-width:2.4}
+.legend{margin-top:14px}
+.legend .swatches{display:flex;height:11px}
 .legend .swatches i{flex:1}
+.legend .breaks{display:flex;justify-content:space-between;margin-top:5px;
+  font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--ink-3)}
+.legend .note{margin-top:8px;font-family:"Libre Franklin",sans-serif;font-size:11px;color:var(--ink-3);
+  display:flex;align-items:center;gap:7px}
+.legend .note i{width:13px;height:11px;background:var(--nodata);border:1px solid var(--rule-2);display:inline-block}
 
-.detail{background:var(--surface);border:1px solid var(--rule);padding:22px 24px}
+.railcard{background:var(--surface);border:1px solid var(--rule);padding:20px 22px;margin-bottom:18px}
+.mhead{border-bottom:2px solid var(--ink);padding-bottom:11px;margin-bottom:14px}
+.mhead .cat{font-family:"Libre Franklin",sans-serif;font-size:9.5px;font-weight:700;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+.mhead h3{font-size:23px;font-weight:800;margin:0 0 6px;letter-spacing:-.02em}
+.mhead p{margin:0;font-size:13.5px;color:var(--ink-2)}
+.mstats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:6px}
+.mstats .l{font-family:"Libre Franklin",sans-serif;font-size:9px;font-weight:600;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--ink-3);margin-bottom:3px}
+.mstats .v{font-family:"IBM Plex Mono",monospace;font-size:15px;font-weight:600;font-variant-numeric:tabular-nums}
+.dist{margin:16px 0 4px}
+.dist svg{display:block;width:100%;height:auto}
+.distcap{font-family:"Libre Franklin",sans-serif;font-size:10.5px;color:var(--ink-3);margin-top:2px}
+
+.ranklist{max-height:520px;overflow-y:auto;border-top:1px solid var(--rule)}
+.rankrow{display:grid;grid-template-columns:26px 1fr 84px;gap:10px;align-items:center;
+  padding:5px 4px;border-bottom:1px solid var(--rule);cursor:pointer;font-size:13px}
+.rankrow:hover{background:var(--surface-2)}
+.rankrow.sel{background:var(--ink)}
+.rankrow.sel .rk,.rankrow.sel .nm,.rankrow.sel .vl{color:var(--paper)}
+.rankrow .rk{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--ink-3);text-align:right}
+.rankrow .nm{font-family:"Libre Franklin",sans-serif;font-size:12.5px;font-weight:600;
+  display:flex;align-items:center;gap:8px;min-width:0}
+.rankrow .nm span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rankrow .track{flex:1;height:9px;background:var(--surface-2);min-width:40px}
+.rankrow.sel .track{background:rgba(255,255,255,.18)}
+.rankrow .fill{height:100%;background:var(--accent-soft)}
+.rankrow .vl{font-family:"IBM Plex Mono",monospace;font-size:12px;text-align:right;font-variant-numeric:tabular-nums}
+
+.detail{background:var(--surface);border:1px solid var(--rule);padding:22px 26px}
 .detail-h{display:flex;justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap;
   border-bottom:2px solid var(--ink);padding-bottom:10px;margin-bottom:16px}
 .detail-h h3{font-size:26px;font-weight:800;margin:0;letter-spacing:-.02em}
 .tag{font-size:11px;color:var(--ink-3);letter-spacing:.06em}
-.dgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:16px 20px;margin-bottom:22px}
+.dgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:16px 20px;margin-bottom:22px}
 .dstat .l{font-family:"Libre Franklin",sans-serif;font-size:9.5px;font-weight:600;letter-spacing:.09em;
   text-transform:uppercase;color:var(--ink-3);margin-bottom:3px}
 .dstat .v{font-family:"IBM Plex Mono",monospace;font-size:18px;font-weight:600;font-variant-numeric:tabular-nums}
@@ -127,7 +163,7 @@ select:focus-visible,input:focus-visible,button:focus-visible,path:focus-visible
 .bar-row .vl{font-family:"IBM Plex Mono",monospace;font-size:12.5px;text-align:right;font-variant-numeric:tabular-nums}
 .barnote{font-size:12px;color:var(--ink-3);margin-top:9px;font-family:"IBM Plex Mono",monospace}
 
-.tablewrap{overflow-x:auto;border:1px solid var(--rule);background:var(--surface)}
+.tablewrap{overflow-x:auto;border:1px solid var(--rule);background:var(--surface);max-height:74vh}
 table{border-collapse:separate;border-spacing:0;width:100%;font-size:12.5px}
 th,td{padding:6px 9px;white-space:nowrap;text-align:right}
 th{position:sticky;top:0;z-index:3;background:var(--surface);font-family:"Libre Franklin",sans-serif;
@@ -144,6 +180,7 @@ tbody tr:hover td.cty{color:var(--accent)}
 tbody tr.sel td.cty{background:var(--ink);color:var(--paper)}
 .fips{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--ink-3);margin-left:7px;font-weight:400}
 th .dir{color:var(--accent)}
+.tabnote{font-family:"Libre Franklin",sans-serif;font-size:11.5px;color:var(--ink-3);margin-top:9px}
 
 .chartbox{background:var(--surface);border:1px solid var(--rule);padding:20px 22px 14px}
 .chartbox svg{display:block;width:100%;height:auto}
@@ -160,7 +197,7 @@ th .dir{color:var(--accent)}
 
 #tip{position:fixed;z-index:60;pointer-events:none;background:var(--ink);color:var(--paper);
   padding:9px 12px;font-family:"IBM Plex Mono",monospace;font-size:11.5px;line-height:1.5;
-  border-radius:2px;max-width:290px;opacity:0;box-shadow:0 4px 14px rgba(0,0,0,.22)}
+  border-radius:2px;max-width:300px;opacity:0;box-shadow:0 4px 14px rgba(0,0,0,.22)}
 #tip b{font-weight:600}
 #tip .t{font-family:"Libre Franklin",sans-serif;font-weight:700;font-size:12.5px;
   display:block;margin-bottom:4px;letter-spacing:.02em}
@@ -190,7 +227,7 @@ footer dd{margin:0}
 <div class="caveat">
   <h3>Read this before you read the numbers</h3>
   <ul>
-    <li><b>Medicare does not record where a beneficiary lives.</b> Claims identify the <i>service</i> billed, never the residence. Someone in independent living, in assisted living, or in their own house is indistinguishable in this data, and no public CMS file splits spend by residential setting. So the residence columns here come from state licensure, and the spend columns are county-wide.</li>
+    <li><b>Medicare does not record where a beneficiary lives.</b> Claims identify the <i>service</i> billed, never the residence. Someone in independent living, in assisted living, or in their own house is indistinguishable in this data, and no public CMS file splits spend by residential setting. So the residence measures here come from state licensure, and the spend measures are county-wide.</li>
     <li><b>Independent living is invisible on purpose.</b> Alabama does not license IL &mdash; it is housing, not care, so there is no registry and no bed count. The closest honest proxy is the <b>75+ and 85+ enrollee counts</b> set against licensed AL and memory-care beds: that gap is your addressable population.</li>
     <li><b>&ldquo;Skilled nursing&rdquo; here means post-acute SNF, not the nursing home.</b> Medicare covers up to 100 days after a qualifying hospital stay. Long-term custodial care is paid by Medicaid and out of pocket and never appears in these dollars &mdash; which means most of the savings from keeping someone out of a nursing home accrue to <b>Medicaid</b>, not Medicare.</li>
     <li class="ok"><b>What Medicare savings do look like is on this page:</b> fewer inpatient stays, lower readmission rates, fewer ER visits, fewer SNF days per 1,000, and a heavier tilt toward home health and hospice. Those five are the measurable case for aging in place, and they vary by more than two-fold across Alabama counties.</li>
@@ -199,34 +236,63 @@ footer dd{margin:0}
 </div>
 
 <section>
-  <h2>Where the demand is</h2>
-  <p class="sub">Choose a measure to shade the map and the heatmap below. Click any county &mdash; on the map or in the table &mdash; to open its full profile.</p>
+  <h2>County heat map</h2>
+  <p class="sub">Every measure in the dataset can shade the map. Pick a category to narrow the list, or search it by name &mdash; inpatient stays, readmissions, SNF days, home health use, bed gap, growth in the 75+ cohort. Click any county on the map or in the ranking to open its profile below.</p>
   <div class="controls">
-    <div class="ctl"><label for="metric">Shade counties by</label><select id="metric"></select></div>
-    <div class="ctl"><label for="scale">Scale</label><select id="scale">
+    <div class="ctl"><label>Category</label><div class="chips" id="catChips"></div></div>
+    <div class="ctl"><label for="mq">Search measures</label><input type="search" id="mq" placeholder="readmission, snf, bed&hellip;" autocomplete="off"></div>
+    <div class="ctl"><label for="measure">Measure</label><select id="measure"></select></div>
+    <div class="ctl"><label for="scale">Shading</label><select id="scale">
       <option value="auto">Auto (fits the measure)</option>
       <option value="seq">Magnitude, low to high</option>
       <option value="div">Compared to Alabama average</option>
     </select></div>
-    <div class="ctl"><label for="minage">Min. enrollees 75+ <span id="minageV" class="mono"></span></label><input type="range" id="minage" min="0" max="20000" step="500" value="0"></div>
-    <div class="ctl"><label for="q">Find a county</label><input type="search" id="q" placeholder="Jefferson, Baldwin&hellip;" autocomplete="off"></div>
   </div>
-  <div class="mapgrid">
+  <div class="explorer">
     <div class="mapbox">
       <svg id="map" role="img" aria-label="Alabama counties shaded by the selected measure"></svg>
-      <div class="legend"><span id="lgLo">low</span><span class="swatches" id="lgSw"></span><span id="lgHi">high</span></div>
+      <div class="legend">
+        <div class="swatches" id="lgSw"></div>
+        <div class="breaks" id="lgBreaks"></div>
+        <div class="note"><i></i> Not reported &mdash; the county has no beds or CMS suppressed the cell</div>
+      </div>
     </div>
-    <div class="detail" id="detail"></div>
+    <div>
+      <div class="railcard">
+        <div class="mhead">
+          <div class="cat" id="mCat"></div>
+          <h3 id="mName"></h3>
+          <p id="mDesc"></p>
+        </div>
+        <div class="mstats" id="mStats"></div>
+        <div class="dist"><svg id="dist" role="img" aria-label="Distribution of the selected measure across the 67 counties"></svg></div>
+        <div class="distcap">Each mark is one county. The dashed rule is the Alabama average.</div>
+      </div>
+      <div class="railcard" style="padding-top:16px">
+        <div class="mhead" style="border-bottom-width:1px;padding-bottom:8px;margin-bottom:0">
+          <h3 style="font-size:15px" id="rankTitle">All 67 counties, ranked</h3>
+        </div>
+        <div class="ranklist" id="ranks"></div>
+      </div>
+    </div>
   </div>
 </section>
 
 <section>
-  <h2>County heatmap</h2>
-  <p class="sub">Rates and dollars are shaded against the Alabama average; counts are shaded low to high. Click a column header to sort, and use the group chips to focus on demand, cost, utilization or supply.</p>
+  <h2>County profile</h2>
+  <p class="sub">The selected county in full &mdash; demand, where its Medicare dollar goes, licensed capacity, and how heavily it leans on institutional care.</p>
+  <div class="detail" id="detail"></div>
+</section>
+
+<section>
+  <h2>Every measure, side by side</h2>
+  <p class="sub">The same data as a table. Rates and dollars are shaded against the Alabama average; counts are shaded low to high. Click a column header to sort. The category chips above control which columns appear here too.</p>
   <div class="controls">
-    <div class="ctl"><label>Column groups</label><div class="chips" id="grpChips"></div></div>
+    <div class="ctl"><label for="q">Filter counties</label><input type="search" id="q" placeholder="Jefferson, Baldwin&hellip;" autocomplete="off"></div>
+    <div class="ctl"><label for="minage">Min. enrollees 75+ <span id="minageV" class="mono"></span></label><input type="range" id="minage" min="0" max="20000" step="500" value="0"></div>
   </div>
   <div class="tablewrap"><table id="heat"><thead><tr id="hrow"></tr></thead><tbody id="hbody"></tbody></table></div>
+  <div class="tabnote" id="tabnote"></div>
 </section>
 
 <section>
@@ -238,10 +304,11 @@ footer dd{margin:0}
 <footer>
   <h3>Sources &amp; vintage</h3>
   <dl>
-    <dt>Enrollment</dt><dd>CMS Medicare Monthly Enrollment, annual 2025 &mdash; dataset d7fabe1e-d19b-4333-9eff-e80e0643f2fd</dd>
+    <dt>Enrollment</dt><dd>CMS Medicare Monthly Enrollment, annual 2025 &mdash; dataset d7fabe1e-d19b-4333-9eff-e80e0643f2fd. Growth measures compare 2025 with 2020.</dd>
     <dt>Spend &amp; use</dt><dd>CMS Medicare Geographic Variation by National, State &amp; County, 2024 &mdash; dataset 6219697b-8f6c-4164-bed4-cd9317c58ebc, Original Medicare only</dd>
     <dt>Nursing homes</dt><dd>CMS Care Compare Provider Information &mdash; 224 Alabama facilities, certified beds and average daily residents</dd>
     <dt>AL &amp; memory care</dt><dd>Alabama Department of Public Health Facilities Directory &mdash; 185 licensed Assisted Living Facilities and 107 Specialty Care Assisted Living Facilities, retrieved September 2026</dd>
+    <dt>Bed gap</dt><dd>Beds required to reach Alabama's own statewide rate of 25.7 assisted living and memory care beds per 1,000 enrollees aged 75+. Benchmarked against the state average rather than an outside industry target, so the measure needs no assumption beyond this data.</dd>
     <dt>On SCALF</dt><dd>Specialty Care Assisted Living Facility is Alabama's license class for dementia and Alzheimer's care, counted here as memory care. Many SCALFs share an address with an ALF and are licensed separately, so facility counts exceed the number of distinct campuses.</dd>
   </dl>
 </footer>
@@ -252,69 +319,167 @@ footer dd{margin:0}
 const D = /*__DATA__*/ null;
 const GEO = /*__GEO__*/ null;
 
-const fmtN=v=>v==null?'—':Math.round(v).toLocaleString();
-const fmt1=v=>v==null?'—':v.toFixed(1);
-const fmtM=v=>v==null?'—':'$'+Math.round(v).toLocaleString();
-const fmtP=v=>v==null?'—':(v*100).toFixed(1)+'%';
+/* ---------- formatting ---------- */
+const F={
+  n:  v=>v==null?'—':Math.round(v).toLocaleString(),
+  n1: v=>v==null?'—':v.toFixed(1),
+  d:  v=>v==null?'—':'$'+Math.round(v).toLocaleString(),
+  dm: v=>v==null?'—':'$'+(v/1e6).toFixed(0)+'M',
+  p:  v=>v==null?'—':(v*100).toFixed(1)+'%',
+  ps: v=>v==null?'—':(v>0?'+':'')+(v*100).toFixed(1)+'%',
+  sn: v=>v==null?'—':(v>0?'+':'')+Math.round(v).toLocaleString(),
+};
 
-const M=[
- {k:'enroll',   g:'Demand', l:'Enrollees',         sh:'Enrollees', f:fmtN, mode:'seq', d:'Total Medicare enrollees, 2025'},
- {k:'a75',      g:'Demand', l:'Aged 75+',          sh:'75+',       f:fmtN, mode:'seq', d:'Enrollees aged 75 and over'},
- {k:'a85',      g:'Demand', l:'Aged 85+',          sh:'85+',       f:fmtN, mode:'seq', d:'Enrollees aged 85 and over'},
- {k:'ma_pct',   g:'Demand', l:'MA share',          sh:'MA %',      f:fmtP, mode:'div', d:'Share enrolled in Medicare Advantage'},
- {k:'dual_pct', g:'Demand', l:'Dual eligible',     sh:'Dual %',    f:fmtP, mode:'div', d:'Share also covered by Medicaid'},
- {k:'pc',       g:'Cost',   l:'FFS $ per bene',    sh:'$/bene',    f:fmtM, mode:'div', d:'Total Original Medicare payment per FFS beneficiary, 2024'},
- {k:'home_pc',  g:'Cost',   l:'Home & community',  sh:'Home $',    f:fmtM, mode:'div', d:'Home health, office visits, DME, labs, imaging, clinics and Part B drugs'},
- {k:'acute_pc', g:'Cost',   l:'Acute hospital',    sh:'Acute $',   f:fmtM, mode:'div', d:'Inpatient, outpatient, ambulatory surgery, procedures, ambulance, dialysis'},
- {k:'inst_pc',  g:'Cost',   l:'Institutional PAC', sh:'Inst $',    f:fmtM, mode:'div', d:'Skilled nursing, inpatient rehab and long-term care hospital'},
- {k:'eol_pc',   g:'Cost',   l:'Hospice',           sh:'Hospice $', f:fmtM, mode:'div', d:'Hospice payment per FFS beneficiary'},
- {k:'ip_stays', g:'Use',    l:'IP stays / 1k',     sh:'IP/1k',     f:fmt1, mode:'div', d:'Inpatient covered stays per 1,000 beneficiaries'},
- {k:'readmit',  g:'Use',    l:'Readmissions',      sh:'Readmit',   f:fmtP, mode:'div', d:'Acute hospital readmission rate'},
- {k:'er',       g:'Use',    l:'ER visits / 1k',    sh:'ER/1k',     f:fmt1, mode:'div', d:'Emergency department visits per 1,000 beneficiaries'},
- {k:'snf_days', g:'Use',    l:'SNF days / 1k',     sh:'SNF d/1k',  f:fmt1, mode:'div', d:'Medicare-covered skilled nursing days per 1,000 beneficiaries'},
- {k:'snf_pct',  g:'Use',    l:'Used SNF',          sh:'SNF %',     f:fmtP, mode:'div', d:'Share with any Medicare-covered SNF stay'},
- {k:'hh_pct',   g:'Use',    l:'Used home health',  sh:'HH %',      f:fmtP, mode:'div', d:'Share with any home health episode'},
- {k:'hospc_pct',g:'Use',    l:'Used hospice',      sh:'Hospice %', f:fmtP, mode:'div', d:'Share with any hospice stay'},
- {k:'alf_bed',  g:'Supply', l:'AL beds',           sh:'AL beds',   f:fmtN, mode:'seq', d:'Licensed assisted living beds'},
- {k:'mc_bed',   g:'Supply', l:'Memory care beds',  sh:'MC beds',   f:fmtN, mode:'seq', d:'Licensed specialty care (memory care) beds'},
- {k:'nh_res',   g:'Supply', l:'NH residents',      sh:'NH res',    f:fmtN, mode:'seq', d:'Average daily nursing home residents'},
- {k:'sl_per1k', g:'Supply', l:'AL+MC / 1k 75+',    sh:'AL+MC/1k',  f:fmt1, mode:'div', d:'Licensed assisted living and memory care beds per 1,000 enrollees aged 75+'},
- {k:'nh_per1k', g:'Supply', l:'NH res / 1k 75+',   sh:'NH/1k',     f:fmt1, mode:'div', d:'Nursing home residents per 1,000 enrollees aged 75+'},
+/* ---------- measure catalogue ----------
+   [key, label, format, shading mode, description]
+   'seq' shades low to high; 'div' shades against the Alabama average.       */
+const CAT=[
+ ['Demand', [
+  ['enroll','Medicare enrollees','n','seq','Total Medicare enrollees, 2025'],
+  ['a75','Aged 75+','n','seq','Enrollees aged 75 and over — the core senior-living cohort'],
+  ['a85','Aged 85+','n','seq','Enrollees aged 85 and over'],
+  ['g5_a75','Growth in 75+, 5yr','ps','div','Change in the 75+ cohort since 2020'],
+  ['g5_enroll','Growth in enrollment, 5yr','ps','div','Change in total Medicare enrollment since 2020'],
+  ['ma_pct','Medicare Advantage share','p','div','Share enrolled in Medicare Advantage rather than Original Medicare'],
+  ['om','Original Medicare enrollees','n','seq','Enrollees remaining in fee-for-service Medicare'],
+  ['dual_pct','Dual eligible','p','div','Share also covered by Medicaid — a proxy for low income'],
+  ['avg_age','Average age','n1','div','Average age of fee-for-service beneficiaries'],
+  ['feml_pct','Female','p','div','Share female'],
+  ['blk_pct','Black','p','div','Share Black'],
+  ['wht_pct','White','p','div','Share White'],
+  ['hsp_pct','Hispanic','p','div','Share Hispanic'],
+ ]],
+ ['Opportunity', [
+  ['bed_gap','Bed gap to state rate','sn','div','Assisted living and memory care beds needed to reach Alabama’s statewide rate of 25.7 per 1,000 aged 75+. Positive means under-supplied.'],
+  ['per_bed','People 75+ per bed','n1','div','Enrollees aged 75+ for every licensed assisted living or memory care bed. Higher means thinner supply.'],
+  ['sl_per1k','AL + memory care beds / 1k 75+','n1','div','Licensed assisted living and memory care beds per 1,000 enrollees aged 75 and over'],
+  ['sl_bed','AL + memory care beds','n','seq','Total licensed assisted living and memory care beds'],
+  ['mc_share','Memory care share of beds','p','div','Memory care share of a county’s licensed senior living beds'],
+  ['nh_per1k','Nursing home residents / 1k 75+','n1','div','Nursing home residents per 1,000 enrollees aged 75 and over'],
+  ['nh_occ','Nursing home occupancy','p','div','Average daily residents as a share of certified beds'],
+ ]],
+ ['Cost', [
+  ['pc','Total $ per beneficiary','d','div','Total Original Medicare payment per fee-for-service beneficiary, 2024'],
+  ['pc_std','Standardized $ per beneficiary','d','div','The same figure with wage and policy adjustments removed — the right one for comparing care intensity between counties'],
+  ['tot_amt','Total FFS spend','dm','seq','Total Original Medicare payments in the county'],
+  ['home_pc','Home & community $','d','div','Home health, office visits, DME, labs, imaging, clinics and Part B drugs, per beneficiary'],
+  ['acute_pc','Acute hospital $','d','div','Inpatient, outpatient, ambulatory surgery, procedures, ambulance and dialysis, per beneficiary'],
+  ['inst_pc','Institutional post-acute $','d','div','Skilled nursing, inpatient rehab and long-term care hospital, per beneficiary'],
+  ['eol_pc','Hospice $','d','div','Hospice payment per beneficiary'],
+  ['pc_ip','Inpatient $','d','div','Inpatient hospital payment per beneficiary'],
+  ['pc_op','Outpatient $','d','div','Hospital outpatient payment per beneficiary'],
+  ['pc_snf','Skilled nursing $','d','div','Post-acute SNF payment per beneficiary'],
+  ['pc_hh','Home health $','d','div','Home health payment per beneficiary'],
+  ['pc_hospc','Hospice $ (bucket)','d','div','Hospice payment per beneficiary'],
+  ['pc_em','Office visits $','d','div','Evaluation and management payment per beneficiary'],
+  ['pc_dme','Durable equipment $','d','div','DME payment per beneficiary'],
+  ['pc_imgng','Imaging $','d','div','Imaging payment per beneficiary'],
+  ['pc_tests','Lab tests $','d','div','Laboratory test payment per beneficiary'],
+  ['pc_prcdrs','Procedures $','d','div','Procedure payment per beneficiary'],
+  ['pc_asc','Ambulatory surgery $','d','div','Ambulatory surgical centre payment per beneficiary'],
+  ['pc_irf','Inpatient rehab $','d','div','Inpatient rehabilitation facility payment per beneficiary'],
+  ['pc_ltch','Long-term care hospital $','d','div','LTCH payment per beneficiary'],
+  ['pc_amblnc','Ambulance $','d','div','Ambulance payment per beneficiary'],
+  ['pc_fqhc_rhc','Clinic $ (FQHC/RHC)','d','div','Federally qualified health centre and rural health clinic payment per beneficiary'],
+  ['pc_trtmnts','Part B drugs $','d','div','Part B drug and treatment payment per beneficiary'],
+  ['pc_op_dlys','Dialysis $','d','div','Outpatient dialysis payment per beneficiary'],
+ ]],
+ ['Hospital', [
+  ['ip_stays','Inpatient stays / 1k','n1','div','Inpatient covered stays per 1,000 beneficiaries'],
+  ['ip_days','Inpatient days / 1k','n1','div','Inpatient covered days per 1,000 beneficiaries'],
+  ['ip_pct','Had an inpatient stay','p','div','Share with at least one inpatient stay'],
+  ['readmit','Readmission rate','p','div','Share of acute hospital discharges followed by a readmission — the single clearest signal of care that is not holding after discharge'],
+  ['ip_per_user','Inpatient $ per user','d','div','Inpatient payment per beneficiary who had a stay'],
+  ['er','ER visits / 1k','n1','div','Emergency department visits per 1,000 beneficiaries'],
+  ['er_pct','Had an ER visit','p','div','Share with at least one emergency visit'],
+  ['op_visits','Outpatient visits / 1k','n1','div','Hospital outpatient visits per 1,000 beneficiaries'],
+  ['op_pct','Had an outpatient visit','p','div','Share with at least one hospital outpatient visit'],
+ ]],
+ ['Post-acute', [
+  ['snf_days','SNF days / 1k','n1','div','Medicare-covered skilled nursing days per 1,000 beneficiaries'],
+  ['snf_stays','SNF stays / 1k','n1','div','Medicare-covered SNF stays per 1,000 beneficiaries'],
+  ['snf_pct','Used SNF','p','div','Share with any Medicare-covered SNF stay'],
+  ['snf_per_user','SNF $ per user','d','div','SNF payment per beneficiary who had a stay'],
+  ['irf_stays','Rehab stays / 1k','n1','div','Inpatient rehabilitation stays per 1,000 beneficiaries'],
+  ['irf_pct','Used inpatient rehab','p','div','Share with any inpatient rehabilitation stay'],
+  ['ltch_stays','LTCH stays / 1k','n1','div','Long-term care hospital stays per 1,000 beneficiaries'],
+  ['ltch_pct','Used LTCH','p','div','Share with any long-term care hospital stay'],
+ ]],
+ ['Home & community', [
+  ['hh_pct','Used home health','p','div','Share with any home health episode'],
+  ['hh_eps','Home health episodes / 1k','n1','div','Home health episodes per 1,000 beneficiaries'],
+  ['hh_visits','Home health visits / 1k','n1','div','Home health visits per 1,000 beneficiaries'],
+  ['hh_per_user','Home health $ per user','d','div','Home health payment per beneficiary who used it'],
+  ['hospc_pct','Used hospice','p','div','Share with any hospice stay'],
+  ['hospc_days','Hospice days / 1k','n1','div','Hospice covered days per 1,000 beneficiaries'],
+  ['hospc_stays','Hospice stays / 1k','n1','div','Hospice stays per 1,000 beneficiaries'],
+  ['em_pct','Saw a doctor','p','div','Share with any evaluation and management visit'],
+  ['em_events','Office visits / 1k','n1','div','Evaluation and management events per 1,000 beneficiaries'],
+  ['dme_pct','Used durable equipment','p','div','Share with any DME claim'],
+  ['dme_events','DME events / 1k','n1','div','DME events per 1,000 beneficiaries'],
+  ['tests_pct','Had lab tests','p','div','Share with any laboratory test'],
+  ['imgng_pct','Had imaging','p','div','Share with any imaging study'],
+  ['fqhc_pct','Used a clinic','p','div','Share using a federally qualified health centre or rural health clinic'],
+  ['fqhc_visits','Clinic visits / 1k','n1','div','FQHC and RHC visits per 1,000 beneficiaries'],
+  ['amblnc_pct','Used an ambulance','p','div','Share with any ambulance claim'],
+  ['amblnc_events','Ambulance runs / 1k','n1','div','Ambulance events per 1,000 beneficiaries'],
+ ]],
+ ['Supply', [
+  ['alf_bed','Assisted living beds','n','seq','Licensed assisted living beds'],
+  ['alf_fac','Assisted living facilities','n','seq','Licensed assisted living facilities'],
+  ['mc_bed','Memory care beds','n','seq','Licensed specialty care (memory care) beds'],
+  ['mc_fac','Memory care facilities','n','seq','Licensed specialty care assisted living facilities'],
+  ['nh_res','Nursing home residents','n','seq','Average daily nursing home residents'],
+  ['nh_bed','Nursing home beds','n','seq','Certified nursing home beds'],
+  ['nh_fac','Nursing homes','n','seq','Certified nursing homes'],
+ ]],
 ];
-const MK=Object.fromEntries(M.map(m=>[m.k,m]));
-const GROUPS=['Demand','Cost','Use','Supply'];
-const GLAB={Demand:'Demand',Cost:'Cost',Use:'Utilization',Supply:'Supply'};
 
-D.forEach(r=>{
-  r.sl_bed=r.alf_bed+r.mc_bed;
-  r.sl_per1k=r.a75?r.sl_bed/r.a75*1000:0;
-  r.nh_per1k=r.a75?r.nh_res/r.a75*1000:0;
-  r.ma_pct=r.ma/r.enroll;
-  r.dual_pct=r.dual/r.enroll;
+const M=[]; const GROUPS=[];
+CAT.forEach(function(c){
+  GROUPS.push(c[0]);
+  c[1].forEach(function(m){
+    M.push({k:m[0],l:m[1],f:F[m[2]],mode:m[3],d:m[4],g:c[0],
+            sh:m[1].length>16?m[1].slice(0,15)+'…':m[1]});
+  });
 });
+const MK={}; M.forEach(function(m){MK[m.k]=m});
+
+/* ---------- state benchmarks ---------- */
 const T=k=>D.reduce((s,r)=>s+(r[k]||0),0);
+const RATIO={ma_pct:['ma','enroll'],dual_pct:['dual','enroll'],
+  sl_per1k:['sl_bed','a75'],nh_per1k:['nh_res','a75'],nh_occ:['nh_res','nh_bed'],
+  mc_share:['mc_bed','sl_bed'],per_bed:['a75','sl_bed']};
+const COUNTS=['enroll','a75','a85','om','sl_bed','alf_bed','alf_fac','mc_bed','mc_fac',
+              'nh_res','nh_bed','nh_fac','tot_amt','bed_gap'];
 const ST={};
-M.forEach(m=>{
+M.forEach(function(m){
   const k=m.k;
-  if(['enroll','a75','a85','alf_bed','mc_bed','nh_res'].includes(k)){ST[k]=T(k)/D.length;return}
-  if(k==='ma_pct'){ST[k]=T('ma')/T('enroll');return}
-  if(k==='dual_pct'){ST[k]=T('dual')/T('enroll');return}
-  if(k==='sl_per1k'){ST[k]=(T('alf_bed')+T('mc_bed'))/T('a75')*1000;return}
-  if(k==='nh_per1k'){ST[k]=T('nh_res')/T('a75')*1000;return}
-  ST[k]=D.reduce((s,r)=>s+(r[k]||0)*r.ffs_benes,0)/T('ffs_benes');
+  if(RATIO[k]){const p=RATIO[k];ST[k]=T(p[0])/T(p[1])*(k==='sl_per1k'||k==='nh_per1k'?1000:1);return}
+  // growth is true statewide growth, not an average of county rates
+  if(k==='g5_enroll'){ST[k]=T('enroll')/T('enroll_p')-1;return}
+  if(k==='g5_a75'){ST[k]=T('a75')/T('a75_p')-1;return}
+  if(COUNTS.indexOf(k)>=0){ST[k]=T(k)/D.length;return}
+  // everything else is a per-beneficiary rate: weight by FFS beneficiaries
+  let n=0,w=0;
+  D.forEach(function(r){if(r[k]!=null){n+=r[k]*r.ffs_benes;w+=r.ffs_benes}});
+  ST[k]=w?n/w:null;
 });
 const SL_TOT=T('alf_bed')+T('mc_bed');
 const PER_BED=T('a75')/SL_TOT;
+const SHORT=D.filter(r=>r.bed_gap>0);
 
+/* ---------- kpis ---------- */
 const kpi=(l,v,s)=>'<div class="kpi"><div class="kpi-l">'+l+'</div><div class="kpi-v">'+v+'</div><div class="kpi-s">'+s+'</div></div>';
 document.getElementById('kpis').innerHTML=
   kpi('Medicare enrollees',(T('enroll')/1e6).toFixed(2)+'M',Math.round(T('ma')/T('enroll')*100)+'% Medicare Advantage')+
-  kpi('Aged 75+',fmtN(T('a75')),fmtN(T('a85'))+' are 85 or older')+
-  kpi('FFS spend, 2024','$'+(T('tot_amt')/1e9).toFixed(2)+'B','$'+fmtN(T('tot_amt')/T('ffs_benes'))+' per FFS beneficiary')+
-  kpi('AL + memory care beds',fmtN(SL_TOT),T('alf_fac')+' ALFs, '+T('mc_fac')+' SCALFs')+
-  kpi('Nursing home residents',fmtN(T('nh_res')),fmtN(T('nh_bed'))+' certified beds, '+Math.round(T('nh_res')/T('nh_bed')*100)+'% full')+
-  kpi('75+ per licensed bed',PER_BED.toFixed(0),'Assisted living and memory care only');
+  kpi('Aged 75+',F.n(T('a75')),F.n(T('a85'))+' are 85 or older')+
+  kpi('FFS spend, 2024','$'+(T('tot_amt')/1e9).toFixed(2)+'B','$'+F.n(T('tot_amt')/T('ffs_benes'))+' per FFS beneficiary')+
+  kpi('AL + memory care beds',F.n(SL_TOT),T('alf_fac')+' ALFs, '+T('mc_fac')+' SCALFs')+
+  kpi('75+ per licensed bed',PER_BED.toFixed(0),'Statewide rate '+(SL_TOT/T('a75')*1000).toFixed(1)+' beds per 1,000')+
+  kpi('Beds short of state rate',F.n(SHORT.reduce((s,r)=>s+r.bed_gap,0)),SHORT.length+' of 67 counties below the rate');
 
+/* ---------- colour ---------- */
 const cs=getComputedStyle(document.documentElement);
 const ramp=()=>[1,2,3,4,5,6,7].map(i=>cs.getPropertyValue('--seq'+i).trim());
 const DIV_L=['#184f95','#3987e5','#9ec5f4','#e8e9e3','#f2a9a8','#e34948','#a52322'];
@@ -322,9 +487,16 @@ const DIV_D=['#86b6ef','#3987e5','#235a97','#33383c','#8f3231','#e34948','#f08a8
 const isDark=()=>{const t=document.documentElement.getAttribute('data-theme');
   return t==='dark'||(t!=='light'&&matchMedia('(prefers-color-scheme: dark)').matches)};
 const divRamp=()=>isDark()?DIV_D:DIV_L;
-const scaleMode=()=>{const s=document.getElementById('scale').value;
-  return s!=='auto'?s:MK[document.getElementById('metric').value].mode};
+const DIV_CUTS=[-0.25,-0.12,-0.04,0.04,0.12,0.25];
 
+let sel='01073', sortK='enroll', sortD=-1, metric='a75';
+const active=new Set(GROUPS);
+const $=id=>document.getElementById(id);
+const byFips={}; D.forEach(r=>{byFips[r.fips]=r});
+const sortedVals={};
+M.forEach(function(m){sortedVals[m.k]=D.map(r=>r[m.k]).filter(v=>v!=null).sort((a,b)=>a-b)});
+
+const mode=m=>{const s=$('scale').value;return s==='auto'?m.mode:s};
 function binSeq(v,sorted){
   if(!sorted.length)return 0;
   let lo=0,hi=sorted.length;
@@ -332,151 +504,243 @@ function binSeq(v,sorted){
   return Math.min(6,Math.floor(lo/sorted.length*7));
 }
 function binDiv(v,avg){
-  if(!avg)return 3;
-  const r=v/avg-1, cuts=[-0.25,-0.12,-0.04,0.04,0.12,0.25];
-  let i=0; while(i<6&&r>cuts[i])i++;
+  if(avg==null||!avg)return 3;
+  const r=v/avg-1; let i=0;
+  while(i<6&&r>DIV_CUTS[i])i++;
   return i;
 }
+function bin(m,v){
+  return mode(m)==='seq'?binSeq(v,sortedVals[m.k]):binDiv(v,ST[m.k]);
+}
 function tint(hex,steps){
-  const a=0.10+Math.min(6,steps)/6*0.40;
-  const n=parseInt(hex.slice(1),16);
+  const a=0.10+Math.min(6,steps)/6*0.40, n=parseInt(hex.slice(1),16);
   return 'rgba('+(n>>16&255)+','+(n>>8&255)+','+(n&255)+','+a.toFixed(3)+')';
 }
-function cellColor(m,v,sorted){
+function cellColor(m,v){
   if(v==null)return 'transparent';
-  if(m.mode==='seq'){const b=binSeq(v,sorted);return tint(ramp()[b],b)}
-  const b=binDiv(v,ST[m.k]);return tint(divRamp()[b],Math.abs(b-3)*2);
+  const b=bin(m,v);
+  return mode(m)==='seq'?tint(ramp()[b],b):tint(divRamp()[b],Math.abs(b-3)*2);
 }
-function mapColor(m,v,sorted){
-  if(v==null)return 'var(--surface-2)';
-  return scaleMode()==='seq'?ramp()[binSeq(v,sorted)]:divRamp()[binDiv(v,ST[m.k])];
+function solid(m,v){
+  if(v==null)return 'var(--nodata)';
+  return (mode(m)==='seq'?ramp():divRamp())[bin(m,v)];
 }
 
-let sel='01073', sortK='enroll', sortD=-1;
-const active=new Set(GROUPS);
-const $=id=>document.getElementById(id);
-const byFips=Object.fromEntries(D.map(r=>[r.fips,r]));
-const sortedVals={};
-M.forEach(m=>{sortedVals[m.k]=D.map(r=>r[m.k]).filter(v=>v!=null).sort((a,b)=>a-b)});
-
-const msel=$('metric');
-GROUPS.forEach(g=>{
-  const og=document.createElement('optgroup'); og.label=GLAB[g];
-  M.filter(m=>m.g===g).forEach(m=>{
-    const o=document.createElement('option'); o.value=m.k; o.textContent=m.l; og.appendChild(o)});
-  msel.appendChild(og);
-});
-msel.value='a75';
-
-$('grpChips').innerHTML=GROUPS.map(g=>'<button class="chip" data-g="'+g+'" aria-pressed="true">'+GLAB[g]+'</button>').join('');
-$('grpChips').addEventListener('click',e=>{
+/* ---------- measure picker ---------- */
+$('catChips').innerHTML=CAT.map(function(c){
+  return '<button class="chip" data-g="'+c[0]+'" aria-pressed="true">'+c[0]+
+    '<span class="n">'+c[1].length+'</span></button>'}).join('');
+$('catChips').addEventListener('click',function(e){
   const b=e.target.closest('.chip'); if(!b)return;
   const g=b.dataset.g;
   if(active.has(g)&&active.size>1)active.delete(g); else active.add(g);
   b.setAttribute('aria-pressed',String(active.has(g)));
-  drawTable();
+  fillMeasures(); drawTable();
 });
-
-function filtered(){
-  const q=$('q').value.trim().toLowerCase(), mn=+$('minage').value;
-  return D.filter(r=>r.a75>=mn&&(!q||r.county.toLowerCase().includes(q)));
+function visibleMeasures(){
+  const q=$('mq').value.trim().toLowerCase();
+  return M.filter(m=>active.has(m.g)&&(!q||(m.l+' '+m.d+' '+m.g).toLowerCase().includes(q)));
+}
+function fillMeasures(){
+  const vis=visibleMeasures(), sl=$('measure');
+  sl.textContent='';
+  GROUPS.forEach(function(g){
+    const inGroup=vis.filter(m=>m.g===g);
+    if(!inGroup.length)return;
+    const og=document.createElement('optgroup'); og.label=g;
+    inGroup.forEach(function(m){
+      const o=document.createElement('option'); o.value=m.k; o.textContent=m.l; og.appendChild(o)});
+    sl.appendChild(og);
+  });
+  if(!vis.length){metric=null; drawMap(); drawRail(); return}
+  if(!vis.some(m=>m.k===metric))metric=vis[0].k;
+  sl.value=metric;
+  drawMap(); drawRail();
 }
 
+/* ---------- map ---------- */
 const svgNS='http://www.w3.org/2000/svg';
 function drawMap(){
-  const m=MK[msel.value], sorted=sortedVals[m.k];
-  const keep=new Set(filtered().map(r=>r.fips));
   const map=$('map');
   map.setAttribute('viewBox','0 0 '+GEO.w+' '+GEO.h);
   map.textContent='';
-  Object.keys(GEO.c).forEach(fips=>{
+  if(!metric)return;
+  const m=MK[metric];
+  Object.keys(GEO.c).forEach(function(fips){
     const g=GEO.c[fips], r=byFips[fips];
     if(!r||!g.d)return;
     const p=document.createElementNS(svgNS,'path');
     p.setAttribute('d',g.d);
-    p.setAttribute('fill',mapColor(m,r[m.k],sorted));
+    p.setAttribute('fill',solid(m,r[m.k]));
     p.setAttribute('tabindex','0');
     p.setAttribute('role','button');
     p.setAttribute('aria-label',r.county+' County, '+m.l+' '+m.f(r[m.k]));
-    p.setAttribute('opacity',keep.has(fips)?'1':'0.18');
     if(fips===sel)p.setAttribute('class','sel');
-    p.addEventListener('click',()=>{sel=fips;render()});
-    p.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();sel=fips;render()}});
-    p.addEventListener('pointerenter',e=>showTip(e,'<span class="t">'+r.county+' County</span>'+m.l+': <b>'+m.f(r[m.k])+'</b><br>Alabama average: '+m.f(ST[m.k])));
+    p.addEventListener('click',function(){sel=fips;render()});
+    p.addEventListener('keydown',function(e){
+      if(e.key==='Enter'||e.key===' '){e.preventDefault();sel=fips;render()}});
+    p.addEventListener('pointerenter',function(e){showTip(e,
+      '<span class="t">'+r.county+' County</span>'+m.l+': <b>'+m.f(r[m.k])+
+      '</b><br>Alabama average: '+m.f(ST[m.k]))});
     p.addEventListener('pointermove',moveTip);
     p.addEventListener('pointerleave',hideTip);
     map.appendChild(p);
   });
-  const rp=scaleMode()==='seq'?ramp():divRamp();
+  drawLegend(m);
+}
+function drawLegend(m){
+  const seq=mode(m)==='seq', rp=seq?ramp():divRamp();
   $('lgSw').innerHTML=rp.map(c=>'<i style="background:'+c+'"></i>').join('');
-  $('lgLo').textContent=scaleMode()==='seq'?'lowest':'−25% vs AL';
-  $('lgHi').textContent=scaleMode()==='seq'?'highest':'+25% vs AL';
+  let labels;
+  if(seq){
+    const s=sortedVals[m.k];
+    labels=[0,1,2,3,4,5,6,7].map(function(i){
+      const v=s[Math.min(s.length-1,Math.floor(i/7*s.length))];
+      return i===7?m.f(s[s.length-1]):m.f(v)});
+  }else{
+    const a=ST[m.k];
+    labels=['','−25%','−12%','avg','','+12%','+25%',''];
+    labels[3]=m.f(a);
+  }
+  $('lgBreaks').innerHTML=labels.map(function(t,i){
+    return '<span style="flex:1;text-align:'+(i===0?'left':i===labels.length-1?'right':'center')+'">'+t+'</span>'}).join('');
 }
 
+/* ---------- rail: headline, distribution, ranking ---------- */
+function drawRail(){
+  if(!metric){$('mName').textContent='No measure matches that search';
+    $('mCat').textContent='';$('mDesc').textContent='';
+    $('mStats').innerHTML='';$('dist').textContent='';$('ranks').textContent='';return}
+  const m=MK[metric], s=sortedVals[m.k];
+  $('mCat').textContent=m.g;
+  $('mName').textContent=m.l;
+  $('mDesc').textContent=m.d;
+  const med=s.length%2?s[(s.length-1)/2]:(s[s.length/2-1]+s[s.length/2])/2;
+  $('mStats').innerHTML=
+    ['Alabama average',m.f(ST[m.k]),'Median county',m.f(med),
+     'Lowest',m.f(s[0]),'Highest',m.f(s[s.length-1])]
+    .reduce(function(a,v,i,arr){
+      return i%2?a+'<div><div class="l">'+arr[i-1]+'</div><div class="v">'+v+'</div></div>':a},'');
+
+  // distribution: one tick per county across the observed range
+  const W=520,H=52,pad=10;
+  const lo=s[0], hi=s[s.length-1], span=(hi-lo)||1;
+  const X=v=>pad+(v-lo)/span*(W-2*pad);
+  let g='<line class="gridline" x1="'+pad+'" y1="'+(H-14)+'" x2="'+(W-pad)+'" y2="'+(H-14)+'"/>';
+  if(ST[m.k]!=null&&ST[m.k]>=lo&&ST[m.k]<=hi)
+    g+='<line class="avgline" x1="'+X(ST[m.k]).toFixed(1)+'" y1="6" x2="'+X(ST[m.k]).toFixed(1)+'" y2="'+(H-10)+'"/>';
+  D.forEach(function(r){
+    if(r[m.k]==null)return;
+    const x=X(r[m.k]).toFixed(1), on=r.fips===sel;
+    g+='<line x1="'+x+'" y1="'+(on?4:14)+'" x2="'+x+'" y2="'+(H-14)+'" stroke="'+
+      (on?'var(--ink)':solid(m,r[m.k]))+'" stroke-width="'+(on?2.5:2)+'" opacity="'+(on?1:.8)+'"/>';
+  });
+  const cur=byFips[sel];
+  if(cur[m.k]!=null){
+    const x=X(cur[m.k]);
+    g+='<text class="tick" x="'+Math.min(W-pad,Math.max(pad,x)).toFixed(1)+'" y="'+H+
+      '" text-anchor="'+(x>W/2?'end':'start')+'">'+cur.county+' '+m.f(cur[m.k])+'</text>';
+  }
+  const d=$('dist'); d.setAttribute('viewBox','0 0 '+W+' '+H); d.innerHTML=g;
+
+  // ranking
+  const rows=D.filter(r=>r[m.k]!=null).sort((a,b)=>b[m.k]-a[m.k]);
+  const mx=Math.max.apply(null,rows.map(r=>Math.abs(r[m.k])))||1;
+  $('rankTitle').textContent=rows.length+' counties by '+m.l.toLowerCase();
+  $('ranks').innerHTML=rows.map(function(r,i){
+    return '<div class="rankrow'+(r.fips===sel?' sel':'')+'" data-f="'+r.fips+
+      '" tabindex="0" role="button"><div class="rk">'+(i+1)+'</div>'+
+      '<div class="nm"><span>'+r.county+'</span><span class="track"><span class="fill" style="width:'+
+        (Math.abs(r[m.k])/mx*100).toFixed(1)+'%;background:'+solid(m,r[m.k])+'"></span></span></div>'+
+      '<div class="vl">'+m.f(r[m.k])+'</div></div>'}).join('');
+}
+$('ranks').addEventListener('click',function(e){
+  const row=e.target.closest('.rankrow'); if(!row)return;
+  sel=row.dataset.f; render();
+});
+$('ranks').addEventListener('keydown',function(e){
+  const row=e.target.closest('.rankrow');
+  if(row&&(e.key==='Enter'||e.key===' ')){e.preventDefault();sel=row.dataset.f;render()}
+});
+
+/* ---------- county profile ---------- */
 function delta(k,v){
-  const a=ST[k]; if(!a)return '';
+  const a=ST[k];
+  if(a==null||!a||v==null)return '';
   const d=(v/a-1)*100, c=Math.abs(d)<3?'flat':(d>0?'up':'down');
   return '<div class="d '+c+'">'+(d>0?'+':'')+d.toFixed(0)+'% vs AL</div>';
 }
 function drawDetail(){
   const r=byFips[sel];
-  const st=k=>{const m=MK[k];
-    return '<div class="dstat"><div class="l">'+m.l+'</div><div class="v">'+m.f(r[k])+'</div>'+(m.mode==='div'?delta(k,r[k]):'')+'</div>'};
-  const bundles=[['home_pc','Home &amp; community'],['acute_pc','Acute hospital'],['inst_pc','Institutional PAC'],['eol_pc','Hospice']];
+  const st=function(k){const m=MK[k];
+    return '<div class="dstat"><div class="l">'+m.l+'</div><div class="v">'+m.f(r[k])+'</div>'+
+      (m.mode==='div'?delta(k,r[k]):'')+'</div>'};
+  const bundles=[['home_pc','Home &amp; community'],['acute_pc','Acute hospital'],
+                 ['inst_pc','Institutional PAC'],['eol_pc','Hospice']];
   const mx=Math.max.apply(null,bundles.map(b=>Math.max(r[b[0]],ST[b[0]])))*1.06;
   const bars=bundles.map(function(b){
     const k=b[0],v=r[k],a=ST[k],d=(v/a-1)*100,c=Math.abs(d)<3?'flat':(d>0?'up':'down');
     return '<div class="bar-row"><div class="nm">'+b[1]+'</div>'+
       '<div class="bar-track"><div class="bar-fill" style="width:'+(v/mx*100).toFixed(1)+'%"></div>'+
       '<div class="bar-avg" style="left:'+(a/mx*100).toFixed(1)+'%"></div></div>'+
-      '<div class="vl">'+fmtM(v)+' <span class="'+c+'">'+(d>0?'+':'')+d.toFixed(0)+'%</span></div></div>'}).join('');
+      '<div class="vl">'+F.d(v)+' <span class="'+c+'">'+(d>0?'+':'')+d.toFixed(0)+'%</span></div></div>'}).join('');
   $('detail').innerHTML=
     '<div class="detail-h"><h3>'+r.county+' County</h3>'+
-    '<span class="tag">FIPS '+r.fips+' &middot; '+fmtN(r.ffs_benes)+' FFS benes &middot; avg age '+r.avg_age+'</span></div>'+
-    '<div class="dgrid">'+st('enroll')+st('a75')+st('a85')+st('ma_pct')+st('dual_pct')+st('pc')+'</div>'+
+    '<span class="tag">FIPS '+r.fips+' &middot; '+F.n(r.ffs_benes)+' FFS benes &middot; avg age '+r.avg_age+'</span></div>'+
+    '<div class="dgrid">'+st('enroll')+st('a75')+st('a85')+st('g5_a75')+st('ma_pct')+st('dual_pct')+'</div>'+
     '<div class="blockhead">Where the Medicare dollar goes &mdash; per FFS beneficiary, 2024</div>'+
     '<div class="bars">'+bars+'</div>'+
-    '<div class="barnote">Vertical rule marks the Alabama average.</div>'+
-    '<div class="blockhead">Licensed capacity</div>'+
+    '<div class="barnote">Vertical rule marks the Alabama average. Total '+F.d(r.pc)+' per beneficiary.</div>'+
+    '<div class="blockhead">Licensed capacity and the gap</div>'+
     '<div class="dgrid">'+
-      '<div class="dstat"><div class="l">Assisted living</div><div class="v">'+fmtN(r.alf_bed)+'</div><div class="d flat">'+r.alf_fac+' facilit'+(r.alf_fac===1?'y':'ies')+'</div></div>'+
-      '<div class="dstat"><div class="l">Memory care</div><div class="v">'+fmtN(r.mc_bed)+'</div><div class="d flat">'+r.mc_fac+' SCALF'+(r.mc_fac===1?'':'s')+'</div></div>'+
-      '<div class="dstat"><div class="l">Nursing home</div><div class="v">'+fmtN(r.nh_res)+'</div><div class="d flat">'+r.nh_fac+' home'+(r.nh_fac===1?'':'s')+', '+fmtN(r.nh_bed)+' beds</div></div>'+
-      st('sl_per1k')+st('nh_per1k')+
-      '<div class="dstat"><div class="l">75+ per AL/MC bed</div><div class="v">'+(r.sl_bed?(r.a75/r.sl_bed).toFixed(0):'—')+'</div><div class="d flat">AL average '+PER_BED.toFixed(0)+'</div></div>'+
+      '<div class="dstat"><div class="l">Assisted living</div><div class="v">'+F.n(r.alf_bed)+
+        '</div><div class="d flat">'+r.alf_fac+' facilit'+(r.alf_fac===1?'y':'ies')+'</div></div>'+
+      '<div class="dstat"><div class="l">Memory care</div><div class="v">'+F.n(r.mc_bed)+
+        '</div><div class="d flat">'+r.mc_fac+' SCALF'+(r.mc_fac===1?'':'s')+'</div></div>'+
+      '<div class="dstat"><div class="l">Nursing home</div><div class="v">'+F.n(r.nh_res)+
+        '</div><div class="d flat">'+r.nh_fac+' home'+(r.nh_fac===1?'':'s')+', '+F.n(r.nh_bed)+' beds</div></div>'+
+      st('sl_per1k')+st('per_bed')+st('bed_gap')+
     '</div>'+
-    '<div class="blockhead">Institutional intensity</div>'+
-    '<div class="dgrid">'+st('snf_days')+st('snf_pct')+st('ip_stays')+st('readmit')+st('hh_pct')+st('hospc_pct')+'</div>';
+    '<div class="blockhead">Institutional intensity and the aging-in-place signals</div>'+
+    '<div class="dgrid">'+st('snf_days')+st('snf_pct')+st('ip_stays')+st('readmit')+st('er')+
+      st('hh_pct')+st('hospc_pct')+st('nh_per1k')+'</div>';
 }
 
+/* ---------- table ---------- */
+function filtered(){
+  const q=$('q').value.trim().toLowerCase(), mn=+$('minage').value;
+  return D.filter(r=>r.a75>=mn&&(!q||r.county.toLowerCase().includes(q)));
+}
 function drawTable(){
   const C=M.filter(m=>active.has(m.g));
   $('hrow').innerHTML='<th class="cty">County</th>'+C.map(function(m,i){
     const first=i===0||C[i-1].g!==m.g;
-    return '<th class="num'+(first?' grp':'')+'" data-k="'+m.k+'" title="'+m.d+'">'+m.sh+
-      (sortK===m.k?'<span class="dir"> '+(sortD<0?'▾':'▴')+'</span>':'')+'</th>'}).join('');
-  const rows=filtered().slice().sort((a,b)=>{
+    return '<th class="num'+(first?' grp':'')+'" data-k="'+m.k+'" title="'+m.g+' — '+m.d+'">'+
+      m.sh+(sortK===m.k?'<span class="dir"> '+(sortD<0?'▾':'▴')+'</span>':'')+'</th>'}).join('');
+  const rows=filtered().slice().sort(function(a,b){
     const av=a[sortK],bv=b[sortK];
-    return ((av==null?-1:av)-(bv==null?-1:bv))*sortD||a.county.localeCompare(b.county)});
+    return ((av==null?-Infinity:av)-(bv==null?-Infinity:bv))*sortD||a.county.localeCompare(b.county)});
   $('hbody').innerHTML=rows.map(function(r){
     return '<tr data-f="'+r.fips+'"'+(r.fips===sel?' class="sel"':'')+'>'+
       '<td class="cty">'+r.county+'<span class="fips">'+r.fips+'</span></td>'+
       C.map(function(m,i){
         const first=i===0||C[i-1].g!==m.g;
-        return '<td class="num'+(first?' grp':'')+'" style="background:'+cellColor(m,r[m.k],sortedVals[m.k])+
+        return '<td class="num'+(first?' grp':'')+'" style="background:'+cellColor(m,r[m.k])+
           '" data-k="'+m.k+'" data-f="'+r.fips+'">'+m.f(r[m.k])+'</td>'}).join('')+'</tr>'}).join('');
+  $('tabnote').textContent=rows.length+' counties × '+C.length+
+    ' measures shown. Toggle categories above to add or remove columns.';
 }
-$('hrow').addEventListener('click',e=>{
+$('hrow').addEventListener('click',function(e){
   const th=e.target.closest('th[data-k]'); if(!th)return;
   const k=th.dataset.k;
   if(sortK===k)sortD*=-1; else{sortK=k;sortD=-1}
   drawTable();
 });
-$('hbody').addEventListener('click',e=>{
+$('hbody').addEventListener('click',function(e){
   const tr=e.target.closest('tr[data-f]'); if(!tr)return;
   sel=tr.dataset.f; render();
 });
-$('hbody').addEventListener('pointerover',e=>{
+$('hbody').addEventListener('pointerover',function(e){
   const td=e.target.closest('td[data-k]'); if(!td)return;
   const m=MK[td.dataset.k], r=byFips[td.dataset.f];
   showTip(e,'<span class="t">'+r.county+' &middot; '+m.l+'</span><b>'+m.f(r[m.k])+
@@ -485,24 +749,25 @@ $('hbody').addEventListener('pointerover',e=>{
 $('hbody').addEventListener('pointermove',moveTip);
 $('hbody').addEventListener('pointerout',hideTip);
 
+/* ---------- scatter ---------- */
 function drawScatter(){
   const W=980,H=480,P={t:30,r:34,b:62,l:80};
   const xM=Math.max.apply(null,D.map(r=>r.sl_per1k))*1.08;
-  const ysAll=D.map(r=>r.snf_days);
-  const yMin=Math.min.apply(null,ysAll)*0.93, yM=Math.max.apply(null,ysAll)*1.05;
+  const ys=D.map(r=>r.snf_days);
+  const yMin=Math.min.apply(null,ys)*0.93, yM=Math.max.apply(null,ys)*1.05;
   const X=v=>P.l+v/xM*(W-P.l-P.r);
   const Y=v=>H-P.b-(v-yMin)/(yM-yMin)*(H-P.t-P.b);
   const maxE=Math.max.apply(null,D.map(r=>r.enroll));
   const rad=v=>4.5+Math.sqrt(v/maxE)*17;
-  const s=$('scatter');
-  s.setAttribute('viewBox','0 0 '+W+' '+H);
-  const xt=[]; for(let v=0;v<=xM;v+=10)xt.push(v);
+  const s=$('scatter'); s.setAttribute('viewBox','0 0 '+W+' '+H);
   const step=Math.max(100,Math.ceil((yM-yMin)/5/100)*100);
-  const yt=[]; for(let v=Math.ceil(yMin/step)*step;v<=yM;v+=step)yt.push(v);
   let g='';
-  yt.forEach(v=>{g+='<line class="gridline" x1="'+P.l+'" y1="'+Y(v).toFixed(1)+'" x2="'+(W-P.r)+'" y2="'+Y(v).toFixed(1)+'"/>'+
-    '<text class="tick" x="'+(P.l-10)+'" y="'+(Y(v)+4).toFixed(1)+'" text-anchor="end">'+fmtN(v)+'</text>'});
-  xt.forEach(v=>{g+='<text class="tick" x="'+X(v).toFixed(1)+'" y="'+(H-P.b+20)+'" text-anchor="middle">'+v+'</text>'});
+  for(let v=Math.ceil(yMin/step)*step;v<=yM;v+=step){
+    g+='<line class="gridline" x1="'+P.l+'" y1="'+Y(v).toFixed(1)+'" x2="'+(W-P.r)+'" y2="'+Y(v).toFixed(1)+'"/>'+
+       '<text class="tick" x="'+(P.l-10)+'" y="'+(Y(v)+4).toFixed(1)+'" text-anchor="end">'+F.n(v)+'</text>';
+  }
+  for(let v=0;v<=xM;v+=10)
+    g+='<text class="tick" x="'+X(v).toFixed(1)+'" y="'+(H-P.b+20)+'" text-anchor="middle">'+v+'</text>';
   g+='<line class="avgline" x1="'+X(ST.sl_per1k).toFixed(1)+'" y1="'+P.t+'" x2="'+X(ST.sl_per1k).toFixed(1)+'" y2="'+(H-P.b)+'"/>'+
      '<line class="avgline" x1="'+P.l+'" y1="'+Y(ST.snf_days).toFixed(1)+'" x2="'+(W-P.r)+'" y2="'+Y(ST.snf_days).toFixed(1)+'"/>'+
      '<text class="quad" x="'+(P.l+8)+'" y="'+(P.t-10)+'">Few beds, heavy SNF use</text>'+
@@ -510,24 +775,28 @@ function drawScatter(){
      '<text class="axlab" x="'+(P.l+(W-P.l-P.r)/2)+'" y="'+(H-14)+'" text-anchor="middle">Assisted living + memory care beds per 1,000 aged 75+</text>'+
      '<text class="axlab" transform="translate(22,'+(P.t+(H-P.t-P.b)/2)+') rotate(-90)" text-anchor="middle">SNF days per 1,000 beneficiaries</text>';
   const named={'01073':1,'01097':1,'01089':1,'01003':1,'01117':1,'01081':1,'01023':1,'01047':1};
-  D.slice().sort((a,b)=>b.enroll-a.enroll).forEach(r=>{
+  D.slice().sort((a,b)=>b.enroll-a.enroll).forEach(function(r){
     const x=X(r.sl_per1k),y=Y(r.snf_days),rr=rad(r.enroll);
-    g+='<circle class="dot'+(r.sl_bed===0?' hi':'')+'" cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="'+rr.toFixed(1)+'" data-f="'+r.fips+'"/>';
-    if(named[r.fips])g+='<text class="dotlab" x="'+(x+rr+6).toFixed(1)+'" y="'+(y+4).toFixed(1)+'">'+r.county+'</text>';
+    g+='<circle class="dot'+(r.sl_bed===0?' hi':'')+'" cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+
+       '" r="'+rr.toFixed(1)+'" data-f="'+r.fips+'"/>';
+    if(named[r.fips])
+      g+='<text class="dotlab" x="'+(x+rr+6).toFixed(1)+'" y="'+(y+4).toFixed(1)+'">'+r.county+'</text>';
   });
   s.innerHTML=g;
-  Array.prototype.forEach.call(s.querySelectorAll('circle'),c=>{
+  Array.prototype.forEach.call(s.querySelectorAll('circle'),function(c){
     const r=byFips[c.dataset.f];
-    c.addEventListener('pointerenter',e=>showTip(e,'<span class="t">'+r.county+' County</span>'+
-      'AL+MC beds per 1k 75+: <b>'+fmt1(r.sl_per1k)+'</b><br>SNF days per 1k: <b>'+fmt1(r.snf_days)+'</b><br>'+
-      'Enrollees: '+fmtN(r.enroll)+'<br>'+(r.sl_bed?r.alf_bed+' AL + '+r.mc_bed+' MC beds':'<b>No licensed AL or memory care</b>')));
+    c.addEventListener('pointerenter',function(e){showTip(e,'<span class="t">'+r.county+' County</span>'+
+      'AL+MC beds per 1k 75+: <b>'+F.n1(r.sl_per1k)+'</b><br>SNF days per 1k: <b>'+F.n1(r.snf_days)+
+      '</b><br>Enrollees: '+F.n(r.enroll)+'<br>'+
+      (r.sl_bed?r.alf_bed+' AL + '+r.mc_bed+' MC beds':'<b>No licensed AL or memory care</b>'))});
     c.addEventListener('pointermove',moveTip);
     c.addEventListener('pointerleave',hideTip);
-    c.addEventListener('click',()=>{sel=r.fips;render();
-      document.querySelector('.mapgrid').scrollIntoView({behavior:'smooth',block:'center'})});
+    c.addEventListener('click',function(){sel=r.fips;render();
+      document.querySelector('.explorer').scrollIntoView({behavior:'smooth',block:'center'})});
   });
 }
 
+/* ---------- tooltip ---------- */
 const tip=$('tip');
 function showTip(e,html){tip.innerHTML=html;tip.style.opacity='1';moveTip(e)}
 function moveTip(e){
@@ -539,18 +808,20 @@ function moveTip(e){
 }
 function hideTip(){tip.style.opacity='0'}
 
-function render(){drawMap();drawDetail();drawTable()}
-msel.addEventListener('change',drawMap);
-$('scale').addEventListener('change',()=>{drawMap();drawTable()});
-$('q').addEventListener('input',()=>{drawMap();drawTable()});
-$('minage').addEventListener('input',()=>{
-  const v=+$('minage').value;
-  $('minageV').textContent=v?fmtN(v):'all';
-  drawMap();drawTable();
+/* ---------- wire ---------- */
+function render(){drawMap();drawRail();drawDetail();drawTable()}
+$('measure').addEventListener('change',function(){metric=this.value;drawMap();drawRail()});
+$('mq').addEventListener('input',fillMeasures);
+$('scale').addEventListener('change',function(){drawMap();drawRail();drawTable()});
+$('q').addEventListener('input',drawTable);
+$('minage').addEventListener('input',function(){
+  const v=+this.value;
+  $('minageV').textContent=v?F.n(v):'all';
+  drawTable();
 });
 $('minageV').textContent='all';
-matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{render();drawScatter()});
-new MutationObserver(()=>{render();drawScatter()}).observe(
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',function(){render();drawScatter()});
+new MutationObserver(function(){render();drawScatter()}).observe(
   document.documentElement,{attributes:true,attributeFilter:['data-theme']});
-render();drawScatter();
+fillMeasures(); drawDetail(); drawTable(); drawScatter();
 </script>

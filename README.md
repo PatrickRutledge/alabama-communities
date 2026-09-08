@@ -48,11 +48,30 @@ and B* — not per enrollee. The two denominators differ by more than 3x in some
 | Assisted living | 185 facilities, 7,320 licensed beds |
 | Memory care (SCALF) | 107 facilities, 3,499 licensed beds |
 | Nursing homes | 224 facilities, 26,504 certified beds, 21,964 residents (83% full) |
-| People aged 75+ per licensed AL/memory-care bed | 39 |
+| People aged 75+ per licensed AL/memory-care bed | 39 (statewide rate 25.7 beds per 1,000) |
 | Counties with **no** licensed assisted living or memory care | **18** |
+| Counties below the statewide bed rate | **49 of 67**, 1,947 beds short in total |
 
 Where the fee-for-service dollar goes: acute hospital 50.2%, home and community 35.3%,
 institutional post-acute 7.6%, hospice 5.6%.
+
+## The heat map
+
+Every one of the **85 measures** in the dataset can shade the county map — filter the list
+by category (demand, opportunity, cost, hospital, post-acute, home and community, supply)
+or search it by name. Alongside the map: the measure's Alabama average, median, and range;
+a distribution strip showing where each county falls; and all 67 counties ranked. The same
+85 measures are available as a sortable table, and clicking any county opens its full profile.
+
+**Bed gap** is the market measure worth starting with. It is the number of assisted living
+and memory care beds a county would need to reach Alabama's own statewide rate of 25.7 per
+1,000 residents aged 75+. It is benchmarked against the state's own average rather than an
+outside industry target, so it needs no assumption beyond this data. The largest gaps are
+Elmore (135 beds), Russell (101), Dale (89), Mobile (82) and Chilton (74).
+
+**Growth measures** compare 2025 with 2020. Statewide the 75+ cohort grew 19.5% while total
+enrollment grew 6.7% — the demand curve is steepening. Lee (+36%), Baldwin (+34%) and
+Shelby (+33%) are growing that cohort fastest among counties with a meaningful base.
 
 ## Sources
 

@@ -22,12 +22,10 @@ DESCRIPTION = ("Medicare demand, cost and licensed senior-housing supply for all
                "counties: an interactive map, a filterable heatmap, and the assisted living "
                "and memory care supply gap.")
 
-# Fields the page actually reads. Everything else stays in data/alabama_master.csv
-# rather than riding along in the payload.
-FIELDS = ["county", "fips", "enroll", "ma", "dual", "a75", "a85", "ffs_benes", "avg_age",
-          "pc", "tot_amt", "ip_stays", "readmit", "er", "snf_pct", "snf_days", "hh_pct",
-          "hospc_pct", "alf_fac", "alf_bed", "mc_fac", "mc_bed", "nh_fac", "nh_bed",
-          "nh_res", "home_pc", "inst_pc", "acute_pc", "eol_pc"]
+# The page exposes every measure in the merge, so the whole row ships. At 67 counties
+# and ~90 short numeric fields this costs well under 100 KB and removes a whole class
+# of bug where the measure catalogue references a field the payload dropped.
+FIELDS = None  # None = ship every field
 
 FAVICON = ("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'"
            "%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8F%A1%3C/text%3E%3C/svg%3E")
@@ -82,7 +80,7 @@ def main():
         if token not in tpl:
             raise SystemExit(f"template is missing the {token} placeholder")
 
-    slim = [{k: r[k] for k in FIELDS} for r in rows]
+    slim = rows if FIELDS is None else [{k: r[k] for k in FIELDS} for r in rows]
     tpl = tpl.replace("/*__DATA__*/ null", json.dumps(slim, separators=(",", ":")))
     tpl = tpl.replace("/*__GEO__*/ null", json.dumps(geo, separators=(",", ":")))
 
