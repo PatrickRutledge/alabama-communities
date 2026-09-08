@@ -1,10 +1,12 @@
 # Alabama Senior Care Atlas
 
 Medicare demand, cost and licensed senior-housing supply for all 67 Alabama counties,
-built as a single self-contained page: an interactive county map, a filterable heatmap,
-a per-county profile, and a supply-versus-institutional-intensity scatter.
+built as two self-contained pages.
 
-**Live site:** https://patrickrutledge.github.io/alabama-communities/
+| Page | What it is |
+| --- | --- |
+| **[County atlas](https://patrickrutledge.github.io/alabama-communities/)** | 85 measures on an interactive county heat map, a filterable table, per-county profiles, and a supply-versus-institutional-intensity scatter |
+| **[Bed map](https://patrickrutledge.github.io/alabama-communities/facilities.html)** | All 292 licensed communities as points on a zoomable map, sized by beds — zoom a hotspot to read names, bed counts, licence class and administrators |
 
 Built for senior-living market analysis — independent living, assisted living and
 memory care — from public CMS and Alabama Department of Public Health data.
@@ -55,6 +57,32 @@ and B* — not per enrollee. The two denominators differ by more than 3x in some
 Where the fee-for-service dollar goes: acute hospital 50.2%, home and community 35.3%,
 institutional post-acute 7.6%, hospice 5.6%.
 
+## The bed map
+
+Every licensed assisted living and memory care community in Alabama on one zoomable map.
+Counties shade by total beds (or AL beds, memory care beds, community count, beds per 1,000
+aged 75+, or bed gap); each community is a dot sized by licensed beds and coloured by licence
+type. Scroll to zoom, drag to pan, click a county to fly to it. Community names appear once
+you pass 2.4× zoom, placed with collision detection so they stay readable. Click any dot for
+the full record — licence class, administrator, phone, address, licensee type and facility ID.
+
+Filter by type, minimum bed count, county, or free text across name, city, county and
+administrator. The ranked list beside the map follows the same filters and zooms to whatever
+you click.
+
+**Geocoding honesty:** 262 of 292 communities resolve to a street address through the US
+Census geocoder. The other 30 sit on streets the Census address file does not yet carry;
+those fall back to their own city's centroid (24) or their county's (6) and are drawn as
+hollow rings rather than solid dots, with an "approx. location" badge on the record. Bed
+counts, names, licence classes and administrators are exact in every case — only the pin
+moves.
+
+Note that many campuses hold both an ALF and a SCALF licence at one address, so they appear
+as two dots at the same point. That is correct: two licences, two bed counts.
+
+Biggest county capacity: Madison 1,528 beds, Jefferson 1,466, Baldwin 911, Mobile 756,
+Shelby 681, Tuscaloosa 665. Eighteen counties have none at all.
+
 ## The heat map
 
 Every one of the **85 measures** in the dataset can shade the county map — filter the list
@@ -82,6 +110,7 @@ Shelby (+33%) are growing that cohort fastest among counties with a meaningful b
 | [CMS Care Compare Provider Information](https://data.cms.gov/provider-data/dataset/4pq5-n9py) (`4pq5-n9py`) | current | nursing home certified beds and average daily residents |
 | [Alabama ADPH Facilities Directory](https://dph1.adph.state.al.us/FacilitiesDirectory/) | Sep 2026 | licensed ALF and SCALF facilities and beds |
 | [Plotly US county GeoJSON](https://github.com/plotly/datasets) | — | county boundaries for the map |
+| [US Census Geocoder](https://geocoding.geo.census.gov/) | Public_AR_Current | facility coordinates for the bed map |
 
 **On SCALF:** Specialty Care Assisted Living Facility is Alabama's license class for
 dementia and Alzheimer's care, counted here as memory care. Many SCALFs share an address
@@ -93,14 +122,18 @@ All sources are public and require no API key.
 
 ```bash
 pip install pandas xlrd
-python scripts/fetch_data.py     # pull all five sources into data/raw/
-python scripts/build_master.py   # merge to data/alabama_master.{json,csv} + al_geo.json
-python scripts/build_site.py     # inline the data into index.html
-python scripts/build_site.py --artifact   # same page without the document shell
+python scripts/fetch_data.py          # pull all five sources into data/raw/
+python scripts/build_master.py        # merge to data/alabama_master.{json,csv} + al_geo.json
+python scripts/geocode_facilities.py  # geocode communities to data/al_facilities.json
+python scripts/build_site.py          # inline data into index.html + facilities.html
+python scripts/build_site.py --artifact   # same pages without the document shell
 ```
 
-The `--artifact` form writes `dist/atlas.artifact.html` for hosts that supply their own
-`<head>` and theme stamp (a Claude Artifact, for instance). Same page, same data.
+`geocode_facilities.py` reads the scraped Excel exports by default; pass `--csv PATH` to use
+a hand-supplied ADPH CSV export instead. Both produce identical output.
+
+The `--artifact` form writes `dist/*.artifact.html` for hosts that supply their own `<head>`
+and theme stamp (a Claude Artifact, for instance). Same pages, same data.
 
 `data/raw/` is gitignored; the derived outputs are committed so the site builds without
 a network round trip. To move to a newer CMS vintage, bump `GEOVAR_YEAR` in
@@ -109,14 +142,18 @@ a network round trip. To move to a newer CMS vintage, bump `GEOVAR_YEAR` in
 ## Layout
 
 ```
-index.html                  built site — single file, no runtime fetches
-src/atlas.template.html     page source with /*__DATA__*/ placeholders
-scripts/fetch_data.py       downloads the five upstream sources
-scripts/build_master.py     joins them into one row per county
-scripts/build_site.py       inlines data, adds document shell and theme toggle
-data/alabama_master.csv     67 counties x 93 fields, for spreadsheets
-data/alabama_master.json    same, as the site consumes it
-data/al_geo.json            county boundaries projected to SVG paths
+index.html                     county atlas — single file, no runtime fetches
+facilities.html                bed map — single file, no runtime fetches
+src/atlas.template.html        atlas source with /*__DATA__*/ placeholders
+src/facilities.template.html   bed map source
+scripts/fetch_data.py          downloads the five upstream sources
+scripts/build_master.py        joins them into one row per county
+scripts/geocode_facilities.py  geocodes communities via the US Census geocoder
+scripts/build_site.py          inlines data, adds document shell, nav and theme toggle
+data/alabama_master.csv        67 counties x 93 fields, for spreadsheets
+data/alabama_master.json       same, as the atlas consumes it
+data/al_facilities.json        292 communities with coordinates and precision flags
+data/al_geo.json               county boundaries as SVG paths, plus projection bounds
 ```
 
 ### A note on the two joins
@@ -125,6 +162,11 @@ Counties are joined on 5-digit FIPS where available. The three sources spell cou
 three different ways — `DeKalb`, `Dekalb`, `De Kalb` — so supply data joins on a
 letters-only key instead. `build_master.py` fails loudly if any facility county does
 not join, rather than silently dropping beds.
+
+The county map and the bed map share one projection. `build_master.py` writes the
+projection bounds into `data/al_geo.json` alongside the county paths, and the bed map
+projects each facility's lon/lat with the identical formula, so dots land inside the right
+county rather than drifting.
 
 The ADPH directory is an ASP.NET WebForms app using *cookieless* sessions: the session
 id lives in the URL path as `(S(...))`, and the facility-type selection is held in

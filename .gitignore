@@ -6,6 +6,7 @@ Market-sep26.xls
 Alabama Patient Density Heat Map*/
 alabama_medicare_by_county.csv
 alabama_medicare_senior_living_by_county.csv
+bhm-metro-beds.*
 
 __pycache__/
 *.pyc

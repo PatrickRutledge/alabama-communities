@@ -1,0 +1,580 @@
+<title>Alabama Senior Living Bed Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  color-scheme: light;
+  --paper:#f2f3ef; --surface:#fbfbf9; --surface-2:#eceee7;
+  --ink:#12171c; --ink-2:#4a5560; --ink-3:#78838d;
+  --rule:#d6d9d0; --rule-2:#c2c6ba;
+  --accent:#1c5cab; --accent-soft:#2a78d6; --clay:#c1502a; --clay-soft:#eb6834;
+  --nodata:#e2e4dd;
+  --seq1:#cde2fb;--seq2:#9ec5f4;--seq3:#6da7ec;--seq4:#3987e5;--seq5:#256abf;--seq6:#184f95;--seq7:#0d366b;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --paper:#14171a; --surface:#1b1f23; --surface-2:#22272c;
+    --ink:#e9ece6; --ink-2:#a4afb8; --ink-3:#7b868f;
+    --rule:#2c3237; --rule-2:#3b434a;
+    --accent:#3987e5; --accent-soft:#5598e7; --clay:#d95926; --clay-soft:#eb6834;
+    --nodata:#22272c;
+    --seq1:#16304f;--seq2:#1c4573;--seq3:#235a97;--seq4:#2a78d6;--seq5:#5598e7;--seq6:#86b6ef;--seq7:#b7d3f6;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --paper:#14171a; --surface:#1b1f23; --surface-2:#22272c;
+  --ink:#e9ece6; --ink-2:#a4afb8; --ink-3:#7b868f;
+  --rule:#2c3237; --rule-2:#3b434a;
+  --accent:#3987e5; --accent-soft:#5598e7; --clay:#d95926; --clay-soft:#eb6834;
+  --nodata:#22272c;
+  --seq1:#16304f;--seq2:#1c4573;--seq3:#235a97;--seq4:#2a78d6;--seq5:#5598e7;--seq6:#86b6ef;--seq7:#b7d3f6;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);
+  font-family:"Source Serif 4",Georgia,"Times New Roman",serif;
+  font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1340px;margin:0 auto;padding:0 24px 72px}
+h1,h2,h3,.ui{font-family:"Libre Franklin","Helvetica Neue",Arial,sans-serif}
+.mono,.kpi-v,.tag{font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;font-variant-numeric:tabular-nums}
+
+header.mast{border-bottom:3px solid var(--ink);margin-top:28px;padding-bottom:14px}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-2);display:flex;flex-wrap:wrap;gap:8px 18px;align-items:baseline}
+.eyebrow b{color:var(--accent);font-weight:600}
+h1{font-size:clamp(28px,5vw,50px);font-weight:800;letter-spacing:-.022em;line-height:1.02;
+  margin:10px 0 8px;text-wrap:balance}
+.dek{font-size:17px;color:var(--ink-2);max-width:66ch;margin:0}
+.nav{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap}
+.nav a{font-family:"Libre Franklin",sans-serif;font-size:11.5px;font-weight:600;letter-spacing:.06em;
+  text-transform:uppercase;text-decoration:none;color:var(--ink-2);border:1px solid var(--rule-2);
+  padding:6px 12px;border-radius:2px;background:var(--surface)}
+.nav a:hover{color:var(--accent);border-color:var(--accent)}
+.nav a[aria-current=page]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));
+  border-bottom:1px solid var(--rule);margin:0 0 28px}
+.kpi{padding:18px 18px 16px 0;border-right:1px solid var(--rule)}
+.kpi:last-child{border-right:0}
+.kpi-l{font-family:"Libre Franklin",sans-serif;font-size:10.5px;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3);margin-bottom:6px}
+.kpi-v{font-size:25px;font-weight:600;letter-spacing:-.02em;line-height:1}
+.kpi-s{font-size:12.5px;color:var(--ink-2);margin-top:5px;font-family:"Libre Franklin",sans-serif}
+
+h2{font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);
+  margin:0 0 4px;display:flex;align-items:center;gap:10px}
+h2::after{content:"";flex:1;height:2px;background:var(--ink);opacity:.16}
+.sub{font-size:14.5px;color:var(--ink-2);margin:0 0 18px;max-width:76ch}
+section{margin:0 0 44px}
+
+.controls{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:flex-end;margin:0 0 16px;
+  padding-bottom:16px;border-bottom:1px solid var(--rule)}
+.ctl{display:flex;flex-direction:column;gap:5px}
+.ctl label{font-family:"Libre Franklin",sans-serif;font-size:10px;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3)}
+select,input[type=search]{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--ink);
+  background:var(--surface);border:1px solid var(--rule-2);padding:7px 10px;border-radius:2px;min-width:158px}
+input[type=range]{accent-color:var(--accent);width:150px}
+select:focus-visible,input:focus-visible,button:focus-visible,circle:focus-visible,
+.frow:focus-visible,path:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.chips{display:flex;gap:6px}
+.chip{font-family:"Libre Franklin",sans-serif;font-size:11.5px;font-weight:600;
+  padding:6px 11px;border:1px solid var(--rule-2);background:var(--surface);color:var(--ink-2);
+  border-radius:2px;cursor:pointer}
+.chip[aria-pressed=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+
+/* map */
+.maplayout{display:grid;grid-template-columns:1.5fr minmax(310px,.95fr);gap:26px;align-items:start}
+@media(max-width:960px){.maplayout{grid-template-columns:1fr}}
+.mapshell{background:var(--surface);border:1px solid var(--rule);position:relative;overflow:hidden}
+#map{display:block;width:100%;height:min(80vh,880px);touch-action:none;cursor:grab}
+#map.drag{cursor:grabbing}
+#map .cty{stroke:var(--surface);cursor:pointer}
+#map .cty:hover{stroke:var(--ink)}
+#map .cty.sel{stroke:var(--ink)}
+#map .dot{cursor:pointer;stroke:var(--surface)}
+#map .dot.mc{fill:var(--clay-soft)}
+#map .dot.al{fill:var(--accent-soft)}
+#map .dot.on{stroke:var(--ink)}
+#map .lbl{font-family:"Libre Franklin",sans-serif;font-weight:600;fill:var(--ink);
+  paint-order:stroke;stroke:var(--surface);stroke-linejoin:round;pointer-events:none}
+.zoombar{position:absolute;top:12px;right:12px;display:flex;flex-direction:column;gap:5px;z-index:5}
+.zoombar button{width:34px;height:34px;font-family:"Libre Franklin",sans-serif;font-size:17px;
+  font-weight:600;line-height:1;background:var(--surface);color:var(--ink-2);
+  border:1px solid var(--rule-2);border-radius:2px;cursor:pointer}
+.zoombar button:hover{color:var(--accent);border-color:var(--accent)}
+.zoombar button.reset{font-size:10px;letter-spacing:.05em}
+.maphint{position:absolute;left:12px;bottom:12px;z-index:5;background:var(--surface);
+  border:1px solid var(--rule);padding:6px 10px;font-family:"Libre Franklin",sans-serif;
+  font-size:11px;color:var(--ink-3);border-radius:2px}
+.maplegend{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center;margin-top:12px;
+  font-family:"Libre Franklin",sans-serif;font-size:11.5px;color:var(--ink-2)}
+.maplegend .k{display:flex;align-items:center;gap:7px}
+.maplegend .sw{width:12px;height:12px;border-radius:50%;display:inline-block}
+.maplegend .sizes{display:flex;align-items:flex-end;gap:7px}
+.maplegend .sizes i{border-radius:50%;background:var(--ink-3);opacity:.45;display:inline-block}
+.ramp{display:flex;height:10px;width:150px}
+.ramp i{flex:1}
+.rampwrap{display:flex;align-items:center;gap:8px;font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--ink-3)}
+
+/* side rail */
+.card{background:var(--surface);border:1px solid var(--rule);padding:18px 20px;margin-bottom:16px}
+.card h3{font-size:11px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;
+  margin:0 0 12px;color:var(--ink);padding-bottom:9px;border-bottom:2px solid var(--ink)}
+.fdetail .nm{font-family:"Libre Franklin",sans-serif;font-size:20px;font-weight:800;
+  letter-spacing:-.015em;line-height:1.15;margin-bottom:6px}
+.badges{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.badge{font-family:"Libre Franklin",sans-serif;font-size:10px;font-weight:700;letter-spacing:.07em;
+  text-transform:uppercase;padding:4px 8px;border-radius:2px;color:var(--paper)}
+.badge.al{background:var(--accent)}
+.badge.mc{background:var(--clay)}
+.badge.ghost{background:transparent;color:var(--ink-3);border:1px solid var(--rule-2)}
+.frow-dl{display:grid;grid-template-columns:auto 1fr;gap:7px 14px;margin:0;
+  font-size:13px;align-items:baseline}
+.frow-dl dt{font-family:"Libre Franklin",sans-serif;font-size:9.5px;font-weight:600;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);white-space:nowrap}
+.frow-dl dd{margin:0;font-family:"IBM Plex Mono",monospace;font-size:12.5px;word-break:break-word}
+.bignum{font-family:"IBM Plex Mono",monospace;font-size:34px;font-weight:600;line-height:1;
+  letter-spacing:-.02em;margin-bottom:2px}
+.bignum small{font-family:"Libre Franklin",sans-serif;font-size:11px;font-weight:600;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-left:7px}
+
+.flist{max-height:440px;overflow-y:auto;border-top:1px solid var(--rule)}
+.frow{display:grid;grid-template-columns:9px 1fr 62px;gap:9px;align-items:center;
+  padding:7px 3px;border-bottom:1px solid var(--rule);cursor:pointer}
+.frow:hover{background:var(--surface-2)}
+.frow.on{background:var(--ink)}
+.frow.on .n,.frow.on .c,.frow.on .b{color:var(--paper)}
+.frow .d{width:9px;height:9px;border-radius:50%}
+.frow .n{font-family:"Libre Franklin",sans-serif;font-size:12.5px;font-weight:600;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.frow .c{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--ink-3)}
+.frow .b{font-family:"IBM Plex Mono",monospace;font-size:12.5px;text-align:right;font-variant-numeric:tabular-nums}
+.listcount{font-family:"Libre Franklin",sans-serif;font-size:11.5px;color:var(--ink-3);margin-top:9px}
+
+.note{background:var(--surface);border:1px solid var(--rule);border-left:4px solid var(--clay);
+  padding:16px 20px;margin:0 0 40px;font-size:14px;color:var(--ink-2)}
+.note b{color:var(--ink);font-weight:600}
+
+#tip{position:fixed;z-index:60;pointer-events:none;background:var(--ink);color:var(--paper);
+  padding:9px 12px;font-family:"IBM Plex Mono",monospace;font-size:11.5px;line-height:1.5;
+  border-radius:2px;max-width:300px;opacity:0;box-shadow:0 4px 14px rgba(0,0,0,.22)}
+#tip .t{font-family:"Libre Franklin",sans-serif;font-weight:700;font-size:12.5px;
+  display:block;margin-bottom:4px}
+
+footer{border-top:2px solid var(--ink);padding-top:18px;font-size:12.5px;color:var(--ink-2)}
+footer h3{font-family:"Libre Franklin",sans-serif;font-size:10px;font-weight:800;letter-spacing:.14em;
+  text-transform:uppercase;margin:0 0 10px;color:var(--ink)}
+footer dl{display:grid;grid-template-columns:auto 1fr;gap:5px 16px;margin:0;
+  font-family:"IBM Plex Mono",monospace;font-size:11.5px}
+footer dt{color:var(--ink-3)}
+footer dd{margin:0}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+<header class="mast">
+  <div class="eyebrow"><b>Alabama</b><span>292 licensed communities</span><span>10,819 beds</span><span>ADPH Sep 2026</span></div>
+  <h1>Alabama Senior Living Bed Map</h1>
+  <p class="dek">Every licensed assisted living and memory care community in Alabama, placed on the map and sized by licensed beds. Counties are shaded by total capacity. Zoom into a hotspot to read community names, bed counts, licence class and administrator.</p>
+  <!--NAV-->
+</header>
+
+<div class="kpis" id="kpis"></div>
+
+<section>
+  <h2>The map</h2>
+  <p class="sub">Scroll or pinch to zoom, drag to pan, click a county to zoom to it. Community names appear as you zoom in. Click any dot for the full record.</p>
+  <div class="controls">
+    <div class="ctl"><label>Community type</label><div class="chips" id="typeChips">
+      <button class="chip" data-t="AL" aria-pressed="true">Assisted living</button>
+      <button class="chip" data-t="MC" aria-pressed="true">Memory care</button>
+    </div></div>
+    <div class="ctl"><label for="shade">Shade counties by</label><select id="shade">
+      <option value="beds">Total licensed beds</option>
+      <option value="albeds">Assisted living beds</option>
+      <option value="mcbeds">Memory care beds</option>
+      <option value="fac">Number of communities</option>
+      <option value="per1k">Beds per 1,000 aged 75+</option>
+      <option value="gap">Bed gap to state rate</option>
+      <option value="none">Nothing &mdash; dots only</option>
+    </select></div>
+    <div class="ctl"><label for="county">County</label><select id="county"></select></div>
+    <div class="ctl"><label for="minbeds">Min. beds <span id="minbedsV" class="mono"></span></label><input type="range" id="minbeds" min="0" max="120" step="5" value="0"></div>
+    <div class="ctl"><label for="q">Search name, city or administrator</label><input type="search" id="q" placeholder="Brookdale, Hoover, Smith&hellip;" autocomplete="off"></div>
+  </div>
+  <div class="maplayout">
+    <div>
+      <div class="mapshell">
+        <svg id="map" role="img" aria-label="Map of licensed assisted living and memory care communities in Alabama"></svg>
+        <div class="zoombar">
+          <button type="button" id="zin" aria-label="Zoom in">+</button>
+          <button type="button" id="zout" aria-label="Zoom out">&minus;</button>
+          <button type="button" id="zreset" class="reset" aria-label="Reset the view">Fit</button>
+        </div>
+        <div class="maphint" id="maphint"></div>
+      </div>
+      <div class="maplegend">
+        <span class="k"><i class="sw" style="background:var(--accent-soft)"></i> Assisted living</span>
+        <span class="k"><i class="sw" style="background:var(--clay-soft)"></i> Memory care</span>
+        <span class="k sizes" id="sizeKey"></span>
+        <span class="rampwrap" id="rampKey"></span>
+      </div>
+    </div>
+    <div>
+      <div class="card fdetail" id="detail"></div>
+      <div class="card">
+        <h3 id="listHead">Communities</h3>
+        <div class="flist" id="list"></div>
+        <div class="listcount" id="listCount"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="note">
+  <b>On the dots.</b> 262 of the 292 communities geocode to a street address. The remaining 30 sit on newer streets the Census address file does not yet carry; those are placed at the centre of their own city (24) or county (6) and are drawn with a hollow ring rather than a solid fill. Bed counts, names, licence class and administrators are exact in every case &mdash; only the pin position is approximate.
+  <b>On the licence classes.</b> Alabama licenses memory care separately as a Specialty Care Assisted Living Facility, and many campuses hold both an ALF and a SCALF licence at one address. Those appear here as two dots at the same point, because they are two licences with two bed counts.
+</div>
+
+<footer>
+  <h3>Sources &amp; vintage</h3>
+  <dl>
+    <dt>Communities</dt><dd>Alabama Department of Public Health Facilities Directory &mdash; 185 licensed Assisted Living Facilities and 107 Specialty Care Assisted Living Facilities, retrieved September 2026</dd>
+    <dt>Coordinates</dt><dd>US Census Bureau geocoder, Public_AR_Current benchmark</dd>
+    <dt>County context</dt><dd>Enrollees aged 75+ from CMS Medicare Monthly Enrollment, annual 2025. Bed gap is the beds needed to reach Alabama's statewide rate of 25.7 per 1,000 aged 75+.</dd>
+  </dl>
+</footer>
+</div>
+<div id="tip" role="status" aria-live="polite"></div>
+
+<script>
+const FAC = /*__FAC__*/ null;
+const GEO = /*__GEO__*/ null;
+const CNTY = /*__CNTY__*/ null;
+
+const $=id=>document.getElementById(id);
+const fmt=v=>v==null?'—':Math.round(v).toLocaleString();
+const fmt1=v=>v==null?'—':v.toFixed(1);
+
+/* project lon/lat with exactly the formula build_master.py used for the county paths */
+const PX=lon=>(lon-GEO.lon0)/(GEO.lon1-GEO.lon0)*GEO.w;
+const PY=lat=>GEO.h-(lat-GEO.lat0)/(GEO.lat1-GEO.lat0)*GEO.h;
+FAC.forEach(f=>{f.x=PX(f.lon); f.y=PY(f.lat)});
+
+const byFips={}; CNTY.forEach(c=>{byFips[c.fips]=c});
+CNTY.forEach(c=>{c.beds=0;c.albeds=0;c.mcbeds=0;c.fac=0});
+FAC.forEach(function(f){
+  const c=byFips[f.fips]; if(!c)return;
+  c.beds+=f.beds; c.fac++;
+  if(f.type==='MC')c.mcbeds+=f.beds; else c.albeds+=f.beds;
+});
+CNTY.forEach(function(c){
+  c.per1k=c.a75?c.beds/c.a75*1000:0;
+});
+
+const TOT=FAC.reduce((s,f)=>s+f.beds,0);
+const AL=FAC.filter(f=>f.type==='AL'), MC=FAC.filter(f=>f.type==='MC');
+const A75=CNTY.reduce((s,c)=>s+c.a75,0);
+const kpi=(l,v,s)=>'<div class="kpi"><div class="kpi-l">'+l+'</div><div class="kpi-v">'+v+
+  '</div><div class="kpi-s">'+s+'</div></div>';
+$('kpis').innerHTML=
+  kpi('Licensed beds',fmt(TOT),FAC.length+' communities statewide')+
+  kpi('Assisted living',fmt(AL.reduce((s,f)=>s+f.beds,0)),AL.length+' ALF licences')+
+  kpi('Memory care',fmt(MC.reduce((s,f)=>s+f.beds,0)),MC.length+' SCALF licences')+
+  kpi('Largest community',fmt(FAC[0].beds)+' beds',FAC[0].name)+
+  kpi('Counties with beds',CNTY.filter(c=>c.beds>0).length+' of 67',CNTY.filter(c=>c.beds===0).length+' have none')+
+  kpi('75+ per bed',(A75/TOT).toFixed(0),'Statewide rate '+(TOT/A75*1000).toFixed(1)+' per 1,000');
+
+/* ---------- colour ---------- */
+const cs=getComputedStyle(document.documentElement);
+const ramp=()=>[1,2,3,4,5,6,7].map(i=>cs.getPropertyValue('--seq'+i).trim());
+const SHADE={beds:'Total licensed beds',albeds:'Assisted living beds',mcbeds:'Memory care beds',
+  fac:'Communities',per1k:'Beds per 1,000 aged 75+',gap:'Bed gap to state rate'};
+function shadeVals(k){return CNTY.map(c=>c[k]).filter(v=>v!=null).sort((a,b)=>a-b)}
+function shadeColor(k,v){
+  if(k==='none')return 'var(--nodata)';
+  if(v==null)return 'var(--nodata)';
+  if(k!=='gap'&&v===0)return 'var(--nodata)';
+  const s=shadeVals(k);
+  let lo=0,hi=s.length;
+  while(lo<hi){const m=(lo+hi)>>1; if(s[m]<=v)lo=m+1; else hi=m}
+  return ramp()[Math.min(6,Math.floor(lo/s.length*7))];
+}
+
+/* ---------- state ---------- */
+let sel=FAC[0].id, k=1, tx=0, ty=0, VW=600, VH=957;
+const types=new Set(['AL','MC']);
+const svg=$('map');
+
+function shown(){
+  const q=$('q').value.trim().toLowerCase();
+  const mn=+$('minbeds').value, cf=$('county').value;
+  return FAC.filter(f=>types.has(f.type)&&f.beds>=mn&&(cf==='all'||f.fips===cf)&&
+    (!q||(f.name+' '+f.city+' '+f.admin+' '+f.county).toLowerCase().includes(q)));
+}
+
+/* ---------- county picker ---------- */
+$('county').innerHTML='<option value="all">All 67 counties</option>'+
+  CNTY.slice().sort((a,b)=>b.beds-a.beds).map(c=>'<option value="'+c.fips+'">'+c.county+
+    ' — '+fmt(c.beds)+' beds</option>').join('');
+
+/* ---------- map ---------- */
+const NS='http://www.w3.org/2000/svg';
+let gRoot=null;
+function buildMap(){
+  svg.setAttribute('viewBox','0 0 '+VW+' '+VH);
+  svg.textContent='';
+  gRoot=document.createElementNS(NS,'g');
+  svg.appendChild(gRoot);
+  const gC=document.createElementNS(NS,'g'), gD=document.createElementNS(NS,'g'),
+        gL=document.createElementNS(NS,'g');
+  gRoot.appendChild(gC); gRoot.appendChild(gD); gRoot.appendChild(gL);
+  gRoot.dataset.role='root'; gD.dataset.role='dots'; gL.dataset.role='labels';
+
+  const sk=$('shade').value;
+  Object.keys(GEO.c).forEach(function(fips){
+    const g=GEO.c[fips], c=byFips[fips];
+    if(!g.d)return;
+    const p=document.createElementNS(NS,'path');
+    p.setAttribute('d',g.d);
+    p.setAttribute('class','cty');
+    p.setAttribute('fill',shadeColor(sk,c?c[sk]:null));
+    p.setAttribute('tabindex','0');
+    p.setAttribute('role','button');
+    p.setAttribute('aria-label',(c?c.county:g.n)+' County');
+    p.addEventListener('click',function(e){e.stopPropagation();zoomToCounty(fips)});
+    p.addEventListener('keydown',function(e){
+      if(e.key==='Enter'||e.key===' '){e.preventDefault();zoomToCounty(fips)}});
+    if(c)p.addEventListener('pointerenter',function(e){showTip(e,
+      '<span class="t">'+c.county+' County</span>'+
+      fmt(c.beds)+' beds in '+c.fac+' communit'+(c.fac===1?'y':'ies')+'<br>'+
+      fmt(c.albeds)+' assisted living · '+fmt(c.mcbeds)+' memory care<br>'+
+      fmt1(c.per1k)+' beds per 1,000 aged 75+'+
+      (c.bed_gap>0?'<br><b>'+fmt(c.bed_gap)+' beds short of the state rate</b>':''))});
+    p.addEventListener('pointermove',moveTip);
+    p.addEventListener('pointerleave',hideTip);
+    gC.appendChild(p);
+  });
+  drawDots();
+  applyTransform();
+}
+const R=b=>2.2+Math.sqrt(b)*0.78;   /* area tracks bed count */
+function drawDots(){
+  const gD=gRoot.querySelector('[data-role=dots]'), gL=gRoot.querySelector('[data-role=labels]');
+  gD.textContent=''; gL.textContent='';
+  const list=shown().slice().sort((a,b)=>b.beds-a.beds);
+  list.forEach(function(f){
+    const c=document.createElementNS(NS,'circle');
+    c.setAttribute('cx',f.x.toFixed(1)); c.setAttribute('cy',f.y.toFixed(1));
+    c.setAttribute('r',R(f.beds).toFixed(2));
+    c.setAttribute('class','dot '+(f.type==='MC'?'mc':'al')+(f.id===sel?' on':''));
+    c.setAttribute('tabindex','0');
+    c.setAttribute('role','button');
+    c.setAttribute('aria-label',f.name+', '+f.beds+' beds, '+f.city);
+    if(f.prec!=='street'){c.setAttribute('fill-opacity','0.15');
+      c.setAttribute('stroke',f.type==='MC'?'var(--clay-soft)':'var(--accent-soft)')}
+    else c.setAttribute('fill-opacity','0.82');
+    c.dataset.id=f.id;
+    c.addEventListener('click',function(e){e.stopPropagation();sel=f.id;render()});
+    c.addEventListener('keydown',function(e){
+      if(e.key==='Enter'||e.key===' '){e.preventDefault();sel=f.id;render()}});
+    c.addEventListener('pointerenter',function(e){showTip(e,
+      '<span class="t">'+f.name+'</span><b>'+f.beds+' beds</b> · '+
+      (f.type==='MC'?'Memory care':'Assisted living')+'<br>'+f.city+', '+f.county+' County<br>'+
+      f.admin+(f.prec!=='street'?'<br><i>approximate location</i>':''))});
+    c.addEventListener('pointermove',moveTip);
+    c.addEventListener('pointerleave',hideTip);
+    gD.appendChild(c);
+  });
+  // labels only once zoomed in, biggest first, and only where they will not collide
+  if(k>=2.4){
+    const placed=[];
+    list.forEach(function(f){
+      const fs=9/k, w=f.name.length*fs*0.5, h=fs*1.25;
+      const x=f.x+R(f.beds)+3/k, y=f.y+fs*0.35;
+      if(placed.some(p=>Math.abs(p.x-x)<(p.w+w)/2&&Math.abs(p.y-y)<(p.h+h)*0.9))return;
+      placed.push({x:x+w/2,y:y,w:w,h:h});
+      const t=document.createElementNS(NS,'text');
+      t.setAttribute('x',x.toFixed(1)); t.setAttribute('y',y.toFixed(1));
+      t.setAttribute('class','lbl');
+      t.setAttribute('font-size',fs.toFixed(2));
+      t.setAttribute('stroke-width',(2.4/k).toFixed(2));
+      t.textContent=f.name+' · '+f.beds;
+      gL.appendChild(t);
+    });
+  }
+  const n=list.length;
+  $('maphint').textContent=k<2.4
+    ? n+' communities · zoom in for names'
+    : n+' communities · '+Math.round(k*100)/100+'× zoom';
+}
+function applyTransform(){
+  gRoot.setAttribute('transform','translate('+tx.toFixed(2)+','+ty.toFixed(2)+') scale('+k.toFixed(4)+')');
+  gRoot.querySelectorAll('.cty').forEach(p=>p.setAttribute('stroke-width',(0.9/k).toFixed(3)));
+  gRoot.querySelectorAll('.dot').forEach(c=>c.setAttribute('stroke-width',(1.1/k).toFixed(3)));
+}
+function clamp(){
+  const minK=1, maxK=42;
+  k=Math.max(minK,Math.min(maxK,k));
+  const ew=VW*k, eh=VH*k;
+  tx=ew<=VW?(VW-ew)/2:Math.max(VW-ew,Math.min(0,tx));
+  ty=eh<=VH?(VH-eh)/2:Math.max(VH-eh,Math.min(0,ty));
+}
+function zoomAt(px,py,factor){
+  const k0=k; k=k0*factor; clamp();
+  const r=k/k0;
+  tx=px-(px-tx)*r; ty=py-(py-ty)*r;
+  clamp(); applyTransform(); drawDots();
+}
+function svgPoint(e){
+  const b=svg.getBoundingClientRect();
+  return [ (e.clientX-b.left)/b.width*VW, (e.clientY-b.top)/b.height*VH ];
+}
+svg.addEventListener('wheel',function(e){
+  e.preventDefault();
+  const p=svgPoint(e);
+  zoomAt(p[0],p[1],e.deltaY<0?1.22:1/1.22);
+},{passive:false});
+let drag=null;
+svg.addEventListener('pointerdown',function(e){
+  drag={x:e.clientX,y:e.clientY,tx:tx,ty:ty,moved:false};
+  svg.classList.add('drag'); svg.setPointerCapture(e.pointerId);
+});
+svg.addEventListener('pointermove',function(e){
+  if(!drag)return;
+  const b=svg.getBoundingClientRect();
+  const dx=(e.clientX-drag.x)/b.width*VW, dy=(e.clientY-drag.y)/b.height*VH;
+  if(Math.abs(dx)+Math.abs(dy)>1.5)drag.moved=true;
+  tx=drag.tx+dx; ty=drag.ty+dy; clamp(); applyTransform();
+});
+['pointerup','pointercancel','pointerleave'].forEach(function(ev){
+  svg.addEventListener(ev,function(){svg.classList.remove('drag');drag=null});
+});
+svg.addEventListener('dblclick',function(e){const p=svgPoint(e);zoomAt(p[0],p[1],1.9)});
+$('zin').addEventListener('click',()=>zoomAt(VW/2,VH/2,1.5));
+$('zout').addEventListener('click',()=>zoomAt(VW/2,VH/2,1/1.5));
+$('zreset').addEventListener('click',function(){k=1;tx=0;ty=0;clamp();applyTransform();drawDots()});
+
+function zoomTo(x,y,target){
+  k=target; clamp();
+  tx=VW/2-x*k; ty=VH/2-y*k;
+  clamp(); applyTransform(); drawDots();
+}
+function zoomToCounty(fips){
+  const pts=FAC.filter(f=>f.fips===fips);
+  const c=byFips[fips];
+  if(pts.length){
+    const xs=pts.map(p=>p.x), ys=pts.map(p=>p.y);
+    const w=Math.max(18,Math.max.apply(null,xs)-Math.min.apply(null,xs));
+    const h=Math.max(18,Math.max.apply(null,ys)-Math.min.apply(null,ys));
+    zoomTo((Math.min.apply(null,xs)+Math.max.apply(null,xs))/2,
+           (Math.min.apply(null,ys)+Math.max.apply(null,ys))/2,
+           Math.min(20,Math.min(VW/(w*1.5),VH/(h*1.5))));
+  }
+  if(c)$('county').value=fips;
+  drawDots();
+}
+
+/* ---------- detail + list ---------- */
+function drawDetail(){
+  const f=FAC.find(x=>x.id===sel)||FAC[0];
+  const c=byFips[f.fips];
+  $('detail').innerHTML=
+    '<h3>Community record</h3>'+
+    '<div class="nm">'+f.name+'</div>'+
+    '<div class="badges"><span class="badge '+(f.type==='MC'?'mc':'al')+'">'+
+      (f.type==='MC'?'Memory care':'Assisted living')+'</span>'+
+      '<span class="badge ghost">'+f.status+'</span>'+
+      (f.prec!=='street'?'<span class="badge ghost">approx. location</span>':'')+'</div>'+
+    '<div class="bignum">'+f.beds+'<small>licensed beds</small></div>'+
+    '<dl class="frow-dl" style="margin-top:16px">'+
+      '<dt>Licence class</dt><dd>'+(f.cls||'—')+'</dd>'+
+      '<dt>Administrator</dt><dd>'+(f.admin||'—')+'</dd>'+
+      '<dt>Phone</dt><dd>'+(f.phone||'—')+'</dd>'+
+      '<dt>Address</dt><dd>'+f.addr+'<br>'+f.city+', AL '+f.zip+'</dd>'+
+      '<dt>County</dt><dd>'+f.county+(c?' — '+fmt(c.beds)+' beds total':'')+'</dd>'+
+      '<dt>Licensee</dt><dd>'+(f.owner||'—')+'</dd>'+
+      '<dt>Facility ID</dt><dd>'+f.id+'</dd>'+
+    '</dl>';
+}
+function drawList(){
+  const list=shown().slice().sort((a,b)=>b.beds-a.beds);
+  $('listHead').textContent=$('county').value==='all'?'Communities, largest first'
+    :byFips[$('county').value].county+' County';
+  $('list').innerHTML=list.map(function(f){
+    return '<div class="frow'+(f.id===sel?' on':'')+'" data-id="'+f.id+'" tabindex="0" role="button">'+
+      '<span class="d" style="background:var(--'+(f.type==='MC'?'clay-soft':'accent-soft')+')"></span>'+
+      '<span><span class="n">'+f.name+'</span><br><span class="c">'+f.city+' · '+f.county+'</span></span>'+
+      '<span class="b">'+f.beds+'</span></div>'}).join('');
+  $('listCount').textContent=list.length+' of '+FAC.length+' communities · '+
+    fmt(list.reduce((s,f)=>s+f.beds,0))+' beds shown';
+}
+$('list').addEventListener('click',function(e){
+  const r=e.target.closest('.frow'); if(!r)return;
+  sel=r.dataset.id; focusFacility();
+});
+$('list').addEventListener('keydown',function(e){
+  const r=e.target.closest('.frow');
+  if(r&&(e.key==='Enter'||e.key===' ')){e.preventDefault();sel=r.dataset.id;focusFacility()}
+});
+function focusFacility(){
+  const f=FAC.find(x=>x.id===sel);
+  if(f)zoomTo(f.x,f.y,Math.max(k,9));
+  render();
+}
+
+/* ---------- keys ---------- */
+function drawKeys(){
+  $('sizeKey').innerHTML=[16,60,140].map(function(b){
+    const d=Math.round(R(b)*2);
+    return '<i style="width:'+d+'px;height:'+d+'px"></i>'}).join('')+
+    '<span style="margin-left:3px">16 · 60 · 140 beds</span>';
+  const sk=$('shade').value;
+  if(sk==='none'){$('rampKey').innerHTML='';return}
+  const s=shadeVals(sk);
+  $('rampKey').innerHTML='<span>'+SHADE[sk]+'</span><span>'+fmt(s[0])+'</span>'+
+    '<span class="ramp">'+ramp().map(c=>'<i style="background:'+c+'"></i>').join('')+'</span>'+
+    '<span>'+fmt(s[s.length-1])+'</span>';
+}
+
+/* ---------- tooltip ---------- */
+const tip=$('tip');
+function showTip(e,html){tip.innerHTML=html;tip.style.opacity='1';moveTip(e)}
+function moveTip(e){
+  const b=tip.getBoundingClientRect();
+  let x=e.clientX+14,y=e.clientY+14;
+  if(x+b.width>innerWidth-8)x=e.clientX-b.width-14;
+  if(y+b.height>innerHeight-8)y=e.clientY-b.height-14;
+  tip.style.left=x+'px';tip.style.top=y+'px';
+}
+function hideTip(){tip.style.opacity='0'}
+
+/* ---------- wire ---------- */
+function render(){drawDots();drawDetail();drawList()}
+$('typeChips').addEventListener('click',function(e){
+  const b=e.target.closest('.chip'); if(!b)return;
+  const t=b.dataset.t;
+  if(types.has(t)&&types.size>1)types.delete(t); else types.add(t);
+  b.setAttribute('aria-pressed',String(types.has(t)));
+  render();
+});
+$('shade').addEventListener('change',function(){buildMap();drawKeys()});
+$('county').addEventListener('change',function(){
+  const v=this.value;
+  if(v==='all'){k=1;tx=0;ty=0;clamp();applyTransform()} else zoomToCounty(v);
+  render();
+});
+$('minbeds').addEventListener('input',function(){
+  $('minbedsV').textContent=+this.value?('≥'+this.value):'all';
+  render();
+});
+$('q').addEventListener('input',render);
+$('minbedsV').textContent='all';
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',function(){buildMap();drawKeys()});
+new MutationObserver(function(){buildMap();drawKeys()}).observe(
+  document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+buildMap(); drawKeys(); drawDetail(); drawList();
+</script>

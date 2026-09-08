@@ -128,7 +128,11 @@ def build_geometry():
             parts.append("M" + "L".join(f"{x:.1f} {y:.1f}" for x, y in xy) + "Z")
         out[f["id"]] = {"n": f["properties"]["NAME"], "d": "".join(parts)}
 
-    geo = {"w": round(W), "h": round(H), "c": out}
+    # Ship the projection parameters too: the facilities map projects points with the
+    # identical formula so dots land exactly on their county.
+    geo = {"w": round(W), "h": round(H),
+           "lon0": lon0, "lon1": lon1, "lat0": lat0, "lat1": lat1,
+           "c": out}
     with open(os.path.join(OUT, "al_geo.json"), "w", encoding="utf-8") as f:
         json.dump(geo, f, separators=(",", ":"))
 

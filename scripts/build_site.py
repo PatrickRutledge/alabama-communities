@@ -1,37 +1,58 @@
 #!/usr/bin/env python3
-"""Build index.html from src/atlas.template.html plus the merged data.
+"""Build the site's pages from src/*.template.html plus the merged data.
 
-Pass --artifact to write dist/atlas.artifact.html instead: the same page with the
-data inlined but no document shell, for a host that supplies its own <head> and
+  index.html       the county atlas -- 85 measures on a choropleth and a heatmap
+  facilities.html  every licensed community as a point on a zoomable bed map
+
+Pass --artifact to write dist/*.artifact.html instead: the same pages with data
+inlined but no document shell, for a host that supplies its own <head> and
 light/dark theme stamp.
 
-The template is authored to run both as a Claude Artifact (where the host supplies
-the document shell and the light/dark theme stamp) and as a standalone page. This
-script supplies what the host would otherwise provide: a document shell, a base
-reset, a favicon, and a theme toggle -- then inlines the data so the published
-page is a single file with no runtime fetches.
+Each template is authored to run in either setting. This script supplies what a
+host would otherwise provide -- a document shell, a base reset, a favicon, a
+cross-page nav and a theme toggle -- then inlines the data so each published page
+is a single file with no runtime fetches.
 
-Run:  python scripts/build_site.py
+Run:  python scripts/build_site.py [--artifact]
 """
 import json
 import os
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-TEMPLATE = os.path.join(ROOT, "src", "atlas.template.html")
+SRC = os.path.join(ROOT, "src")
 DATA = os.path.join(ROOT, "data")
-OUT = os.path.join(ROOT, "index.html")
-OUT_ARTIFACT = os.path.join(ROOT, "dist", "atlas.artifact.html")
+DIST = os.path.join(ROOT, "dist")
 
-TITLE = "Alabama Senior Care Atlas"
-DESCRIPTION = ("Medicare demand, cost and licensed senior-housing supply for all 67 Alabama "
-               "counties: an interactive map, a filterable heatmap, and the assisted living "
-               "and memory care supply gap.")
+SITE = "https://patrickrutledge.github.io/alabama-communities/"
 
-# The page exposes every measure in the merge, so the whole row ships. At 67 counties
-# and ~90 short numeric fields this costs well under 100 KB and removes a whole class
-# of bug where the measure catalogue references a field the payload dropped.
-FIELDS = None  # None = ship every field
+# Absolute links so the nav works from a published artifact as well as from the site.
+NAV = [("index.html", "County atlas"), ("facilities.html", "Bed map")]
+
+PAGES = [
+    {
+        "template": "atlas.template.html",
+        "out": "index.html",
+        "title": "Alabama Senior Care Atlas",
+        "description": ("Medicare demand, cost and licensed senior-housing supply for all 67 "
+                        "Alabama counties: 85 measures on an interactive heat map, plus the "
+                        "assisted living and memory care bed gap."),
+        "data": {"/*__DATA__*/ null": "alabama_master.json", "/*__GEO__*/ null": "al_geo.json"},
+    },
+    {
+        "template": "facilities.template.html",
+        "out": "facilities.html",
+        "title": "Alabama Senior Living Bed Map",
+        "description": ("Every licensed assisted living and memory care community in Alabama, "
+                        "mapped and sized by licensed beds, zoomable to community name, bed "
+                        "count, licence class and administrator."),
+        "data": {"/*__FAC__*/ null": "al_facilities.json", "/*__GEO__*/ null": "al_geo.json",
+                 "/*__CNTY__*/ null": "_county_slim"},
+    },
+]
+
+# The facilities map needs only a slice of the county merge for its shading and context.
+COUNTY_SLIM = ["fips", "county", "a75", "bed_gap"]
 
 FAVICON = ("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'"
            "%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8F%A1%3C/text%3E%3C/svg%3E")
@@ -74,42 +95,52 @@ THEME_JS = """
 """
 
 
-def main():
-    with open(TEMPLATE, encoding="utf-8") as f:
+def load(name):
+    with open(os.path.join(DATA, name), encoding="utf-8") as f:
+        return json.load(f)
+
+
+def nav_html(current):
+    links = "".join(
+        f'<a href="{SITE}{href}"{" aria-current=\"page\"" if href == current else ""}>{label}</a>'
+        for href, label in NAV)
+    return f'<nav class="nav">{links}</nav>'
+
+
+def build(page, artifact):
+    with open(os.path.join(SRC, page["template"]), encoding="utf-8") as f:
         tpl = f.read()
-    with open(os.path.join(DATA, "alabama_master.json"), encoding="utf-8") as f:
-        rows = json.load(f)
-    with open(os.path.join(DATA, "al_geo.json"), encoding="utf-8") as f:
-        geo = json.load(f)
 
-    for token in ("/*__DATA__*/ null", "/*__GEO__*/ null"):
+    for token, source in page["data"].items():
         if token not in tpl:
-            raise SystemExit(f"template is missing the {token} placeholder")
+            raise SystemExit(f"{page['template']} is missing the {token} placeholder")
+        if source == "_county_slim":
+            payload = [{k: r[k] for k in COUNTY_SLIM} for r in load("alabama_master.json")]
+        else:
+            payload = load(source)
+        tpl = tpl.replace(token, json.dumps(payload, separators=(",", ":")))
 
-    slim = rows if FIELDS is None else [{k: r[k] for k in FIELDS} for r in rows]
-    tpl = tpl.replace("/*__DATA__*/ null", json.dumps(slim, separators=(",", ":")))
-    tpl = tpl.replace("/*__GEO__*/ null", json.dumps(geo, separators=(",", ":")))
+    tpl = tpl.replace("<!--NAV-->", nav_html(page["out"]))
 
-    if "--artifact" in sys.argv:
-        os.makedirs(os.path.dirname(OUT_ARTIFACT), exist_ok=True)
-        with open(OUT_ARTIFACT, "w", encoding="utf-8") as f:
+    if artifact:
+        os.makedirs(DIST, exist_ok=True)
+        out = os.path.join(DIST, page["out"].replace(".html", ".artifact.html"))
+        with open(out, "w", encoding="utf-8") as f:
             f.write(tpl)
-        print(f"dist/atlas.artifact.html  {os.path.getsize(OUT_ARTIFACT)/1024:.0f} KB "
-              f"({len(slim)} counties)")
-        return
-
-    # The template's own <style> ends the head material; everything after it is body.
-    split = tpl.index("</style>") + len("</style>")
-    head, body = tpl[:split], tpl[split:]
-
-    html = f"""<!doctype html>
+    else:
+        # The template's own <style> ends the head material; everything after it is body.
+        split = tpl.index("</style>") + len("</style>")
+        head, body = tpl[:split], tpl[split:]
+        out = os.path.join(ROOT, page["out"])
+        with open(out, "w", encoding="utf-8") as f:
+            f.write(f"""<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="{DESCRIPTION}">
-<meta property="og:title" content="{TITLE}">
-<meta property="og:description" content="{DESCRIPTION}">
+<meta name="description" content="{page['description']}">
+<meta property="og:title" content="{page['title']}">
+<meta property="og:description" content="{page['description']}">
 <meta property="og:type" content="website">
 <link rel="icon" href="{FAVICON}">
 {head}
@@ -121,10 +152,16 @@ def main():
 <script>{THEME_JS}</script>
 </body>
 </html>
-"""
-    with open(OUT, "w", encoding="utf-8") as f:
-        f.write(html)
-    print(f"index.html  {os.path.getsize(OUT)/1024:.0f} KB  ({len(slim)} counties)")
+""")
+    print(f"  {os.path.relpath(out, ROOT).replace(os.sep, '/'):34} "
+          f"{os.path.getsize(out)/1024:>4.0f} KB")
+
+
+def main():
+    artifact = "--artifact" in sys.argv
+    print("building artifact pages" if artifact else "building site pages")
+    for page in PAGES:
+        build(page, artifact)
 
 
 if __name__ == "__main__":
