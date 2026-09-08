@@ -1,0 +1,556 @@
+<title>Alabama Senior Care Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  color-scheme: light;
+  --paper:#f2f3ef; --surface:#fbfbf9; --surface-2:#eceee7;
+  --ink:#12171c; --ink-2:#4a5560; --ink-3:#78838d;
+  --rule:#d6d9d0; --rule-2:#c2c6ba;
+  --accent:#1c5cab; --accent-soft:#2a78d6; --clay:#c1502a;
+  --pos:#184f95; --neg:#a52322;
+  --cell-ink:#12171c;
+  --seq1:#cde2fb;--seq2:#9ec5f4;--seq3:#6da7ec;--seq4:#3987e5;--seq5:#256abf;--seq6:#184f95;--seq7:#0d366b;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --paper:#14171a; --surface:#1b1f23; --surface-2:#22272c;
+    --ink:#e9ece6; --ink-2:#a4afb8; --ink-3:#7b868f;
+    --rule:#2c3237; --rule-2:#3b434a;
+    --accent:#3987e5; --accent-soft:#5598e7; --clay:#d95926;
+    --pos:#5598e7; --neg:#e66767;
+    --cell-ink:#eef1ec;
+    --seq1:#16304f;--seq2:#1c4573;--seq3:#235a97;--seq4:#2a78d6;--seq5:#5598e7;--seq6:#86b6ef;--seq7:#b7d3f6;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --paper:#14171a; --surface:#1b1f23; --surface-2:#22272c;
+  --ink:#e9ece6; --ink-2:#a4afb8; --ink-3:#7b868f;
+  --rule:#2c3237; --rule-2:#3b434a;
+  --accent:#3987e5; --accent-soft:#5598e7; --clay:#d95926;
+  --pos:#5598e7; --neg:#e66767;
+  --cell-ink:#eef1ec;
+  --seq1:#16304f;--seq2:#1c4573;--seq3:#235a97;--seq4:#2a78d6;--seq5:#5598e7;--seq6:#86b6ef;--seq7:#b7d3f6;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);
+  font-family:"Source Serif 4",Georgia,"Times New Roman",serif;
+  font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1240px;margin:0 auto;padding:0 24px 72px}
+h1,h2,h3,.ui{font-family:"Libre Franklin","Helvetica Neue",Arial,sans-serif}
+.mono,td.num,th.num,.kpi-v,.tag{font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;font-variant-numeric:tabular-nums}
+
+header.mast{border-bottom:3px solid var(--ink);margin-top:28px;padding-bottom:14px}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-2);display:flex;flex-wrap:wrap;gap:8px 18px;align-items:baseline}
+.eyebrow b{color:var(--accent);font-weight:600}
+h1{font-size:clamp(30px,5.2vw,52px);font-weight:800;letter-spacing:-.022em;line-height:1.02;
+  margin:10px 0 8px;text-wrap:balance}
+.dek{font-size:17px;color:var(--ink-2);max-width:64ch;margin:0}
+.mast-rule{display:flex;gap:16px;flex-wrap:wrap;margin-top:14px;font-size:12px;color:var(--ink-3);
+  font-family:"IBM Plex Mono",monospace}
+.mast-rule span{border-left:2px solid var(--rule-2);padding-left:8px}
+
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));
+  border-bottom:1px solid var(--rule);margin:0 0 30px}
+.kpi{padding:18px 18px 16px 0;border-right:1px solid var(--rule)}
+.kpi:last-child{border-right:0}
+.kpi-l{font-family:"Libre Franklin",sans-serif;font-size:10.5px;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3);margin-bottom:6px}
+.kpi-v{font-size:26px;font-weight:600;letter-spacing:-.02em;line-height:1}
+.kpi-s{font-size:12.5px;color:var(--ink-2);margin-top:5px;font-family:"Libre Franklin",sans-serif}
+
+section{margin:0 0 46px}
+h2{font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);
+  margin:0 0 4px;display:flex;align-items:center;gap:10px}
+h2::after{content:"";flex:1;height:2px;background:var(--ink);opacity:.16}
+.sub{font-size:14.5px;color:var(--ink-2);margin:0 0 18px;max-width:70ch}
+
+.caveat{background:var(--surface);border:1px solid var(--rule);border-left:4px solid var(--clay);
+  padding:20px 22px;margin:0 0 44px}
+.caveat h3{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;margin:0 0 12px;color:var(--clay)}
+.caveat ul{margin:0;padding-left:0;list-style:none;display:grid;gap:11px}
+.caveat li{padding-left:20px;position:relative;font-size:14.5px;max-width:96ch}
+.caveat li::before{content:"";position:absolute;left:2px;top:.62em;width:7px;height:2px;background:var(--clay)}
+.caveat b{font-weight:600}
+.caveat .ok::before{background:var(--accent)}
+
+.controls{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:flex-end;margin:0 0 18px;
+  padding-bottom:16px;border-bottom:1px solid var(--rule)}
+.ctl{display:flex;flex-direction:column;gap:5px}
+.ctl label{font-family:"Libre Franklin",sans-serif;font-size:10px;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3)}
+select,input[type=search]{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--ink);
+  background:var(--surface);border:1px solid var(--rule-2);padding:7px 10px;border-radius:2px;min-width:150px}
+input[type=range]{accent-color:var(--accent);width:150px}
+select:focus-visible,input:focus-visible,button:focus-visible,path:focus-visible,.chip:focus-visible{
+  outline:2px solid var(--accent);outline-offset:2px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-family:"Libre Franklin",sans-serif;font-size:11.5px;font-weight:600;letter-spacing:.03em;
+  padding:6px 11px;border:1px solid var(--rule-2);background:var(--surface);color:var(--ink-2);
+  border-radius:2px;cursor:pointer}
+.chip[aria-pressed=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+
+.mapgrid{display:grid;grid-template-columns:minmax(260px,340px) 1fr;gap:34px;align-items:start}
+@media(max-width:820px){.mapgrid{grid-template-columns:1fr}}
+.mapbox{background:var(--surface);border:1px solid var(--rule);padding:14px}
+.mapbox svg{display:block;width:100%;height:auto}
+.mapbox path{stroke:var(--surface);stroke-width:.8;cursor:pointer}
+.mapbox path:hover{stroke:var(--ink);stroke-width:1.6}
+.mapbox path.sel{stroke:var(--ink);stroke-width:2.2}
+.legend{display:flex;align-items:center;gap:8px;margin-top:12px;font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--ink-3)}
+.legend .swatches{display:flex;flex:1;height:9px}
+.legend .swatches i{flex:1}
+
+.detail{background:var(--surface);border:1px solid var(--rule);padding:22px 24px}
+.detail-h{display:flex;justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap;
+  border-bottom:2px solid var(--ink);padding-bottom:10px;margin-bottom:16px}
+.detail-h h3{font-size:26px;font-weight:800;margin:0;letter-spacing:-.02em}
+.tag{font-size:11px;color:var(--ink-3);letter-spacing:.06em}
+.dgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:16px 20px;margin-bottom:22px}
+.dstat .l{font-family:"Libre Franklin",sans-serif;font-size:9.5px;font-weight:600;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--ink-3);margin-bottom:3px}
+.dstat .v{font-family:"IBM Plex Mono",monospace;font-size:18px;font-weight:600;font-variant-numeric:tabular-nums}
+.dstat .d{font-family:"IBM Plex Mono",monospace;font-size:11px;margin-top:2px}
+.up{color:var(--neg)}.down{color:var(--pos)}.flat{color:var(--ink-3)}
+.blockhead{font-family:"Libre Franklin",sans-serif;font-size:10px;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-3);margin:22px 0 10px;padding-top:14px;border-top:1px solid var(--rule)}
+.bars{display:grid;gap:9px}
+.bar-row{display:grid;grid-template-columns:132px 1fr 104px;gap:12px;align-items:center;font-size:13px}
+.bar-row .nm{font-family:"Libre Franklin",sans-serif;font-size:12px;color:var(--ink-2)}
+.bar-track{background:var(--surface-2);height:16px;position:relative}
+.bar-fill{height:100%;background:var(--accent)}
+.bar-avg{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink);opacity:.55}
+.bar-row .vl{font-family:"IBM Plex Mono",monospace;font-size:12.5px;text-align:right;font-variant-numeric:tabular-nums}
+.barnote{font-size:12px;color:var(--ink-3);margin-top:9px;font-family:"IBM Plex Mono",monospace}
+
+.tablewrap{overflow-x:auto;border:1px solid var(--rule);background:var(--surface)}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:12.5px}
+th,td{padding:6px 9px;white-space:nowrap;text-align:right}
+th{position:sticky;top:0;z-index:3;background:var(--surface);font-family:"Libre Franklin",sans-serif;
+  font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);
+  border-bottom:2px solid var(--ink);cursor:pointer;vertical-align:bottom;padding-bottom:8px}
+th:hover{color:var(--accent)}
+th.grp,td.grp{border-left:2px solid var(--rule-2)}
+th.cty,td.cty{text-align:left;position:sticky;left:0;background:var(--surface);z-index:2;
+  font-family:"Libre Franklin",sans-serif;font-weight:600;font-size:13px;border-right:2px solid var(--rule-2)}
+th.cty{z-index:4}
+td.num{font-variant-numeric:tabular-nums;font-weight:500;color:var(--cell-ink)}
+tbody tr{cursor:pointer}
+tbody tr:hover td.cty{color:var(--accent)}
+tbody tr.sel td.cty{background:var(--ink);color:var(--paper)}
+.fips{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--ink-3);margin-left:7px;font-weight:400}
+th .dir{color:var(--accent)}
+
+.chartbox{background:var(--surface);border:1px solid var(--rule);padding:20px 22px 14px}
+.chartbox svg{display:block;width:100%;height:auto}
+.axlab{font-family:"Libre Franklin",sans-serif;font-size:11px;font-weight:600;letter-spacing:.08em;
+  text-transform:uppercase;fill:var(--ink-3)}
+.tick{font-family:"IBM Plex Mono",monospace;font-size:11px;fill:var(--ink-3)}
+.gridline{stroke:var(--rule);stroke-width:1}
+.avgline{stroke:var(--ink);stroke-width:1;stroke-dasharray:3 3;opacity:.45}
+.dot{fill:var(--accent-soft);fill-opacity:.7;stroke:var(--surface);stroke-width:2;cursor:pointer}
+.dot.hi{fill:var(--clay);fill-opacity:.85}
+.dotlab{font-family:"Libre Franklin",sans-serif;font-size:11px;font-weight:600;fill:var(--ink-2)}
+.quad{font-family:"Libre Franklin",sans-serif;font-size:10.5px;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;fill:var(--ink-3)}
+
+#tip{position:fixed;z-index:60;pointer-events:none;background:var(--ink);color:var(--paper);
+  padding:9px 12px;font-family:"IBM Plex Mono",monospace;font-size:11.5px;line-height:1.5;
+  border-radius:2px;max-width:290px;opacity:0;box-shadow:0 4px 14px rgba(0,0,0,.22)}
+#tip b{font-weight:600}
+#tip .t{font-family:"Libre Franklin",sans-serif;font-weight:700;font-size:12.5px;
+  display:block;margin-bottom:4px;letter-spacing:.02em}
+
+footer{border-top:2px solid var(--ink);padding-top:18px;font-size:12.5px;color:var(--ink-2)}
+footer h3{font-family:"Libre Franklin",sans-serif;font-size:10px;font-weight:800;letter-spacing:.14em;
+  text-transform:uppercase;margin:0 0 10px;color:var(--ink)}
+footer dl{display:grid;grid-template-columns:auto 1fr;gap:5px 16px;margin:0;
+  font-family:"IBM Plex Mono",monospace;font-size:11.5px}
+footer dt{color:var(--ink-3)}
+footer dd{margin:0}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+<header class="mast">
+  <div class="eyebrow"><b>Alabama</b><span>67 counties</span><span>Enrollment 2025</span><span>Claims 2024</span><span>Licensure Sep 2026</span></div>
+  <h1>Alabama Senior Care Atlas</h1>
+  <p class="dek">Medicare demand, cost and licensed senior-housing supply for every county in Alabama &mdash; built to show where independent living, assisted living and memory care have room to grow, and what Medicare actually spends where they don't.</p>
+  <div class="mast-rule">
+    <span>CMS Monthly Enrollment</span><span>CMS Geographic Variation PUF</span><span>CMS Care Compare</span><span>ADPH Facilities Directory</span>
+  </div>
+</header>
+
+<div class="kpis" id="kpis"></div>
+
+<div class="caveat">
+  <h3>Read this before you read the numbers</h3>
+  <ul>
+    <li><b>Medicare does not record where a beneficiary lives.</b> Claims identify the <i>service</i> billed, never the residence. Someone in independent living, in assisted living, or in their own house is indistinguishable in this data, and no public CMS file splits spend by residential setting. So the residence columns here come from state licensure, and the spend columns are county-wide.</li>
+    <li><b>Independent living is invisible on purpose.</b> Alabama does not license IL &mdash; it is housing, not care, so there is no registry and no bed count. The closest honest proxy is the <b>75+ and 85+ enrollee counts</b> set against licensed AL and memory-care beds: that gap is your addressable population.</li>
+    <li><b>&ldquo;Skilled nursing&rdquo; here means post-acute SNF, not the nursing home.</b> Medicare covers up to 100 days after a qualifying hospital stay. Long-term custodial care is paid by Medicaid and out of pocket and never appears in these dollars &mdash; which means most of the savings from keeping someone out of a nursing home accrue to <b>Medicaid</b>, not Medicare.</li>
+    <li class="ok"><b>What Medicare savings do look like is on this page:</b> fewer inpatient stays, lower readmission rates, fewer ER visits, fewer SNF days per 1,000, and a heavier tilt toward home health and hospice. Those five are the measurable case for aging in place, and they vary by more than two-fold across Alabama counties.</li>
+    <li><b>Spend is Original Medicare only, and Alabama is 60% Medicare Advantage.</b> CMS publishes no county-level MA spending, so the $4.67B here is roughly a third of true Medicare spend in the state. Per-capita figures are per fee-for-service beneficiary with full Part A and B &mdash; not per enrollee.</li>
+  </ul>
+</div>
+
+<section>
+  <h2>Where the demand is</h2>
+  <p class="sub">Choose a measure to shade the map and the heatmap below. Click any county &mdash; on the map or in the table &mdash; to open its full profile.</p>
+  <div class="controls">
+    <div class="ctl"><label for="metric">Shade counties by</label><select id="metric"></select></div>
+    <div class="ctl"><label for="scale">Scale</label><select id="scale">
+      <option value="auto">Auto (fits the measure)</option>
+      <option value="seq">Magnitude, low to high</option>
+      <option value="div">Compared to Alabama average</option>
+    </select></div>
+    <div class="ctl"><label for="minage">Min. enrollees 75+ <span id="minageV" class="mono"></span></label><input type="range" id="minage" min="0" max="20000" step="500" value="0"></div>
+    <div class="ctl"><label for="q">Find a county</label><input type="search" id="q" placeholder="Jefferson, Baldwin&hellip;" autocomplete="off"></div>
+  </div>
+  <div class="mapgrid">
+    <div class="mapbox">
+      <svg id="map" role="img" aria-label="Alabama counties shaded by the selected measure"></svg>
+      <div class="legend"><span id="lgLo">low</span><span class="swatches" id="lgSw"></span><span id="lgHi">high</span></div>
+    </div>
+    <div class="detail" id="detail"></div>
+  </div>
+</section>
+
+<section>
+  <h2>County heatmap</h2>
+  <p class="sub">Rates and dollars are shaded against the Alabama average; counts are shaded low to high. Click a column header to sort, and use the group chips to focus on demand, cost, utilization or supply.</p>
+  <div class="controls">
+    <div class="ctl"><label>Column groups</label><div class="chips" id="grpChips"></div></div>
+  </div>
+  <div class="tablewrap"><table id="heat"><thead><tr id="hrow"></tr></thead><tbody id="hbody"></tbody></table></div>
+</section>
+
+<section>
+  <h2>Supply against institutional intensity</h2>
+  <p class="sub">Horizontal axis: licensed assisted-living and memory-care capacity per 1,000 enrollees aged 75 and over. Vertical axis: Medicare-covered SNF days per 1,000 fee-for-service beneficiaries &mdash; how heavily a county leans on institutional post-acute care. Circle size is total Medicare enrollment; dashed lines mark the Alabama average. Counties in clay have no licensed assisted living or memory care at all.</p>
+  <div class="chartbox"><svg id="scatter" role="img" aria-label="Scatter plot of senior living beds per 1,000 aged 75 plus against SNF days per 1,000 beneficiaries"></svg></div>
+</section>
+
+<footer>
+  <h3>Sources &amp; vintage</h3>
+  <dl>
+    <dt>Enrollment</dt><dd>CMS Medicare Monthly Enrollment, annual 2025 &mdash; dataset d7fabe1e-d19b-4333-9eff-e80e0643f2fd</dd>
+    <dt>Spend &amp; use</dt><dd>CMS Medicare Geographic Variation by National, State &amp; County, 2024 &mdash; dataset 6219697b-8f6c-4164-bed4-cd9317c58ebc, Original Medicare only</dd>
+    <dt>Nursing homes</dt><dd>CMS Care Compare Provider Information &mdash; 224 Alabama facilities, certified beds and average daily residents</dd>
+    <dt>AL &amp; memory care</dt><dd>Alabama Department of Public Health Facilities Directory &mdash; 185 licensed Assisted Living Facilities and 107 Specialty Care Assisted Living Facilities, retrieved September 2026</dd>
+    <dt>On SCALF</dt><dd>Specialty Care Assisted Living Facility is Alabama's license class for dementia and Alzheimer's care, counted here as memory care. Many SCALFs share an address with an ALF and are licensed separately, so facility counts exceed the number of distinct campuses.</dd>
+  </dl>
+</footer>
+</div>
+<div id="tip" role="status" aria-live="polite"></div>
+
+<script>
+const D = /*__DATA__*/ null;
+const GEO = /*__GEO__*/ null;
+
+const fmtN=v=>v==null?'—':Math.round(v).toLocaleString();
+const fmt1=v=>v==null?'—':v.toFixed(1);
+const fmtM=v=>v==null?'—':'$'+Math.round(v).toLocaleString();
+const fmtP=v=>v==null?'—':(v*100).toFixed(1)+'%';
+
+const M=[
+ {k:'enroll',   g:'Demand', l:'Enrollees',         sh:'Enrollees', f:fmtN, mode:'seq', d:'Total Medicare enrollees, 2025'},
+ {k:'a75',      g:'Demand', l:'Aged 75+',          sh:'75+',       f:fmtN, mode:'seq', d:'Enrollees aged 75 and over'},
+ {k:'a85',      g:'Demand', l:'Aged 85+',          sh:'85+',       f:fmtN, mode:'seq', d:'Enrollees aged 85 and over'},
+ {k:'ma_pct',   g:'Demand', l:'MA share',          sh:'MA %',      f:fmtP, mode:'div', d:'Share enrolled in Medicare Advantage'},
+ {k:'dual_pct', g:'Demand', l:'Dual eligible',     sh:'Dual %',    f:fmtP, mode:'div', d:'Share also covered by Medicaid'},
+ {k:'pc',       g:'Cost',   l:'FFS $ per bene',    sh:'$/bene',    f:fmtM, mode:'div', d:'Total Original Medicare payment per FFS beneficiary, 2024'},
+ {k:'home_pc',  g:'Cost',   l:'Home & community',  sh:'Home $',    f:fmtM, mode:'div', d:'Home health, office visits, DME, labs, imaging, clinics and Part B drugs'},
+ {k:'acute_pc', g:'Cost',   l:'Acute hospital',    sh:'Acute $',   f:fmtM, mode:'div', d:'Inpatient, outpatient, ambulatory surgery, procedures, ambulance, dialysis'},
+ {k:'inst_pc',  g:'Cost',   l:'Institutional PAC', sh:'Inst $',    f:fmtM, mode:'div', d:'Skilled nursing, inpatient rehab and long-term care hospital'},
+ {k:'eol_pc',   g:'Cost',   l:'Hospice',           sh:'Hospice $', f:fmtM, mode:'div', d:'Hospice payment per FFS beneficiary'},
+ {k:'ip_stays', g:'Use',    l:'IP stays / 1k',     sh:'IP/1k',     f:fmt1, mode:'div', d:'Inpatient covered stays per 1,000 beneficiaries'},
+ {k:'readmit',  g:'Use',    l:'Readmissions',      sh:'Readmit',   f:fmtP, mode:'div', d:'Acute hospital readmission rate'},
+ {k:'er',       g:'Use',    l:'ER visits / 1k',    sh:'ER/1k',     f:fmt1, mode:'div', d:'Emergency department visits per 1,000 beneficiaries'},
+ {k:'snf_days', g:'Use',    l:'SNF days / 1k',     sh:'SNF d/1k',  f:fmt1, mode:'div', d:'Medicare-covered skilled nursing days per 1,000 beneficiaries'},
+ {k:'snf_pct',  g:'Use',    l:'Used SNF',          sh:'SNF %',     f:fmtP, mode:'div', d:'Share with any Medicare-covered SNF stay'},
+ {k:'hh_pct',   g:'Use',    l:'Used home health',  sh:'HH %',      f:fmtP, mode:'div', d:'Share with any home health episode'},
+ {k:'hospc_pct',g:'Use',    l:'Used hospice',      sh:'Hospice %', f:fmtP, mode:'div', d:'Share with any hospice stay'},
+ {k:'alf_bed',  g:'Supply', l:'AL beds',           sh:'AL beds',   f:fmtN, mode:'seq', d:'Licensed assisted living beds'},
+ {k:'mc_bed',   g:'Supply', l:'Memory care beds',  sh:'MC beds',   f:fmtN, mode:'seq', d:'Licensed specialty care (memory care) beds'},
+ {k:'nh_res',   g:'Supply', l:'NH residents',      sh:'NH res',    f:fmtN, mode:'seq', d:'Average daily nursing home residents'},
+ {k:'sl_per1k', g:'Supply', l:'AL+MC / 1k 75+',    sh:'AL+MC/1k',  f:fmt1, mode:'div', d:'Licensed assisted living and memory care beds per 1,000 enrollees aged 75+'},
+ {k:'nh_per1k', g:'Supply', l:'NH res / 1k 75+',   sh:'NH/1k',     f:fmt1, mode:'div', d:'Nursing home residents per 1,000 enrollees aged 75+'},
+];
+const MK=Object.fromEntries(M.map(m=>[m.k,m]));
+const GROUPS=['Demand','Cost','Use','Supply'];
+const GLAB={Demand:'Demand',Cost:'Cost',Use:'Utilization',Supply:'Supply'};
+
+D.forEach(r=>{
+  r.sl_bed=r.alf_bed+r.mc_bed;
+  r.sl_per1k=r.a75?r.sl_bed/r.a75*1000:0;
+  r.nh_per1k=r.a75?r.nh_res/r.a75*1000:0;
+  r.ma_pct=r.ma/r.enroll;
+  r.dual_pct=r.dual/r.enroll;
+});
+const T=k=>D.reduce((s,r)=>s+(r[k]||0),0);
+const ST={};
+M.forEach(m=>{
+  const k=m.k;
+  if(['enroll','a75','a85','alf_bed','mc_bed','nh_res'].includes(k)){ST[k]=T(k)/D.length;return}
+  if(k==='ma_pct'){ST[k]=T('ma')/T('enroll');return}
+  if(k==='dual_pct'){ST[k]=T('dual')/T('enroll');return}
+  if(k==='sl_per1k'){ST[k]=(T('alf_bed')+T('mc_bed'))/T('a75')*1000;return}
+  if(k==='nh_per1k'){ST[k]=T('nh_res')/T('a75')*1000;return}
+  ST[k]=D.reduce((s,r)=>s+(r[k]||0)*r.ffs_benes,0)/T('ffs_benes');
+});
+const SL_TOT=T('alf_bed')+T('mc_bed');
+const PER_BED=T('a75')/SL_TOT;
+
+const kpi=(l,v,s)=>'<div class="kpi"><div class="kpi-l">'+l+'</div><div class="kpi-v">'+v+'</div><div class="kpi-s">'+s+'</div></div>';
+document.getElementById('kpis').innerHTML=
+  kpi('Medicare enrollees',(T('enroll')/1e6).toFixed(2)+'M',Math.round(T('ma')/T('enroll')*100)+'% Medicare Advantage')+
+  kpi('Aged 75+',fmtN(T('a75')),fmtN(T('a85'))+' are 85 or older')+
+  kpi('FFS spend, 2024','$'+(T('tot_amt')/1e9).toFixed(2)+'B','$'+fmtN(T('tot_amt')/T('ffs_benes'))+' per FFS beneficiary')+
+  kpi('AL + memory care beds',fmtN(SL_TOT),T('alf_fac')+' ALFs, '+T('mc_fac')+' SCALFs')+
+  kpi('Nursing home residents',fmtN(T('nh_res')),fmtN(T('nh_bed'))+' certified beds, '+Math.round(T('nh_res')/T('nh_bed')*100)+'% full')+
+  kpi('75+ per licensed bed',PER_BED.toFixed(0),'Assisted living and memory care only');
+
+const cs=getComputedStyle(document.documentElement);
+const ramp=()=>[1,2,3,4,5,6,7].map(i=>cs.getPropertyValue('--seq'+i).trim());
+const DIV_L=['#184f95','#3987e5','#9ec5f4','#e8e9e3','#f2a9a8','#e34948','#a52322'];
+const DIV_D=['#86b6ef','#3987e5','#235a97','#33383c','#8f3231','#e34948','#f08a89'];
+const isDark=()=>{const t=document.documentElement.getAttribute('data-theme');
+  return t==='dark'||(t!=='light'&&matchMedia('(prefers-color-scheme: dark)').matches)};
+const divRamp=()=>isDark()?DIV_D:DIV_L;
+const scaleMode=()=>{const s=document.getElementById('scale').value;
+  return s!=='auto'?s:MK[document.getElementById('metric').value].mode};
+
+function binSeq(v,sorted){
+  if(!sorted.length)return 0;
+  let lo=0,hi=sorted.length;
+  while(lo<hi){const mid=(lo+hi)>>1; if(sorted[mid]<=v)lo=mid+1; else hi=mid}
+  return Math.min(6,Math.floor(lo/sorted.length*7));
+}
+function binDiv(v,avg){
+  if(!avg)return 3;
+  const r=v/avg-1, cuts=[-0.25,-0.12,-0.04,0.04,0.12,0.25];
+  let i=0; while(i<6&&r>cuts[i])i++;
+  return i;
+}
+function tint(hex,steps){
+  const a=0.10+Math.min(6,steps)/6*0.40;
+  const n=parseInt(hex.slice(1),16);
+  return 'rgba('+(n>>16&255)+','+(n>>8&255)+','+(n&255)+','+a.toFixed(3)+')';
+}
+function cellColor(m,v,sorted){
+  if(v==null)return 'transparent';
+  if(m.mode==='seq'){const b=binSeq(v,sorted);return tint(ramp()[b],b)}
+  const b=binDiv(v,ST[m.k]);return tint(divRamp()[b],Math.abs(b-3)*2);
+}
+function mapColor(m,v,sorted){
+  if(v==null)return 'var(--surface-2)';
+  return scaleMode()==='seq'?ramp()[binSeq(v,sorted)]:divRamp()[binDiv(v,ST[m.k])];
+}
+
+let sel='01073', sortK='enroll', sortD=-1;
+const active=new Set(GROUPS);
+const $=id=>document.getElementById(id);
+const byFips=Object.fromEntries(D.map(r=>[r.fips,r]));
+const sortedVals={};
+M.forEach(m=>{sortedVals[m.k]=D.map(r=>r[m.k]).filter(v=>v!=null).sort((a,b)=>a-b)});
+
+const msel=$('metric');
+GROUPS.forEach(g=>{
+  const og=document.createElement('optgroup'); og.label=GLAB[g];
+  M.filter(m=>m.g===g).forEach(m=>{
+    const o=document.createElement('option'); o.value=m.k; o.textContent=m.l; og.appendChild(o)});
+  msel.appendChild(og);
+});
+msel.value='a75';
+
+$('grpChips').innerHTML=GROUPS.map(g=>'<button class="chip" data-g="'+g+'" aria-pressed="true">'+GLAB[g]+'</button>').join('');
+$('grpChips').addEventListener('click',e=>{
+  const b=e.target.closest('.chip'); if(!b)return;
+  const g=b.dataset.g;
+  if(active.has(g)&&active.size>1)active.delete(g); else active.add(g);
+  b.setAttribute('aria-pressed',String(active.has(g)));
+  drawTable();
+});
+
+function filtered(){
+  const q=$('q').value.trim().toLowerCase(), mn=+$('minage').value;
+  return D.filter(r=>r.a75>=mn&&(!q||r.county.toLowerCase().includes(q)));
+}
+
+const svgNS='http://www.w3.org/2000/svg';
+function drawMap(){
+  const m=MK[msel.value], sorted=sortedVals[m.k];
+  const keep=new Set(filtered().map(r=>r.fips));
+  const map=$('map');
+  map.setAttribute('viewBox','0 0 '+GEO.w+' '+GEO.h);
+  map.textContent='';
+  Object.keys(GEO.c).forEach(fips=>{
+    const g=GEO.c[fips], r=byFips[fips];
+    if(!r||!g.d)return;
+    const p=document.createElementNS(svgNS,'path');
+    p.setAttribute('d',g.d);
+    p.setAttribute('fill',mapColor(m,r[m.k],sorted));
+    p.setAttribute('tabindex','0');
+    p.setAttribute('role','button');
+    p.setAttribute('aria-label',r.county+' County, '+m.l+' '+m.f(r[m.k]));
+    p.setAttribute('opacity',keep.has(fips)?'1':'0.18');
+    if(fips===sel)p.setAttribute('class','sel');
+    p.addEventListener('click',()=>{sel=fips;render()});
+    p.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();sel=fips;render()}});
+    p.addEventListener('pointerenter',e=>showTip(e,'<span class="t">'+r.county+' County</span>'+m.l+': <b>'+m.f(r[m.k])+'</b><br>Alabama average: '+m.f(ST[m.k])));
+    p.addEventListener('pointermove',moveTip);
+    p.addEventListener('pointerleave',hideTip);
+    map.appendChild(p);
+  });
+  const rp=scaleMode()==='seq'?ramp():divRamp();
+  $('lgSw').innerHTML=rp.map(c=>'<i style="background:'+c+'"></i>').join('');
+  $('lgLo').textContent=scaleMode()==='seq'?'lowest':'−25% vs AL';
+  $('lgHi').textContent=scaleMode()==='seq'?'highest':'+25% vs AL';
+}
+
+function delta(k,v){
+  const a=ST[k]; if(!a)return '';
+  const d=(v/a-1)*100, c=Math.abs(d)<3?'flat':(d>0?'up':'down');
+  return '<div class="d '+c+'">'+(d>0?'+':'')+d.toFixed(0)+'% vs AL</div>';
+}
+function drawDetail(){
+  const r=byFips[sel];
+  const st=k=>{const m=MK[k];
+    return '<div class="dstat"><div class="l">'+m.l+'</div><div class="v">'+m.f(r[k])+'</div>'+(m.mode==='div'?delta(k,r[k]):'')+'</div>'};
+  const bundles=[['home_pc','Home &amp; community'],['acute_pc','Acute hospital'],['inst_pc','Institutional PAC'],['eol_pc','Hospice']];
+  const mx=Math.max.apply(null,bundles.map(b=>Math.max(r[b[0]],ST[b[0]])))*1.06;
+  const bars=bundles.map(function(b){
+    const k=b[0],v=r[k],a=ST[k],d=(v/a-1)*100,c=Math.abs(d)<3?'flat':(d>0?'up':'down');
+    return '<div class="bar-row"><div class="nm">'+b[1]+'</div>'+
+      '<div class="bar-track"><div class="bar-fill" style="width:'+(v/mx*100).toFixed(1)+'%"></div>'+
+      '<div class="bar-avg" style="left:'+(a/mx*100).toFixed(1)+'%"></div></div>'+
+      '<div class="vl">'+fmtM(v)+' <span class="'+c+'">'+(d>0?'+':'')+d.toFixed(0)+'%</span></div></div>'}).join('');
+  $('detail').innerHTML=
+    '<div class="detail-h"><h3>'+r.county+' County</h3>'+
+    '<span class="tag">FIPS '+r.fips+' &middot; '+fmtN(r.ffs_benes)+' FFS benes &middot; avg age '+r.avg_age+'</span></div>'+
+    '<div class="dgrid">'+st('enroll')+st('a75')+st('a85')+st('ma_pct')+st('dual_pct')+st('pc')+'</div>'+
+    '<div class="blockhead">Where the Medicare dollar goes &mdash; per FFS beneficiary, 2024</div>'+
+    '<div class="bars">'+bars+'</div>'+
+    '<div class="barnote">Vertical rule marks the Alabama average.</div>'+
+    '<div class="blockhead">Licensed capacity</div>'+
+    '<div class="dgrid">'+
+      '<div class="dstat"><div class="l">Assisted living</div><div class="v">'+fmtN(r.alf_bed)+'</div><div class="d flat">'+r.alf_fac+' facilit'+(r.alf_fac===1?'y':'ies')+'</div></div>'+
+      '<div class="dstat"><div class="l">Memory care</div><div class="v">'+fmtN(r.mc_bed)+'</div><div class="d flat">'+r.mc_fac+' SCALF'+(r.mc_fac===1?'':'s')+'</div></div>'+
+      '<div class="dstat"><div class="l">Nursing home</div><div class="v">'+fmtN(r.nh_res)+'</div><div class="d flat">'+r.nh_fac+' home'+(r.nh_fac===1?'':'s')+', '+fmtN(r.nh_bed)+' beds</div></div>'+
+      st('sl_per1k')+st('nh_per1k')+
+      '<div class="dstat"><div class="l">75+ per AL/MC bed</div><div class="v">'+(r.sl_bed?(r.a75/r.sl_bed).toFixed(0):'—')+'</div><div class="d flat">AL average '+PER_BED.toFixed(0)+'</div></div>'+
+    '</div>'+
+    '<div class="blockhead">Institutional intensity</div>'+
+    '<div class="dgrid">'+st('snf_days')+st('snf_pct')+st('ip_stays')+st('readmit')+st('hh_pct')+st('hospc_pct')+'</div>';
+}
+
+function drawTable(){
+  const C=M.filter(m=>active.has(m.g));
+  $('hrow').innerHTML='<th class="cty">County</th>'+C.map(function(m,i){
+    const first=i===0||C[i-1].g!==m.g;
+    return '<th class="num'+(first?' grp':'')+'" data-k="'+m.k+'" title="'+m.d+'">'+m.sh+
+      (sortK===m.k?'<span class="dir"> '+(sortD<0?'▾':'▴')+'</span>':'')+'</th>'}).join('');
+  const rows=filtered().slice().sort((a,b)=>{
+    const av=a[sortK],bv=b[sortK];
+    return ((av==null?-1:av)-(bv==null?-1:bv))*sortD||a.county.localeCompare(b.county)});
+  $('hbody').innerHTML=rows.map(function(r){
+    return '<tr data-f="'+r.fips+'"'+(r.fips===sel?' class="sel"':'')+'>'+
+      '<td class="cty">'+r.county+'<span class="fips">'+r.fips+'</span></td>'+
+      C.map(function(m,i){
+        const first=i===0||C[i-1].g!==m.g;
+        return '<td class="num'+(first?' grp':'')+'" style="background:'+cellColor(m,r[m.k],sortedVals[m.k])+
+          '" data-k="'+m.k+'" data-f="'+r.fips+'">'+m.f(r[m.k])+'</td>'}).join('')+'</tr>'}).join('');
+}
+$('hrow').addEventListener('click',e=>{
+  const th=e.target.closest('th[data-k]'); if(!th)return;
+  const k=th.dataset.k;
+  if(sortK===k)sortD*=-1; else{sortK=k;sortD=-1}
+  drawTable();
+});
+$('hbody').addEventListener('click',e=>{
+  const tr=e.target.closest('tr[data-f]'); if(!tr)return;
+  sel=tr.dataset.f; render();
+});
+$('hbody').addEventListener('pointerover',e=>{
+  const td=e.target.closest('td[data-k]'); if(!td)return;
+  const m=MK[td.dataset.k], r=byFips[td.dataset.f];
+  showTip(e,'<span class="t">'+r.county+' &middot; '+m.l+'</span><b>'+m.f(r[m.k])+
+    '</b> &nbsp; AL average '+m.f(ST[m.k])+'<br>'+m.d);
+});
+$('hbody').addEventListener('pointermove',moveTip);
+$('hbody').addEventListener('pointerout',hideTip);
+
+function drawScatter(){
+  const W=980,H=480,P={t:30,r:34,b:62,l:80};
+  const xM=Math.max.apply(null,D.map(r=>r.sl_per1k))*1.08;
+  const ysAll=D.map(r=>r.snf_days);
+  const yMin=Math.min.apply(null,ysAll)*0.93, yM=Math.max.apply(null,ysAll)*1.05;
+  const X=v=>P.l+v/xM*(W-P.l-P.r);
+  const Y=v=>H-P.b-(v-yMin)/(yM-yMin)*(H-P.t-P.b);
+  const maxE=Math.max.apply(null,D.map(r=>r.enroll));
+  const rad=v=>4.5+Math.sqrt(v/maxE)*17;
+  const s=$('scatter');
+  s.setAttribute('viewBox','0 0 '+W+' '+H);
+  const xt=[]; for(let v=0;v<=xM;v+=10)xt.push(v);
+  const step=Math.max(100,Math.ceil((yM-yMin)/5/100)*100);
+  const yt=[]; for(let v=Math.ceil(yMin/step)*step;v<=yM;v+=step)yt.push(v);
+  let g='';
+  yt.forEach(v=>{g+='<line class="gridline" x1="'+P.l+'" y1="'+Y(v).toFixed(1)+'" x2="'+(W-P.r)+'" y2="'+Y(v).toFixed(1)+'"/>'+
+    '<text class="tick" x="'+(P.l-10)+'" y="'+(Y(v)+4).toFixed(1)+'" text-anchor="end">'+fmtN(v)+'</text>'});
+  xt.forEach(v=>{g+='<text class="tick" x="'+X(v).toFixed(1)+'" y="'+(H-P.b+20)+'" text-anchor="middle">'+v+'</text>'});
+  g+='<line class="avgline" x1="'+X(ST.sl_per1k).toFixed(1)+'" y1="'+P.t+'" x2="'+X(ST.sl_per1k).toFixed(1)+'" y2="'+(H-P.b)+'"/>'+
+     '<line class="avgline" x1="'+P.l+'" y1="'+Y(ST.snf_days).toFixed(1)+'" x2="'+(W-P.r)+'" y2="'+Y(ST.snf_days).toFixed(1)+'"/>'+
+     '<text class="quad" x="'+(P.l+8)+'" y="'+(P.t-10)+'">Few beds, heavy SNF use</text>'+
+     '<text class="quad" x="'+(W-P.r)+'" y="'+(H-P.b-12)+'" text-anchor="end">Many beds, light SNF use</text>'+
+     '<text class="axlab" x="'+(P.l+(W-P.l-P.r)/2)+'" y="'+(H-14)+'" text-anchor="middle">Assisted living + memory care beds per 1,000 aged 75+</text>'+
+     '<text class="axlab" transform="translate(22,'+(P.t+(H-P.t-P.b)/2)+') rotate(-90)" text-anchor="middle">SNF days per 1,000 beneficiaries</text>';
+  const named={'01073':1,'01097':1,'01089':1,'01003':1,'01117':1,'01081':1,'01023':1,'01047':1};
+  D.slice().sort((a,b)=>b.enroll-a.enroll).forEach(r=>{
+    const x=X(r.sl_per1k),y=Y(r.snf_days),rr=rad(r.enroll);
+    g+='<circle class="dot'+(r.sl_bed===0?' hi':'')+'" cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="'+rr.toFixed(1)+'" data-f="'+r.fips+'"/>';
+    if(named[r.fips])g+='<text class="dotlab" x="'+(x+rr+6).toFixed(1)+'" y="'+(y+4).toFixed(1)+'">'+r.county+'</text>';
+  });
+  s.innerHTML=g;
+  Array.prototype.forEach.call(s.querySelectorAll('circle'),c=>{
+    const r=byFips[c.dataset.f];
+    c.addEventListener('pointerenter',e=>showTip(e,'<span class="t">'+r.county+' County</span>'+
+      'AL+MC beds per 1k 75+: <b>'+fmt1(r.sl_per1k)+'</b><br>SNF days per 1k: <b>'+fmt1(r.snf_days)+'</b><br>'+
+      'Enrollees: '+fmtN(r.enroll)+'<br>'+(r.sl_bed?r.alf_bed+' AL + '+r.mc_bed+' MC beds':'<b>No licensed AL or memory care</b>')));
+    c.addEventListener('pointermove',moveTip);
+    c.addEventListener('pointerleave',hideTip);
+    c.addEventListener('click',()=>{sel=r.fips;render();
+      document.querySelector('.mapgrid').scrollIntoView({behavior:'smooth',block:'center'})});
+  });
+}
+
+const tip=$('tip');
+function showTip(e,html){tip.innerHTML=html;tip.style.opacity='1';moveTip(e)}
+function moveTip(e){
+  const b=tip.getBoundingClientRect();
+  let x=e.clientX+14,y=e.clientY+14;
+  if(x+b.width>innerWidth-8)x=e.clientX-b.width-14;
+  if(y+b.height>innerHeight-8)y=e.clientY-b.height-14;
+  tip.style.left=x+'px';tip.style.top=y+'px';
+}
+function hideTip(){tip.style.opacity='0'}
+
+function render(){drawMap();drawDetail();drawTable()}
+msel.addEventListener('change',drawMap);
+$('scale').addEventListener('change',()=>{drawMap();drawTable()});
+$('q').addEventListener('input',()=>{drawMap();drawTable()});
+$('minage').addEventListener('input',()=>{
+  const v=+$('minage').value;
+  $('minageV').textContent=v?fmtN(v):'all';
+  drawMap();drawTable();
+});
+$('minageV').textContent='all';
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{render();drawScatter()});
+new MutationObserver(()=>{render();drawScatter()}).observe(
+  document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+render();drawScatter();
+</script>

@@ -1,0 +1,607 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Medicare demand, cost and licensed senior-housing supply for all 67 Alabama counties: an interactive map, a filterable heatmap, and the assisted living and memory care supply gap.">
+<meta property="og:title" content="Alabama Senior Care Atlas">
+<meta property="og:description" content="Medicare demand, cost and licensed senior-housing supply for all 67 Alabama counties: an interactive map, a filterable heatmap, and the assisted living and memory care supply gap.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8F%A1%3C/text%3E%3C/svg%3E">
+<title>Alabama Senior Care Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  color-scheme: light;
+  --paper:#f2f3ef; --surface:#fbfbf9; --surface-2:#eceee7;
+  --ink:#12171c; --ink-2:#4a5560; --ink-3:#78838d;
+  --rule:#d6d9d0; --rule-2:#c2c6ba;
+  --accent:#1c5cab; --accent-soft:#2a78d6; --clay:#c1502a;
+  --pos:#184f95; --neg:#a52322;
+  --cell-ink:#12171c;
+  --seq1:#cde2fb;--seq2:#9ec5f4;--seq3:#6da7ec;--seq4:#3987e5;--seq5:#256abf;--seq6:#184f95;--seq7:#0d366b;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --paper:#14171a; --surface:#1b1f23; --surface-2:#22272c;
+    --ink:#e9ece6; --ink-2:#a4afb8; --ink-3:#7b868f;
+    --rule:#2c3237; --rule-2:#3b434a;
+    --accent:#3987e5; --accent-soft:#5598e7; --clay:#d95926;
+    --pos:#5598e7; --neg:#e66767;
+    --cell-ink:#eef1ec;
+    --seq1:#16304f;--seq2:#1c4573;--seq3:#235a97;--seq4:#2a78d6;--seq5:#5598e7;--seq6:#86b6ef;--seq7:#b7d3f6;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --paper:#14171a; --surface:#1b1f23; --surface-2:#22272c;
+  --ink:#e9ece6; --ink-2:#a4afb8; --ink-3:#7b868f;
+  --rule:#2c3237; --rule-2:#3b434a;
+  --accent:#3987e5; --accent-soft:#5598e7; --clay:#d95926;
+  --pos:#5598e7; --neg:#e66767;
+  --cell-ink:#eef1ec;
+  --seq1:#16304f;--seq2:#1c4573;--seq3:#235a97;--seq4:#2a78d6;--seq5:#5598e7;--seq6:#86b6ef;--seq7:#b7d3f6;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);
+  font-family:"Source Serif 4",Georgia,"Times New Roman",serif;
+  font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1240px;margin:0 auto;padding:0 24px 72px}
+h1,h2,h3,.ui{font-family:"Libre Franklin","Helvetica Neue",Arial,sans-serif}
+.mono,td.num,th.num,.kpi-v,.tag{font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;font-variant-numeric:tabular-nums}
+
+header.mast{border-bottom:3px solid var(--ink);margin-top:28px;padding-bottom:14px}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-2);display:flex;flex-wrap:wrap;gap:8px 18px;align-items:baseline}
+.eyebrow b{color:var(--accent);font-weight:600}
+h1{font-size:clamp(30px,5.2vw,52px);font-weight:800;letter-spacing:-.022em;line-height:1.02;
+  margin:10px 0 8px;text-wrap:balance}
+.dek{font-size:17px;color:var(--ink-2);max-width:64ch;margin:0}
+.mast-rule{display:flex;gap:16px;flex-wrap:wrap;margin-top:14px;font-size:12px;color:var(--ink-3);
+  font-family:"IBM Plex Mono",monospace}
+.mast-rule span{border-left:2px solid var(--rule-2);padding-left:8px}
+
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));
+  border-bottom:1px solid var(--rule);margin:0 0 30px}
+.kpi{padding:18px 18px 16px 0;border-right:1px solid var(--rule)}
+.kpi:last-child{border-right:0}
+.kpi-l{font-family:"Libre Franklin",sans-serif;font-size:10.5px;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3);margin-bottom:6px}
+.kpi-v{font-size:26px;font-weight:600;letter-spacing:-.02em;line-height:1}
+.kpi-s{font-size:12.5px;color:var(--ink-2);margin-top:5px;font-family:"Libre Franklin",sans-serif}
+
+section{margin:0 0 46px}
+h2{font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);
+  margin:0 0 4px;display:flex;align-items:center;gap:10px}
+h2::after{content:"";flex:1;height:2px;background:var(--ink);opacity:.16}
+.sub{font-size:14.5px;color:var(--ink-2);margin:0 0 18px;max-width:70ch}
+
+.caveat{background:var(--surface);border:1px solid var(--rule);border-left:4px solid var(--clay);
+  padding:20px 22px;margin:0 0 44px}
+.caveat h3{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;margin:0 0 12px;color:var(--clay)}
+.caveat ul{margin:0;padding-left:0;list-style:none;display:grid;gap:11px}
+.caveat li{padding-left:20px;position:relative;font-size:14.5px;max-width:96ch}
+.caveat li::before{content:"";position:absolute;left:2px;top:.62em;width:7px;height:2px;background:var(--clay)}
+.caveat b{font-weight:600}
+.caveat .ok::before{background:var(--accent)}
+
+.controls{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:flex-end;margin:0 0 18px;
+  padding-bottom:16px;border-bottom:1px solid var(--rule)}
+.ctl{display:flex;flex-direction:column;gap:5px}
+.ctl label{font-family:"Libre Franklin",sans-serif;font-size:10px;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3)}
+select,input[type=search]{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--ink);
+  background:var(--surface);border:1px solid var(--rule-2);padding:7px 10px;border-radius:2px;min-width:150px}
+input[type=range]{accent-color:var(--accent);width:150px}
+select:focus-visible,input:focus-visible,button:focus-visible,path:focus-visible,.chip:focus-visible{
+  outline:2px solid var(--accent);outline-offset:2px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-family:"Libre Franklin",sans-serif;font-size:11.5px;font-weight:600;letter-spacing:.03em;
+  padding:6px 11px;border:1px solid var(--rule-2);background:var(--surface);color:var(--ink-2);
+  border-radius:2px;cursor:pointer}
+.chip[aria-pressed=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+
+.mapgrid{display:grid;grid-template-columns:minmax(260px,340px) 1fr;gap:34px;align-items:start}
+@media(max-width:820px){.mapgrid{grid-template-columns:1fr}}
+.mapbox{background:var(--surface);border:1px solid var(--rule);padding:14px}
+.mapbox svg{display:block;width:100%;height:auto}
+.mapbox path{stroke:var(--surface);stroke-width:.8;cursor:pointer}
+.mapbox path:hover{stroke:var(--ink);stroke-width:1.6}
+.mapbox path.sel{stroke:var(--ink);stroke-width:2.2}
+.legend{display:flex;align-items:center;gap:8px;margin-top:12px;font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--ink-3)}
+.legend .swatches{display:flex;flex:1;height:9px}
+.legend .swatches i{flex:1}
+
+.detail{background:var(--surface);border:1px solid var(--rule);padding:22px 24px}
+.detail-h{display:flex;justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap;
+  border-bottom:2px solid var(--ink);padding-bottom:10px;margin-bottom:16px}
+.detail-h h3{font-size:26px;font-weight:800;margin:0;letter-spacing:-.02em}
+.tag{font-size:11px;color:var(--ink-3);letter-spacing:.06em}
+.dgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:16px 20px;margin-bottom:22px}
+.dstat .l{font-family:"Libre Franklin",sans-serif;font-size:9.5px;font-weight:600;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--ink-3);margin-bottom:3px}
+.dstat .v{font-family:"IBM Plex Mono",monospace;font-size:18px;font-weight:600;font-variant-numeric:tabular-nums}
+.dstat .d{font-family:"IBM Plex Mono",monospace;font-size:11px;margin-top:2px}
+.up{color:var(--neg)}.down{color:var(--pos)}.flat{color:var(--ink-3)}
+.blockhead{font-family:"Libre Franklin",sans-serif;font-size:10px;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-3);margin:22px 0 10px;padding-top:14px;border-top:1px solid var(--rule)}
+.bars{display:grid;gap:9px}
+.bar-row{display:grid;grid-template-columns:132px 1fr 104px;gap:12px;align-items:center;font-size:13px}
+.bar-row .nm{font-family:"Libre Franklin",sans-serif;font-size:12px;color:var(--ink-2)}
+.bar-track{background:var(--surface-2);height:16px;position:relative}
+.bar-fill{height:100%;background:var(--accent)}
+.bar-avg{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink);opacity:.55}
+.bar-row .vl{font-family:"IBM Plex Mono",monospace;font-size:12.5px;text-align:right;font-variant-numeric:tabular-nums}
+.barnote{font-size:12px;color:var(--ink-3);margin-top:9px;font-family:"IBM Plex Mono",monospace}
+
+.tablewrap{overflow-x:auto;border:1px solid var(--rule);background:var(--surface)}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:12.5px}
+th,td{padding:6px 9px;white-space:nowrap;text-align:right}
+th{position:sticky;top:0;z-index:3;background:var(--surface);font-family:"Libre Franklin",sans-serif;
+  font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);
+  border-bottom:2px solid var(--ink);cursor:pointer;vertical-align:bottom;padding-bottom:8px}
+th:hover{color:var(--accent)}
+th.grp,td.grp{border-left:2px solid var(--rule-2)}
+th.cty,td.cty{text-align:left;position:sticky;left:0;background:var(--surface);z-index:2;
+  font-family:"Libre Franklin",sans-serif;font-weight:600;font-size:13px;border-right:2px solid var(--rule-2)}
+th.cty{z-index:4}
+td.num{font-variant-numeric:tabular-nums;font-weight:500;color:var(--cell-ink)}
+tbody tr{cursor:pointer}
+tbody tr:hover td.cty{color:var(--accent)}
+tbody tr.sel td.cty{background:var(--ink);color:var(--paper)}
+.fips{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--ink-3);margin-left:7px;font-weight:400}
+th .dir{color:var(--accent)}
+
+.chartbox{background:var(--surface);border:1px solid var(--rule);padding:20px 22px 14px}
+.chartbox svg{display:block;width:100%;height:auto}
+.axlab{font-family:"Libre Franklin",sans-serif;font-size:11px;font-weight:600;letter-spacing:.08em;
+  text-transform:uppercase;fill:var(--ink-3)}
+.tick{font-family:"IBM Plex Mono",monospace;font-size:11px;fill:var(--ink-3)}
+.gridline{stroke:var(--rule);stroke-width:1}
+.avgline{stroke:var(--ink);stroke-width:1;stroke-dasharray:3 3;opacity:.45}
+.dot{fill:var(--accent-soft);fill-opacity:.7;stroke:var(--surface);stroke-width:2;cursor:pointer}
+.dot.hi{fill:var(--clay);fill-opacity:.85}
+.dotlab{font-family:"Libre Franklin",sans-serif;font-size:11px;font-weight:600;fill:var(--ink-2)}
+.quad{font-family:"Libre Franklin",sans-serif;font-size:10.5px;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;fill:var(--ink-3)}
+
+#tip{position:fixed;z-index:60;pointer-events:none;background:var(--ink);color:var(--paper);
+  padding:9px 12px;font-family:"IBM Plex Mono",monospace;font-size:11.5px;line-height:1.5;
+  border-radius:2px;max-width:290px;opacity:0;box-shadow:0 4px 14px rgba(0,0,0,.22)}
+#tip b{font-weight:600}
+#tip .t{font-family:"Libre Franklin",sans-serif;font-weight:700;font-size:12.5px;
+  display:block;margin-bottom:4px;letter-spacing:.02em}
+
+footer{border-top:2px solid var(--ink);padding-top:18px;font-size:12.5px;color:var(--ink-2)}
+footer h3{font-family:"Libre Franklin",sans-serif;font-size:10px;font-weight:800;letter-spacing:.14em;
+  text-transform:uppercase;margin:0 0 10px;color:var(--ink)}
+footer dl{display:grid;grid-template-columns:auto 1fr;gap:5px 16px;margin:0;
+  font-family:"IBM Plex Mono",monospace;font-size:11.5px}
+footer dt{color:var(--ink-3)}
+footer dd{margin:0}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+<style>
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0}
+  img{max-width:100%}
+  [hidden]{display:none!important}
+  #themeToggle{position:fixed;top:14px;right:14px;z-index:80;
+    font-family:"Libre Franklin","Helvetica Neue",Arial,sans-serif;font-size:11px;font-weight:600;
+    letter-spacing:.08em;text-transform:uppercase;padding:7px 12px;cursor:pointer;border-radius:2px;
+    background:var(--surface);color:var(--ink-2);border:1px solid var(--rule-2)}
+  #themeToggle:hover{color:var(--accent);border-color:var(--accent)}
+  @media print{#themeToggle{display:none}}
+</style>
+</head>
+<body>
+<button id="themeToggle" type="button">Dark</button>
+
+
+<div class="wrap">
+<header class="mast">
+  <div class="eyebrow"><b>Alabama</b><span>67 counties</span><span>Enrollment 2025</span><span>Claims 2024</span><span>Licensure Sep 2026</span></div>
+  <h1>Alabama Senior Care Atlas</h1>
+  <p class="dek">Medicare demand, cost and licensed senior-housing supply for every county in Alabama &mdash; built to show where independent living, assisted living and memory care have room to grow, and what Medicare actually spends where they don't.</p>
+  <div class="mast-rule">
+    <span>CMS Monthly Enrollment</span><span>CMS Geographic Variation PUF</span><span>CMS Care Compare</span><span>ADPH Facilities Directory</span>
+  </div>
+</header>
+
+<div class="kpis" id="kpis"></div>
+
+<div class="caveat">
+  <h3>Read this before you read the numbers</h3>
+  <ul>
+    <li><b>Medicare does not record where a beneficiary lives.</b> Claims identify the <i>service</i> billed, never the residence. Someone in independent living, in assisted living, or in their own house is indistinguishable in this data, and no public CMS file splits spend by residential setting. So the residence columns here come from state licensure, and the spend columns are county-wide.</li>
+    <li><b>Independent living is invisible on purpose.</b> Alabama does not license IL &mdash; it is housing, not care, so there is no registry and no bed count. The closest honest proxy is the <b>75+ and 85+ enrollee counts</b> set against licensed AL and memory-care beds: that gap is your addressable population.</li>
+    <li><b>&ldquo;Skilled nursing&rdquo; here means post-acute SNF, not the nursing home.</b> Medicare covers up to 100 days after a qualifying hospital stay. Long-term custodial care is paid by Medicaid and out of pocket and never appears in these dollars &mdash; which means most of the savings from keeping someone out of a nursing home accrue to <b>Medicaid</b>, not Medicare.</li>
+    <li class="ok"><b>What Medicare savings do look like is on this page:</b> fewer inpatient stays, lower readmission rates, fewer ER visits, fewer SNF days per 1,000, and a heavier tilt toward home health and hospice. Those five are the measurable case for aging in place, and they vary by more than two-fold across Alabama counties.</li>
+    <li><b>Spend is Original Medicare only, and Alabama is 60% Medicare Advantage.</b> CMS publishes no county-level MA spending, so the $4.67B here is roughly a third of true Medicare spend in the state. Per-capita figures are per fee-for-service beneficiary with full Part A and B &mdash; not per enrollee.</li>
+  </ul>
+</div>
+
+<section>
+  <h2>Where the demand is</h2>
+  <p class="sub">Choose a measure to shade the map and the heatmap below. Click any county &mdash; on the map or in the table &mdash; to open its full profile.</p>
+  <div class="controls">
+    <div class="ctl"><label for="metric">Shade counties by</label><select id="metric"></select></div>
+    <div class="ctl"><label for="scale">Scale</label><select id="scale">
+      <option value="auto">Auto (fits the measure)</option>
+      <option value="seq">Magnitude, low to high</option>
+      <option value="div">Compared to Alabama average</option>
+    </select></div>
+    <div class="ctl"><label for="minage">Min. enrollees 75+ <span id="minageV" class="mono"></span></label><input type="range" id="minage" min="0" max="20000" step="500" value="0"></div>
+    <div class="ctl"><label for="q">Find a county</label><input type="search" id="q" placeholder="Jefferson, Baldwin&hellip;" autocomplete="off"></div>
+  </div>
+  <div class="mapgrid">
+    <div class="mapbox">
+      <svg id="map" role="img" aria-label="Alabama counties shaded by the selected measure"></svg>
+      <div class="legend"><span id="lgLo">low</span><span class="swatches" id="lgSw"></span><span id="lgHi">high</span></div>
+    </div>
+    <div class="detail" id="detail"></div>
+  </div>
+</section>
+
+<section>
+  <h2>County heatmap</h2>
+  <p class="sub">Rates and dollars are shaded against the Alabama average; counts are shaded low to high. Click a column header to sort, and use the group chips to focus on demand, cost, utilization or supply.</p>
+  <div class="controls">
+    <div class="ctl"><label>Column groups</label><div class="chips" id="grpChips"></div></div>
+  </div>
+  <div class="tablewrap"><table id="heat"><thead><tr id="hrow"></tr></thead><tbody id="hbody"></tbody></table></div>
+</section>
+
+<section>
+  <h2>Supply against institutional intensity</h2>
+  <p class="sub">Horizontal axis: licensed assisted-living and memory-care capacity per 1,000 enrollees aged 75 and over. Vertical axis: Medicare-covered SNF days per 1,000 fee-for-service beneficiaries &mdash; how heavily a county leans on institutional post-acute care. Circle size is total Medicare enrollment; dashed lines mark the Alabama average. Counties in clay have no licensed assisted living or memory care at all.</p>
+  <div class="chartbox"><svg id="scatter" role="img" aria-label="Scatter plot of senior living beds per 1,000 aged 75 plus against SNF days per 1,000 beneficiaries"></svg></div>
+</section>
+
+<footer>
+  <h3>Sources &amp; vintage</h3>
+  <dl>
+    <dt>Enrollment</dt><dd>CMS Medicare Monthly Enrollment, annual 2025 &mdash; dataset d7fabe1e-d19b-4333-9eff-e80e0643f2fd</dd>
+    <dt>Spend &amp; use</dt><dd>CMS Medicare Geographic Variation by National, State &amp; County, 2024 &mdash; dataset 6219697b-8f6c-4164-bed4-cd9317c58ebc, Original Medicare only</dd>
+    <dt>Nursing homes</dt><dd>CMS Care Compare Provider Information &mdash; 224 Alabama facilities, certified beds and average daily residents</dd>
+    <dt>AL &amp; memory care</dt><dd>Alabama Department of Public Health Facilities Directory &mdash; 185 licensed Assisted Living Facilities and 107 Specialty Care Assisted Living Facilities, retrieved September 2026</dd>
+    <dt>On SCALF</dt><dd>Specialty Care Assisted Living Facility is Alabama's license class for dementia and Alzheimer's care, counted here as memory care. Many SCALFs share an address with an ALF and are licensed separately, so facility counts exceed the number of distinct campuses.</dd>
+  </dl>
+</footer>
+</div>
+<div id="tip" role="status" aria-live="polite"></div>
+
+<script>
+const D = [{"county":"Jefferson","fips":"01073","enroll":139021,"ma":92016,"dual":27496,"a75":52038,"a85":12838,"ffs_benes":34085,"avg_age":73.0,"pc":13521.24,"tot_amt":460871345.0,"ip_stays":242.5994,"readmit":0.1842,"er":599.0025,"snf_pct":0.0303,"snf_days":1115.7987,"hh_pct":0.1065,"hospc_pct":0.0422,"alf_fac":15,"alf_bed":914,"mc_fac":13,"mc_bed":552,"nh_fac":34,"nh_bed":3963,"nh_res":3326.4,"home_pc":4914.74,"inst_pc":1039.21,"acute_pc":6769.09,"eol_pc":648.17},{"county":"Mobile","fips":"01097","enroll":90023,"ma":62761,"dual":20553,"a75":32602,"a85":7667,"ffs_benes":20998,"avg_age":72.0,"pc":13358.86,"tot_amt":280509261.0,"ip_stays":272.9308,"readmit":0.1847,"er":616.3444,"snf_pct":0.039,"snf_days":1308.8866,"hh_pct":0.1014,"hospc_pct":0.0472,"alf_fac":8,"alf_bed":429,"mc_fac":9,"mc_bed":327,"nh_fac":17,"nh_bed":1975,"nh_res":1599.3,"home_pc":4604.31,"inst_pc":951.61,"acute_pc":6825.85,"eol_pc":836.51},{"county":"Madison","fips":"01089","enroll":78966,"ma":35973,"dual":9547,"a75":31149,"a85":8422,"ffs_benes":34495,"avg_age":74.0,"pc":12658.02,"tot_amt":436638500.0,"ip_stays":222.641,"readmit":0.1646,"er":545.6153,"snf_pct":0.0354,"snf_days":1152.196,"hh_pct":0.0814,"hospc_pct":0.0376,"alf_fac":17,"alf_bed":1006,"mc_fac":13,"mc_bed":522,"nh_fac":12,"nh_bed":1267,"nh_res":1100.2,"home_pc":5445.54,"inst_pc":1019.58,"acute_pc":5546.85,"eol_pc":520.82},{"county":"Baldwin","fips":"01003","enroll":65644,"ma":37656,"dual":6739,"a75":26959,"a85":5837,"ffs_benes":23801,"avg_age":74.0,"pc":12382.07,"tot_amt":294705726.0,"ip_stays":218.7723,"readmit":0.1526,"er":627.8308,"snf_pct":0.0303,"snf_days":968.2786,"hh_pct":0.1112,"hospc_pct":0.0405,"alf_fac":12,"alf_bed":703,"mc_fac":4,"mc_bed":208,"nh_fac":7,"nh_bed":772,"nh_res":548.9,"home_pc":4487.5,"inst_pc":773.85,"acute_pc":6372.98,"eol_pc":645.47},{"county":"Montgomery","fips":"01101","enroll":46096,"ma":28849,"dual":11120,"a75":16399,"a85":4029,"ffs_benes":12978,"avg_age":72.0,"pc":11057.55,"tot_amt":143504935.0,"ip_stays":226.1519,"readmit":0.1965,"er":546.078,"snf_pct":0.0212,"snf_days":757.975,"hh_pct":0.0833,"hospc_pct":0.0329,"alf_fac":7,"alf_bed":247,"mc_fac":5,"mc_bed":144,"nh_fac":8,"nh_bed":1081,"nh_res":894.1,"home_pc":3107.79,"inst_pc":926.35,"acute_pc":6409.95,"eol_pc":482.82},{"county":"Shelby","fips":"01117","enroll":44320,"ma":26925,"dual":3724,"a75":18201,"a85":4055,"ffs_benes":13370,"avg_age":74.0,"pc":13156.05,"tot_amt":175896385.0,"ip_stays":224.3082,"readmit":0.1739,"er":557.7412,"snf_pct":0.0217,"snf_days":660.6582,"hh_pct":0.1046,"hospc_pct":0.0413,"alf_fac":10,"alf_bed":431,"mc_fac":7,"mc_bed":250,"nh_fac":3,"nh_bed":392,"nh_res":372.4,"home_pc":5287.04,"inst_pc":913.97,"acute_pc":6173.84,"eol_pc":613.63},{"county":"Tuscaloosa","fips":"01125","enroll":38322,"ma":22654,"dual":7356,"a75":13630,"a85":3107,"ffs_benes":12657,"avg_age":71.0,"pc":13287.66,"tot_amt":168181866.0,"ip_stays":265.4658,"readmit":0.2024,"er":551.2365,"snf_pct":0.0389,"snf_days":1214.4268,"hh_pct":0.1187,"hospc_pct":0.0367,"alf_fac":8,"alf_bed":433,"mc_fac":6,"mc_bed":232,"nh_fac":6,"nh_bed":903,"nh_res":763.3,"home_pc":4112.39,"inst_pc":1061.33,"acute_pc":7457.58,"eol_pc":544.76},{"county":"Lee","fips":"01081","enroll":29605,"ma":16768,"dual":4476,"a75":10973,"a85":2468,"ffs_benes":10554,"avg_age":72.0,"pc":10568.7,"tot_amt":111542055.0,"ip_stays":191.7756,"readmit":0.1672,"er":526.7197,"snf_pct":0.0187,"snf_days":486.7349,"hh_pct":0.0817,"hospc_pct":0.0352,"alf_fac":5,"alf_bed":256,"mc_fac":5,"mc_bed":176,"nh_fac":2,"nh_bed":312,"nh_res":199.0,"home_pc":3101.9,"inst_pc":771.03,"acute_pc":6077.39,"eol_pc":531.09},{"county":"Calhoun","fips":"01015","enroll":28267,"ma":15744,"dual":5857,"a75":9898,"a85":2223,"ffs_benes":10697,"avg_age":72.0,"pc":12567.62,"tot_amt":134435811.0,"ip_stays":273.4412,"readmit":0.2028,"er":549.5933,"snf_pct":0.0442,"snf_days":1317.5657,"hh_pct":0.1424,"hospc_pct":0.041,"alf_fac":4,"alf_bed":164,"mc_fac":4,"mc_bed":163,"nh_fac":5,"nh_bed":667,"nh_res":556.2,"home_pc":4658.39,"inst_pc":956.2,"acute_pc":6253.64,"eol_pc":643.45},{"county":"Morgan","fips":"01103","enroll":27856,"ma":14843,"dual":4391,"a75":10796,"a85":2600,"ffs_benes":11516,"avg_age":74.0,"pc":12776.69,"tot_amt":147136319.0,"ip_stays":244.0083,"readmit":0.1706,"er":558.7878,"snf_pct":0.0464,"snf_days":1548.628,"hh_pct":0.1049,"hospc_pct":0.0495,"alf_fac":6,"alf_bed":190,"mc_fac":2,"mc_bed":78,"nh_fac":4,"nh_bed":634,"nh_res":505.1,"home_pc":5414.74,"inst_pc":956.89,"acute_pc":5363.8,"eol_pc":920.4},{"county":"Etowah","fips":"01055","enroll":26772,"ma":17254,"dual":6042,"a75":9606,"a85":2107,"ffs_benes":8208,"avg_age":72.0,"pc":13897.38,"tot_amt":114069730.0,"ip_stays":323.3431,"readmit":0.1863,"er":631.8226,"snf_pct":0.0374,"snf_days":1312.7437,"hh_pct":0.1435,"hospc_pct":0.0558,"alf_fac":7,"alf_bed":208,"mc_fac":2,"mc_bed":63,"nh_fac":6,"nh_bed":848,"nh_res":633.3,"home_pc":4791.35,"inst_pc":1375.19,"acute_pc":6615.47,"eol_pc":965.75},{"county":"Houston","fips":"01069","enroll":26150,"ma":15614,"dual":5824,"a75":9918,"a85":2380,"ffs_benes":8897,"avg_age":73.0,"pc":13378.88,"tot_amt":119031920.0,"ip_stays":261.7736,"readmit":0.167,"er":582.1063,"snf_pct":0.0371,"snf_days":1274.025,"hh_pct":0.1184,"hospc_pct":0.0468,"alf_fac":6,"alf_bed":206,"mc_fac":2,"mc_bed":32,"nh_fac":3,"nh_bed":501,"nh_res":467.4,"home_pc":4675.37,"inst_pc":1336.7,"acute_pc":6443.68,"eol_pc":800.41},{"county":"Lauderdale","fips":"01077","enroll":23596,"ma":12617,"dual":4186,"a75":9266,"a85":2213,"ffs_benes":9935,"avg_age":73.0,"pc":11722.02,"tot_amt":116458229.0,"ip_stays":265.5259,"readmit":0.1823,"er":544.8415,"snf_pct":0.0412,"snf_days":1426.9753,"hh_pct":0.1139,"hospc_pct":0.0415,"alf_fac":5,"alf_bed":209,"mc_fac":3,"mc_bed":48,"nh_fac":5,"nh_bed":612,"nh_res":560.8,"home_pc":4278.02,"inst_pc":927.11,"acute_pc":5685.69,"eol_pc":672.81},{"county":"Marshall","fips":"01095","enroll":22311,"ma":12309,"dual":4396,"a75":8428,"a85":1931,"ffs_benes":8622,"avg_age":73.0,"pc":11580.25,"tot_amt":99844941.0,"ip_stays":213.9875,"readmit":0.1441,"er":585.9429,"snf_pct":0.0434,"snf_days":1399.0953,"hh_pct":0.1087,"hospc_pct":0.0506,"alf_fac":5,"alf_bed":172,"mc_fac":2,"mc_bed":54,"nh_fac":5,"nh_bed":550,"nh_res":524.9,"home_pc":4070.18,"inst_pc":806.02,"acute_pc":5754.05,"eol_pc":785.95},{"county":"Limestone","fips":"01083","enroll":21856,"ma":11102,"dual":2944,"a75":8341,"a85":1883,"ffs_benes":9087,"avg_age":73.0,"pc":12054.05,"tot_amt":109535125.0,"ip_stays":218.9942,"readmit":0.1596,"er":569.0547,"snf_pct":0.041,"snf_days":1463.9595,"hh_pct":0.0908,"hospc_pct":0.0351,"alf_fac":4,"alf_bed":151,"mc_fac":3,"mc_bed":66,"nh_fac":2,"nh_bed":319,"nh_res":283.3,"home_pc":4767.74,"inst_pc":936.26,"acute_pc":5684.8,"eol_pc":587.24},{"county":"Cullman","fips":"01043","enroll":21317,"ma":12456,"dual":4141,"a75":8200,"a85":1904,"ffs_benes":7788,"avg_age":74.0,"pc":13830.41,"tot_amt":107711256.0,"ip_stays":300.7191,"readmit":0.184,"er":630.3287,"snf_pct":0.0526,"snf_days":1584.1037,"hh_pct":0.1199,"hospc_pct":0.0501,"alf_fac":3,"alf_bed":124,"mc_fac":1,"mc_bed":16,"nh_fac":4,"nh_bed":554,"nh_res":512.0,"home_pc":5625.39,"inst_pc":934.88,"acute_pc":6285.68,"eol_pc":822.42},{"county":"St. Clair","fips":"01115","enroll":20948,"ma":13913,"dual":3326,"a75":7635,"a85":1667,"ffs_benes":5498,"avg_age":73.0,"pc":13370.53,"tot_amt":73511187.0,"ip_stays":281.5569,"readmit":0.1936,"er":602.9465,"snf_pct":0.0295,"snf_days":918.5158,"hh_pct":0.1111,"hospc_pct":0.0435,"alf_fac":3,"alf_bed":140,"mc_fac":0,"mc_bed":0,"nh_fac":4,"nh_bed":374,"nh_res":319.6,"home_pc":4695.35,"inst_pc":812.44,"acute_pc":7144.34,"eol_pc":599.03},{"county":"Talladega","fips":"01121","enroll":20519,"ma":13592,"dual":5096,"a75":6705,"a85":1507,"ffs_benes":5578,"avg_age":72.0,"pc":12762.11,"tot_amt":71187060.0,"ip_stays":257.0814,"readmit":0.1681,"er":602.0079,"snf_pct":0.0398,"snf_days":1136.0703,"hh_pct":0.1181,"hospc_pct":0.0595,"alf_fac":3,"alf_bed":72,"mc_fac":2,"mc_bed":59,"nh_fac":3,"nh_bed":468,"nh_res":436.4,"home_pc":4137.96,"inst_pc":921.87,"acute_pc":6649.06,"eol_pc":962.85},{"county":"Elmore","fips":"01051","enroll":20171,"ma":12028,"dual":3112,"a75":7130,"a85":1555,"ffs_benes":6551,"avg_age":72.0,"pc":10923.27,"tot_amt":71558357.0,"ip_stays":218.4399,"readmit":0.1901,"er":549.2291,"snf_pct":0.0253,"snf_days":704.6252,"hh_pct":0.0835,"hospc_pct":0.035,"alf_fac":3,"alf_bed":48,"mc_fac":0,"mc_bed":0,"nh_fac":4,"nh_bed":421,"nh_res":379.6,"home_pc":3207.99,"inst_pc":586.03,"acute_pc":6392.2,"eol_pc":585.52},{"county":"Walker","fips":"01127","enroll":17156,"ma":11469,"dual":3929,"a75":6137,"a85":1434,"ffs_benes":4946,"avg_age":72.0,"pc":13716.42,"tot_amt":67841428.0,"ip_stays":285.8876,"readmit":0.1795,"er":600.6874,"snf_pct":0.0364,"snf_days":1132.0259,"hh_pct":0.1231,"hospc_pct":0.0574,"alf_fac":4,"alf_bed":118,"mc_fac":2,"mc_bed":30,"nh_fac":5,"nh_bed":526,"nh_res":473.0,"home_pc":4790.04,"inst_pc":804.52,"acute_pc":6857.0,"eol_pc":1104.79},{"county":"DeKalb","fips":"01049","enroll":16135,"ma":9280,"dual":3603,"a75":5906,"a85":1224,"ffs_benes":6164,"avg_age":73.0,"pc":11850.65,"tot_amt":73047378.0,"ip_stays":226.6385,"readmit":0.1667,"er":587.7677,"snf_pct":0.0394,"snf_days":1131.4082,"hh_pct":0.1158,"hospc_pct":0.0438,"alf_fac":3,"alf_bed":72,"mc_fac":1,"mc_bed":16,"nh_fac":3,"nh_bed":466,"nh_res":406.1,"home_pc":4283.96,"inst_pc":811.16,"acute_pc":5852.76,"eol_pc":684.26},{"county":"Colbert","fips":"01033","enroll":14595,"ma":8243,"dual":2880,"a75":5387,"a85":1299,"ffs_benes":5654,"avg_age":73.0,"pc":11684.58,"tot_amt":66064623.0,"ip_stays":252.9183,"readmit":0.183,"er":624.5136,"snf_pct":0.0401,"snf_days":1415.8118,"hh_pct":0.1164,"hospc_pct":0.0442,"alf_fac":2,"alf_bed":96,"mc_fac":3,"mc_bed":45,"nh_fac":3,"nh_bed":302,"nh_res":248.4,"home_pc":4315.07,"inst_pc":1160.52,"acute_pc":5325.11,"eol_pc":753.39},{"county":"Jackson","fips":"01071","enroll":14049,"ma":7615,"dual":2649,"a75":5225,"a85":1141,"ffs_benes":5752,"avg_age":73.0,"pc":12419.84,"tot_amt":71438934.0,"ip_stays":228.0946,"readmit":0.1475,"er":567.6287,"snf_pct":0.0424,"snf_days":1386.6481,"hh_pct":0.1062,"hospc_pct":0.0523,"alf_fac":2,"alf_bed":48,"mc_fac":1,"mc_bed":16,"nh_fac":3,"nh_bed":291,"nh_res":251.5,"home_pc":4814.41,"inst_pc":846.16,"acute_pc":5720.43,"eol_pc":918.36},{"county":"Blount","fips":"01009","enroll":12430,"ma":8338,"dual":2082,"a75":4731,"a85":992,"ffs_benes":3470,"avg_age":73.0,"pc":13119.81,"tot_amt":45525756.0,"ip_stays":253.0259,"readmit":0.1418,"er":594.2363,"snf_pct":0.0378,"snf_days":1063.4006,"hh_pct":0.1205,"hospc_pct":0.0438,"alf_fac":2,"alf_bed":56,"mc_fac":3,"mc_bed":66,"nh_fac":2,"nh_bed":223,"nh_res":200.8,"home_pc":5140.58,"inst_pc":971.73,"acute_pc":6134.08,"eol_pc":725.5},{"county":"Autauga","fips":"01001","enroll":12268,"ma":7410,"dual":2096,"a75":4480,"a85":1072,"ffs_benes":4000,"avg_age":73.0,"pc":11809.46,"tot_amt":47237857.0,"ip_stays":277.0,"readmit":0.2069,"er":644.5,"snf_pct":0.0313,"snf_days":966.75,"hh_pct":0.0943,"hospc_pct":0.043,"alf_fac":2,"alf_bed":40,"mc_fac":2,"mc_bed":64,"nh_fac":1,"nh_bed":162,"nh_res":153.5,"home_pc":3263.91,"inst_pc":945.35,"acute_pc":6810.45,"eol_pc":622.2},{"county":"Russell","fips":"01113","enroll":12176,"ma":7171,"dual":2756,"a75":3946,"a85":958,"ffs_benes":4240,"avg_age":70.0,"pc":11322.76,"tot_amt":48008482.0,"ip_stays":208.7264,"readmit":0.2407,"er":587.5,"snf_pct":0.0167,"snf_days":757.783,"hh_pct":0.0943,"hospc_pct":0.0295,"alf_fac":0,"alf_bed":0,"mc_fac":0,"mc_bed":0,"nh_fac":3,"nh_bed":297,"nh_res":277.4,"home_pc":3215.41,"inst_pc":1297.14,"acute_pc":6254.47,"eol_pc":439.89},{"county":"Coffee","fips":"01031","enroll":11830,"ma":6234,"dual":2150,"a75":4542,"a85":1081,"ffs_benes":5003,"avg_age":73.0,"pc":11459.27,"tot_amt":57330736.0,"ip_stays":212.8723,"readmit":0.1445,"er":650.01,"snf_pct":0.031,"snf_days":931.4411,"hh_pct":0.1089,"hospc_pct":0.0468,"alf_fac":3,"alf_bed":48,"mc_fac":2,"mc_bed":32,"nh_fac":2,"nh_bed":368,"nh_res":239.8,"home_pc":4391.78,"inst_pc":739.66,"acute_pc":5255.07,"eol_pc":848.85},{"county":"Tallapoosa","fips":"01123","enroll":11710,"ma":7232,"dual":2549,"a75":4260,"a85":980,"ffs_benes":3855,"avg_age":73.0,"pc":13328.57,"tot_amt":51381623.0,"ip_stays":218.1582,"readmit":0.1443,"er":615.0454,"snf_pct":0.0353,"snf_days":1000.2594,"hh_pct":0.117,"hospc_pct":0.0389,"alf_fac":3,"alf_bed":62,"mc_fac":1,"mc_bed":42,"nh_fac":4,"nh_bed":488,"nh_res":381.1,"home_pc":4153.49,"inst_pc":800.03,"acute_pc":7581.18,"eol_pc":606.04},{"county":"Dale","fips":"01045","enroll":11625,"ma":6562,"dual":2728,"a75":4065,"a85":984,"ffs_benes":4443,"avg_age":73.0,"pc":11925.7,"tot_amt":52985882.0,"ip_stays":224.8481,"readmit":0.1727,"er":741.8411,"snf_pct":0.032,"snf_days":1050.4164,"hh_pct":0.0977,"hospc_pct":0.0446,"alf_fac":1,"alf_bed":16,"mc_fac":0,"mc_bed":0,"nh_fac":2,"nh_bed":287,"nh_res":238.3,"home_pc":4364.65,"inst_pc":992.47,"acute_pc":5745.16,"eol_pc":656.88},{"county":"Covington","fips":"01039","enroll":10308,"ma":5885,"dual":2488,"a75":3831,"a85":914,"ffs_benes":4130,"avg_age":74.0,"pc":12615.9,"tot_amt":52103664.0,"ip_stays":276.0291,"readmit":0.2002,"er":773.3656,"snf_pct":0.045,"snf_days":1460.0484,"hh_pct":0.1312,"hospc_pct":0.0518,"alf_fac":2,"alf_bed":32,"mc_fac":0,"mc_bed":0,"nh_fac":3,"nh_bed":436,"nh_res":330.8,"home_pc":3824.9,"inst_pc":785.4,"acute_pc":7002.44,"eol_pc":789.5},{"county":"Chilton","fips":"01021","enroll":9948,"ma":7160,"dual":2055,"a75":3490,"a85":733,"ffs_benes":2278,"avg_age":72.0,"pc":13822.71,"tot_amt":31488131.0,"ip_stays":221.6857,"readmit":0.2126,"er":645.7419,"snf_pct":0.0184,"snf_days":534.2406,"hh_pct":0.1054,"hospc_pct":0.0492,"alf_fac":1,"alf_bed":16,"mc_fac":0,"mc_bed":0,"nh_fac":1,"nh_bed":201,"nh_res":95.9,"home_pc":5409.19,"inst_pc":795.79,"acute_pc":6720.5,"eol_pc":752.52},{"county":"Dallas","fips":"01047","enroll":9920,"ma":7068,"dual":3839,"a75":3145,"a85":757,"ffs_benes":2250,"avg_age":72.0,"pc":12697.62,"tot_amt":28569648.0,"ip_stays":292.8889,"readmit":0.2029,"er":649.7778,"snf_pct":0.0547,"snf_days":1941.7778,"hh_pct":0.096,"hospc_pct":0.0453,"alf_fac":1,"alf_bed":30,"mc_fac":0,"mc_bed":0,"nh_fac":3,"nh_bed":343,"nh_res":273.6,"home_pc":3042.88,"inst_pc":1109.02,"acute_pc":7523.9,"eol_pc":617.84},{"county":"Chambers","fips":"01017","enroll":9111,"ma":5951,"dual":2310,"a75":3147,"a85":707,"ffs_benes":2718,"avg_age":72.0,"pc":12046.1,"tot_amt":32741302.0,"ip_stays":257.1744,"readmit":0.181,"er":690.5813,"snf_pct":0.0386,"snf_days":1172.9213,"hh_pct":0.1104,"hospc_pct":0.0467,"alf_fac":1,"alf_bed":16,"mc_fac":1,"mc_bed":16,"nh_fac":4,"nh_bed":320,"nh_res":284.5,"home_pc":3157.22,"inst_pc":939.13,"acute_pc":7027.89,"eol_pc":704.45},{"county":"Escambia","fips":"01053","enroll":9021,"ma":5566,"dual":2104,"a75":3307,"a85":821,"ffs_benes":2999,"avg_age":73.0,"pc":13767.24,"tot_amt":41287939.0,"ip_stays":294.7649,"readmit":0.1655,"er":814.9383,"snf_pct":0.0547,"snf_days":1604.5348,"hh_pct":0.1557,"hospc_pct":0.055,"alf_fac":4,"alf_bed":86,"mc_fac":0,"mc_bed":0,"nh_fac":2,"nh_bed":225,"nh_res":179.7,"home_pc":4099.81,"inst_pc":1189.06,"acute_pc":7516.96,"eol_pc":761.85},{"county":"Cherokee","fips":"01019","enroll":7723,"ma":4647,"dual":1565,"a75":2805,"a85":573,"ffs_benes":2748,"avg_age":73.0,"pc":12302.23,"tot_amt":33806535.0,"ip_stays":250.7278,"readmit":0.176,"er":572.0524,"snf_pct":0.0306,"snf_days":1037.8457,"hh_pct":0.1175,"hospc_pct":0.052,"alf_fac":0,"alf_bed":0,"mc_fac":1,"mc_bed":36,"nh_fac":1,"nh_bed":185,"nh_res":158.8,"home_pc":4153.91,"inst_pc":892.18,"acute_pc":6259.9,"eol_pc":880.21},{"county":"Lawrence","fips":"01079","enroll":7704,"ma":4517,"dual":1529,"a75":2894,"a85":631,"ffs_benes":2922,"avg_age":73.0,"pc":11464.2,"tot_amt":33498379.0,"ip_stays":225.1882,"readmit":0.1347,"er":583.1622,"snf_pct":0.0394,"snf_days":1161.8754,"hh_pct":0.1239,"hospc_pct":0.0424,"alf_fac":0,"alf_bed":0,"mc_fac":0,"mc_bed":0,"nh_fac":1,"nh_bed":136,"nh_res":111.4,"home_pc":4704.8,"inst_pc":708.54,"acute_pc":5118.05,"eol_pc":829.3},{"county":"Marion","fips":"01093","enroll":7249,"ma":3587,"dual":1661,"a75":2806,"a85":694,"ffs_benes":3513,"avg_age":73.0,"pc":12490.57,"tot_amt":43879379.0,"ip_stays":254.1987,"readmit":0.1534,"er":650.7259,"snf_pct":0.0549,"snf_days":1530.6006,"hh_pct":0.1366,"hospc_pct":0.0615,"alf_fac":3,"alf_bed":72,"mc_fac":1,"mc_bed":26,"nh_fac":3,"nh_bed":273,"nh_res":221.6,"home_pc":3911.44,"inst_pc":841.13,"acute_pc":6386.73,"eol_pc":1089.32},{"county":"Geneva","fips":"01061","enroll":7232,"ma":4336,"dual":1803,"a75":2705,"a85":637,"ffs_benes":2569,"avg_age":73.0,"pc":11885.35,"tot_amt":30533468.0,"ip_stays":236.2787,"readmit":0.1389,"er":652.0047,"snf_pct":0.0397,"snf_days":1150.6423,"hh_pct":0.132,"hospc_pct":0.0568,"alf_fac":2,"alf_bed":54,"mc_fac":0,"mc_bed":0,"nh_fac":2,"nh_bed":182,"nh_res":143.7,"home_pc":4280.75,"inst_pc":897.32,"acute_pc":5488.76,"eol_pc":995.76},{"county":"Pike","fips":"01109","enroll":6962,"ma":4566,"dual":1856,"a75":2568,"a85":635,"ffs_benes":1930,"avg_age":73.0,"pc":11858.73,"tot_amt":22887354.0,"ip_stays":219.171,"readmit":0.1772,"er":704.1451,"snf_pct":0.0295,"snf_days":923.8342,"hh_pct":0.1244,"hospc_pct":0.0363,"alf_fac":2,"alf_bed":32,"mc_fac":1,"mc_bed":16,"nh_fac":1,"nh_bed":220,"nh_res":130.4,"home_pc":3563.48,"inst_pc":839.36,"acute_pc":6365.34,"eol_pc":592.44},{"county":"Franklin","fips":"01059","enroll":6824,"ma":3584,"dual":1584,"a75":2522,"a85":600,"ffs_benes":2955,"avg_age":73.0,"pc":13095.56,"tot_amt":38697367.0,"ip_stays":301.8613,"readmit":0.1973,"er":671.4044,"snf_pct":0.0697,"snf_days":2340.1015,"hh_pct":0.1452,"hospc_pct":0.0501,"alf_fac":1,"alf_bed":29,"mc_fac":0,"mc_bed":0,"nh_fac":4,"nh_bed":260,"nh_res":208.1,"home_pc":4326.19,"inst_pc":1372.68,"acute_pc":6334.95,"eol_pc":911.31},{"county":"Clarke","fips":"01025","enroll":6455,"ma":4383,"dual":1699,"a75":2269,"a85":566,"ffs_benes":1780,"avg_age":73.0,"pc":12326.52,"tot_amt":21941212.0,"ip_stays":245.5056,"readmit":0.1493,"er":634.2697,"snf_pct":0.0416,"snf_days":987.0787,"hh_pct":0.1337,"hospc_pct":0.0635,"alf_fac":1,"alf_bed":16,"mc_fac":0,"mc_bed":0,"nh_fac":2,"nh_bed":171,"nh_res":152.2,"home_pc":3740.99,"inst_pc":879.35,"acute_pc":6322.05,"eol_pc":1174.9},{"county":"Winston","fips":"01133","enroll":6405,"ma":3639,"dual":1439,"a75":2392,"a85":532,"ffs_benes":2442,"avg_age":73.0,"pc":13253.58,"tot_amt":32365252.0,"ip_stays":333.7428,"readmit":0.2028,"er":628.1736,"snf_pct":0.0549,"snf_days":2062.6536,"hh_pct":0.1351,"hospc_pct":0.0536,"alf_fac":2,"alf_bed":33,"mc_fac":1,"mc_bed":16,"nh_fac":2,"nh_bed":207,"nh_res":172.6,"home_pc":4228.71,"inst_pc":1048.95,"acute_pc":6763.81,"eol_pc":985.06},{"county":"Randolph","fips":"01111","enroll":6365,"ma":3713,"dual":1321,"a75":2271,"a85":509,"ffs_benes":2359,"avg_age":73.0,"pc":12104.79,"tot_amt":28555189.0,"ip_stays":233.9975,"readmit":0.1706,"er":701.9924,"snf_pct":0.0466,"snf_days":1199.237,"hh_pct":0.12,"hospc_pct":0.0526,"alf_fac":1,"alf_bed":16,"mc_fac":0,"mc_bed":0,"nh_fac":2,"nh_bed":188,"nh_res":130.9,"home_pc":3285.12,"inst_pc":841.22,"acute_pc":6928.85,"eol_pc":891.28},{"county":"Barbour","fips":"01005","enroll":6267,"ma":4229,"dual":1834,"a75":2357,"a85":497,"ffs_benes":1783,"avg_age":73.0,"pc":14730.5,"tot_amt":26264484.0,"ip_stays":305.1038,"readmit":0.2261,"er":776.2199,"snf_pct":0.0387,"snf_days":1195.1767,"hh_pct":0.1329,"hospc_pct":0.0533,"alf_fac":2,"alf_bed":32,"mc_fac":0,"mc_bed":0,"nh_fac":1,"nh_bed":180,"nh_res":161.0,"home_pc":5119.54,"inst_pc":1270.21,"acute_pc":7005.76,"eol_pc":1154.4},{"county":"Marengo","fips":"01091","enroll":5336,"ma":3413,"dual":1639,"a75":1761,"a85":448,"ffs_benes":1704,"avg_age":71.0,"pc":12011.0,"tot_amt":20466739.0,"ip_stays":231.8075,"readmit":0.1315,"er":585.0939,"snf_pct":0.0288,"snf_days":930.1643,"hh_pct":0.1133,"hospc_pct":0.0499,"alf_fac":2,"alf_bed":28,"mc_fac":1,"mc_bed":16,"nh_fac":2,"nh_bed":153,"nh_res":135.2,"home_pc":3119.36,"inst_pc":860.29,"acute_pc":6944.01,"eol_pc":964.07},{"county":"Monroe","fips":"01099","enroll":5310,"ma":3566,"dual":1302,"a75":1830,"a85":413,"ffs_benes":1527,"avg_age":72.0,"pc":11861.92,"tot_amt":18113158.0,"ip_stays":215.4551,"readmit":0.1613,"er":747.8716,"snf_pct":0.0537,"snf_days":1518.0092,"hh_pct":0.1297,"hospc_pct":0.0445,"alf_fac":1,"alf_bed":16,"mc_fac":0,"mc_bed":0,"nh_fac":2,"nh_bed":171,"nh_res":139.1,"home_pc":3512.36,"inst_pc":668.59,"acute_pc":6407.67,"eol_pc":785.97},{"county":"Henry","fips":"01067","enroll":5261,"ma":3413,"dual":1112,"a75":2038,"a85":411,"ffs_benes":1552,"avg_age":73.0,"pc":12670.08,"tot_amt":19663961.0,"ip_stays":266.7526,"readmit":0.194,"er":581.8299,"snf_pct":0.0341,"snf_days":1146.2629,"hh_pct":0.1121,"hospc_pct":0.0354,"alf_fac":2,"alf_bed":32,"mc_fac":0,"mc_bed":0,"nh_fac":1,"nh_bed":142,"nh_res":83.0,"home_pc":4138.09,"inst_pc":1071.55,"acute_pc":6592.39,"eol_pc":516.1},{"county":"Pickens","fips":"01107","enroll":5023,"ma":2985,"dual":1419,"a75":1748,"a85":454,"ffs_benes":1806,"avg_age":72.0,"pc":12447.4,"tot_amt":22479998.0,"ip_stays":225.3599,"readmit":0.1799,"er":568.66,"snf_pct":0.0426,"snf_days":1337.763,"hh_pct":0.1224,"hospc_pct":0.0465,"alf_fac":0,"alf_bed":0,"mc_fac":0,"mc_bed":0,"nh_fac":2,"nh_bed":185,"nh_res":146.1,"home_pc":4045.13,"inst_pc":732.17,"acute_pc":6726.56,"eol_pc":794.94},{"county":"Butler","fips":"01013","enroll":4990,"ma":3248,"dual":1503,"a75":1733,"a85":436,"ffs_benes":1530,"avg_age":73.0,"pc":10987.2,"tot_amt":16810412.0,"ip_stays":216.9935,"readmit":0.1791,"er":560.1307,"snf_pct":0.0307,"snf_days":979.085,"hh_pct":0.0928,"hospc_pct":0.0601,"alf_fac":2,"alf_bed":44,"mc_fac":1,"mc_bed":16,"nh_fac":2,"nh_bed":209,"nh_res":167.0,"home_pc":2871.46,"inst_pc":635.93,"acute_pc":5863.59,"eol_pc":1352.57},{"county":"Bibb","fips":"01007","enroll":4830,"ma":3323,"dual":1117,"a75":1650,"a85":391,"ffs_benes":1227,"avg_age":71.0,"pc":11629.87,"tot_amt":14269845.0,"ip_stays":254.2787,"readmit":0.1357,"er":625.1019,"snf_pct":0.053,"snf_days":2193.154,"hh_pct":0.0937,"hospc_pct":0.0399,"alf_fac":0,"alf_bed":0,"mc_fac":0,"mc_bed":0,"nh_fac":1,"nh_bed":131,"nh_res":108.3,"home_pc":3559.59,"inst_pc":1247.88,"acute_pc":5873.13,"eol_pc":588.04},{"county":"Macon","fips":"01087","enroll":4698,"ma":3056,"dual":1329,"a75":1734,"a85":412,"ffs_benes":1180,"avg_age":72.0,"pc":11056.88,"tot_amt":13047120.0,"ip_stays":206.7797,"readmit":0.1745,"er":597.4576,"snf_pct":0.0237,"snf_days":966.9492,"hh_pct":0.0864,"hospc_pct":0.0347,"alf_fac":0,"alf_bed":0,"mc_fac":0,"mc_bed":0,"nh_fac":1,"nh_bed":111,"nh_res":85.4,"home_pc":2864.34,"inst_pc":748.66,"acute_pc":6570.9,"eol_pc":642.55},{"county":"Fayette","fips":"01057","enroll":4471,"ma":2389,"dual":1004,"a75":1700,"a85":426,"ffs_benes":1933,"avg_age":73.0,"pc":12882.93,"tot_amt":24902698.0,"ip_stays":258.6653,"readmit":0.1706,"er":704.0869,"snf_pct":0.0445,"snf_days":1278.8412,"hh_pct":0.1511,"hospc_pct":0.046,"alf_fac":1,"alf_bed":38,"mc_fac":0,"mc_bed":0,"nh_fac":1,"nh_bed":122,"nh_res":107.8,"home_pc":4025.46,"inst_pc":758.29,"acute_pc":7143.72,"eol_pc":642.31},{"county":"Washington","fips":"01129","enroll":4463,"ma":2791,"dual":941,"a75":1612,"a85":357,"ffs_benes":1510,"avg_age":73.0,"pc":13864.71,"tot_amt":20935712.0,"ip_stays":274.8344,"readmit":0.1939,"er":661.5894,"snf_pct":0.0397,"snf_days":894.0397,"hh_pct":0.1232,"hospc_pct":0.0424,"alf_fac":0,"alf_bed":0,"mc_fac":0,"mc_bed":0,"nh_fac":1,"nh_bed":88,"nh_res":75.8,"home_pc":4343.74,"inst_pc":1689.75,"acute_pc":6658.28,"eol_pc":808.13},{"county":"Hale","fips":"01065","enroll":4285,"ma":2829,"dual":1417,"a75":1296,"a85":303,"ffs_benes":1169,"avg_age":70.0,"pc":13401.93,"tot_amt":15666852.0,"ip_stays":253.2079,"readmit":0.1901,"er":662.1044,"snf_pct":0.0393,"snf_days":1365.2695,"hh_pct":0.1069,"hospc_pct":0.0513,"alf_fac":0,"alf_bed":0,"mc_fac":1,"mc_bed":40,"nh_fac":2,"nh_bed":165,"nh_res":144.4,"home_pc":3790.18,"inst_pc":805.71,"acute_pc":7510.43,"eol_pc":937.14},{"county":"Lamar","fips":"01075","enroll":3880,"ma":1720,"dual":869,"a75":1483,"a85":378,"ffs_benes":2018,"avg_age":73.0,"pc":12498.74,"tot_amt":25222466.0,"ip_stays":252.7255,"readmit":0.1898,"er":678.3944,"snf_pct":0.051,"snf_days":1319.1278,"hh_pct":0.1576,"hospc_pct":0.0466,"alf_fac":0,"alf_bed":0,"mc_fac":0,"mc_bed":0,"nh_fac":1,"nh_bed":158,"nh_res":107.3,"home_pc":3653.72,"inst_pc":701.93,"acute_pc":7268.2,"eol_pc":693.02},{"county":"Choctaw","fips":"01023","enroll":3812,"ma":2206,"dual":1019,"a75":1375,"a85":336,"ffs_benes":1473,"avg_age":73.0,"pc":17538.24,"tot_amt":25833831.0,"ip_stays":239.647,"readmit":0.1599,"er":768.4997,"snf_pct":0.0462,"snf_days":1608.9613,"hh_pct":0.1276,"hospc_pct":0.0414,"alf_fac":0,"alf_bed":0,"mc_fac":0,"mc_bed":0,"nh_fac":1,"nh_bed":120,"nh_res":67.0,"home_pc":4723.44,"inst_pc":3181.9,"acute_pc":8338.25,"eol_pc":876.19},{"county":"Clay","fips":"01027","enroll":3715,"ma":2330,"dual":892,"a75":1398,"a85":325,"ffs_benes":1199,"avg_age":73.0,"pc":10745.66,"tot_amt":12884049.0,"ip_stays":231.0259,"readmit":0.2126,"er":611.3428,"snf_pct":0.045,"snf_days":1362.8023,"hh_pct":0.0976,"hospc_pct":0.03,"alf_fac":0,"alf_bed":0,"mc_fac":0,"mc_bed":0,"nh_fac":2,"nh_bed":184,"nh_res":165.1,"home_pc":3118.21,"inst_pc":792.44,"acute_pc":5988.6,"eol_pc":697.69},{"county":"Cleburne","fips":"01029","enroll":3652,"ma":1911,"dual":737,"a75":1337,"a85":296,"ffs_benes":1579,"avg_age":73.0,"pc":12447.39,"tot_amt":19654426.0,"ip_stays":210.893,"readmit":0.1219,"er":489.5503,"snf_pct":0.038,"snf_days":1097.5301,"hh_pct":0.1336,"hospc_pct":0.0614,"alf_fac":1,"alf_bed":39,"mc_fac":1,"mc_bed":16,"nh_fac":1,"nh_bed":82,"nh_res":72.6,"home_pc":3806.23,"inst_pc":809.84,"acute_pc":6387.66,"eol_pc":1165.04},{"county":"Crenshaw","fips":"01041","enroll":3623,"ma":2388,"dual":966,"a75":1324,"a85":296,"ffs_benes":1070,"avg_age":73.0,"pc":12501.31,"tot_amt":13376401.0,"ip_stays":266.3551,"readmit":0.1742,"er":809.3458,"snf_pct":0.0514,"snf_days":1926.1682,"hh_pct":0.1075,"hospc_pct":0.0486,"alf_fac":0,"alf_bed":0,"mc_fac":0,"mc_bed":0,"nh_fac":1,"nh_bed":151,"nh_res":142.0,"home_pc":3862.21,"inst_pc":888.66,"acute_pc":6475.44,"eol_pc":984.05},{"county":"Conecuh","fips":"01035","enroll":3554,"ma":2261,"dual":960,"a75":1202,"a85":281,"ffs_benes":1164,"avg_age":72.0,"pc":12621.71,"tot_amt":14691672.0,"ip_stays":337.6289,"readmit":0.1667,"er":692.4399,"snf_pct":0.0653,"snf_days":1888.3162,"hh_pct":0.134,"hospc_pct":0.055,"alf_fac":0,"alf_bed":0,"mc_fac":0,"mc_bed":0,"nh_fac":1,"nh_bed":61,"nh_res":55.5,"home_pc":3410.7,"inst_pc":1098.22,"acute_pc":6871.4,"eol_pc":887.2},{"county":"Wilcox","fips":"01131","enroll":3252,"ma":2311,"dual":1290,"a75":1037,"a85":244,"ffs_benes":782,"avg_age":71.0,"pc":11563.99,"tot_amt":9043041.0,"ip_stays":231.4578,"readmit":0.1786,"er":728.9003,"snf_pct":0.0396,"snf_days":1214.8338,"hh_pct":0.1023,"hospc_pct":0.0396,"alf_fac":0,"alf_bed":0,"mc_fac":0,"mc_bed":0,"nh_fac":1,"nh_bed":95,"nh_res":57.0,"home_pc":3493.5,"inst_pc":619.52,"acute_pc":6209.66,"eol_pc":753.26},{"county":"Sumter","fips":"01119","enroll":3201,"ma":2104,"dual":1123,"a75":1004,"a85":253,"ffs_benes":854,"avg_age":71.0,"pc":11886.82,"tot_amt":10151344.0,"ip_stays":221.3115,"readmit":0.1429,"er":548.0094,"snf_pct":0.0351,"snf_days":1560.8899,"hh_pct":0.1112,"hospc_pct":0.0457,"alf_fac":0,"alf_bed":0,"mc_fac":0,"mc_bed":0,"nh_fac":1,"nh_bed":125,"nh_res":108.1,"home_pc":3041.32,"inst_pc":812.54,"acute_pc":6584.05,"eol_pc":985.16},{"county":"Coosa","fips":"01037","enroll":3179,"ma":2082,"dual":776,"a75":1047,"a85":205,"ffs_benes":929,"avg_age":73.0,"pc":12027.87,"tot_amt":11173888.0,"ip_stays":219.591,"readmit":0.1667,"er":555.436,"snf_pct":0.0248,"snf_days":562.9709,"hh_pct":0.1184,"hospc_pct":0.0538,"alf_fac":0,"alf_bed":0,"mc_fac":0,"mc_bed":0,"nh_fac":1,"nh_bed":72,"nh_res":61.5,"home_pc":3203.55,"inst_pc":598.42,"acute_pc":6830.78,"eol_pc":1124.24},{"county":"Lowndes","fips":"01085","enroll":3073,"ma":2261,"dual":1097,"a75":980,"a85":231,"ffs_benes":577,"avg_age":71.0,"pc":10752.88,"tot_amt":6204409.0,"ip_stays":246.1005,"readmit":0.1343,"er":532.0624,"snf_pct":0.026,"snf_days":1157.7123,"hh_pct":0.0901,"hospc_pct":0.0277,"alf_fac":0,"alf_bed":0,"mc_fac":0,"mc_bed":0,"nh_fac":1,"nh_bed":72,"nh_res":59.9,"home_pc":2728.24,"inst_pc":475.8,"acute_pc":5979.0,"eol_pc":526.92},{"county":"Perry","fips":"01105","enroll":2522,"ma":1795,"dual":1110,"a75":826,"a85":233,"ffs_benes":620,"avg_age":71.0,"pc":11092.42,"tot_amt":6877299.0,"ip_stays":198.3871,"readmit":0.1565,"er":540.3226,"snf_pct":0.0419,"snf_days":1233.871,"hh_pct":0.1032,"hospc_pct":0.0581,"alf_fac":0,"alf_bed":0,"mc_fac":0,"mc_bed":0,"nh_fac":2,"nh_bed":162,"nh_res":129.0,"home_pc":2750.34,"inst_pc":591.86,"acute_pc":6595.36,"eol_pc":734.12},{"county":"Bullock","fips":"01011","enroll":2345,"ma":1668,"dual":833,"a75":773,"a85":192,"ffs_benes":520,"avg_age":72.0,"pc":11402.8,"tot_amt":5929455.0,"ip_stays":230.7692,"readmit":0.1743,"er":482.6923,"snf_pct":0.0577,"snf_days":2650.0,"hh_pct":0.0712,"hospc_pct":0.0308,"alf_fac":0,"alf_bed":0,"mc_fac":0,"mc_bed":0,"nh_fac":1,"nh_bed":123,"nh_res":101.4,"home_pc":2741.82,"inst_pc":918.84,"acute_pc":6118.93,"eol_pc":449.54},{"county":"Greene","fips":"01063","enroll":2293,"ma":1646,"dual":850,"a75":716,"a85":180,"ffs_benes":537,"avg_age":71.0,"pc":11541.5,"tot_amt":6197786.0,"ip_stays":270.0186,"readmit":0.186,"er":543.7616,"snf_pct":0.0428,"snf_days":1348.2309,"hh_pct":0.1136,"hospc_pct":0.0596,"alf_fac":0,"alf_bed":0,"mc_fac":0,"mc_bed":0,"nh_fac":1,"nh_bed":72,"nh_res":38.1,"home_pc":2955.21,"inst_pc":702.47,"acute_pc":6016.91,"eol_pc":928.79}];
+const GEO = {"w":600,"h":957,"c":{"01001":{"n":"Autauga","d":"M332.6 532.6L295.3 520.9L279.0 533.3L266.2 500.9L261.7 468.6L296.1 469.1L295.9 460.3L346.7 460.0L347.0 519.5L332.6 532.6Z"},"01009":{"n":"Blount","d":"M318.9 248.4L288.4 233.4L255.6 238.4L255.5 232.5L254.0 232.5L254.0 229.9L260.5 219.7L282.5 211.1L300.8 189.7L299.7 183.0L315.2 177.5L329.5 150.6L339.9 149.7L365.1 181.7L360.2 204.3L353.9 213.6L361.4 213.5L352.7 229.2L319.0 241.1L318.9 248.4Z"},"01017":{"n":"Chambers","d":"M553.7 427.4L563.9 447.0L562.4 448.6L561.6 452.2L536.7 455.3L484.8 455.8L484.8 380.0L545.5 379.9L547.1 389.0L547.3 390.4L553.7 427.4Z"},"01021":{"n":"Chilton","d":"M329.1 397.4L329.3 415.6L339.3 438.7L353.1 450.8L346.6 451.4L346.7 460.0L295.9 460.3L296.1 469.1L261.7 468.6L244.8 468.8L244.8 455.6L244.6 434.1L268.7 434.2L267.8 391.5L267.7 387.1L313.5 387.5L329.1 397.4Z"},"01033":{"n":"Colbert","d":"M55.8 85.2L55.9 84.0L56.0 83.7L59.4 56.7L62.9 23.1L83.9 25.0L107.0 53.3L159.5 35.1L176.0 41.5L177.7 48.0L158.6 88.1L55.8 85.2Z"},"01045":{"n":"Dale","d":"M514.5 677.5L514.4 738.4L502.8 752.2L473.5 747.2L464.9 762.4L451.4 762.2L451.8 677.8L458.4 677.9L458.6 677.8L514.5 677.5Z"},"01051":{"n":"Elmore","d":"M359.5 448.0L362.4 450.7L415.0 450.5L436.5 450.6L435.4 502.9L434.0 511.9L412.4 517.5L383.9 514.2L376.3 502.5L347.0 519.5L346.7 460.0L346.6 451.4L353.1 450.8L359.5 450.7L359.5 448.0Z"},"01065":{"n":"Hale","d":"M176.9 426.6L168.3 435.4L168.0 470.3L159.3 470.3L159.5 505.1L125.1 505.3L110.9 496.6L123.7 483.6L110.8 474.7L113.7 458.3L108.2 447.7L101.2 449.0L127.3 400.1L176.7 400.8L177.0 421.0L176.9 426.6Z"},"01079":{"n":"Lawrence","d":"M230.1 64.3L230.0 84.0L229.3 138.8L229.3 141.7L158.6 140.6L158.6 88.1L177.7 48.0L176.0 41.5L203.9 49.8L230.1 64.3Z"},"01083":{"n":"Limestone","d":"M275.4 3.2L278.0 3.2L284.2 3.2L284.3 3.2L283.2 91.4L257.4 81.9L230.1 64.3L203.9 49.8L211.6 38.3L212.3 1.7L245.9 2.5L247.8 2.5L252.1 2.6L252.4 2.6L252.8 2.6L253.3 2.7L271.0 3.2L273.1 3.2L273.7 3.2L275.4 3.2L275.4 3.2Z"},"01099":{"n":"Monroe","d":"M263.7 650.8L239.0 658.1L225.1 673.0L219.7 697.5L175.8 749.3L144.1 752.5L118.9 742.0L115.6 736.5L135.7 716.8L146.2 719.5L152.6 690.7L152.3 662.0L160.9 661.9L163.4 635.6L263.5 635.3L263.7 650.8Z"},"01107":{"n":"Pickens","d":"M30.3 321.7L32.6 299.0L32.7 298.2L33.1 294.7L88.4 296.7L103.2 296.4L106.2 296.5L106.7 370.8L74.8 388.8L50.4 402.3L22.0 403.2L28.1 343.8L30.3 321.7Z"},"01121":{"n":"Talladega","d":"M386.9 380.6L378.1 380.7L333.5 380.9L331.5 365.7L356.1 342.1L352.5 323.3L368.7 299.5L376.6 302.6L391.7 265.7L407.7 266.6L417.1 284.2L450.8 284.4L450.6 290.3L450.5 293.1L441.2 301.7L432.3 301.8L429.1 322.3L420.2 325.1L419.6 342.7L396.3 342.2L395.9 362.6L387.1 362.3L386.9 380.6Z"},"01023":{"n":"Choctaw","d":"M5.5 566.9L6.7 555.9L8.4 539.7L91.0 539.3L76.1 544.4L78.2 564.4L67.5 589.1L67.0 603.4L58.9 611.4L49.0 638.5L64.5 661.6L1.1 661.8L0.0 631.3L0.0 631.2L0.2 622.7L0.4 615.4L0.4 614.8L2.7 593.5L2.7 593.3L5.5 567.0L5.5 566.9Z"},"01025":{"n":"Clarke","d":"M88.8 603.5L135.3 603.2L135.4 609.8L143.4 636.0L163.4 635.6L160.9 661.9L152.3 662.0L152.6 690.7L146.2 719.5L135.7 716.8L115.6 736.5L118.9 742.0L93.9 764.0L88.4 762.8L86.2 738.2L94.9 736.8L95.2 703.1L67.2 682.5L66.1 667.5L65.8 665.9L64.7 664.2L64.5 661.6L49.0 638.5L58.9 611.4L67.0 603.4L88.8 603.5Z"},"01029":{"n":"Cleburne","d":"M527.8 270.9L530.4 286.7L531.6 294.3L531.8 295.5L531.8 295.5L533.4 304.9L476.3 302.3L455.8 301.8L452.8 307.6L435.1 307.6L441.2 301.7L450.5 293.1L450.6 290.3L477.1 271.8L477.2 246.8L495.0 223.7L495.4 213.2L517.5 208.7L519.5 221.2L523.7 246.7L524.0 247.9L527.8 270.9Z"},"01031":{"n":"Coffee","d":"M451.4 762.2L383.7 763.0L383.2 716.3L383.6 713.4L383.4 695.4L392.0 693.9L391.7 677.9L451.8 677.8L451.4 762.2Z"},"01037":{"n":"Coosa","d":"M359.5 448.0L359.5 450.7L353.1 450.8L339.3 438.7L329.3 415.6L329.1 397.4L333.5 380.9L378.1 380.7L386.9 380.6L414.7 383.4L415.0 450.5L362.4 450.7L359.5 448.0Z"},"01047":{"n":"Dallas","d":"M263.5 591.9L217.8 591.9L203.5 572.1L168.3 548.5L168.1 539.9L176.8 539.8L176.5 504.9L228.2 503.9L244.8 455.6L244.8 468.8L261.7 468.6L266.2 500.9L279.0 533.3L270.7 546.5L279.8 556.5L263.3 556.4L263.5 591.9Z"},"01055":{"n":"Etowah","d":"M442.6 161.5L460.2 207.8L421.4 218.6L421.4 222.9L418.5 222.8L418.5 225.7L417.1 225.6L417.1 228.5L412.6 228.3L412.7 231.2L408.0 231.0L408.0 233.2L405.2 233.1L382.7 203.7L361.4 213.5L353.9 213.6L360.2 204.3L365.1 181.7L381.5 167.0L398.4 161.4L442.6 161.5Z"},"01059":{"n":"Franklin","d":"M53.2 108.9L55.8 85.2L158.6 88.1L158.6 140.6L140.9 140.1L50.1 137.3L51.4 125.3L51.5 124.9L53.2 108.9Z"},"01061":{"n":"Geneva","d":"M500.8 802.0L500.8 802.0L410.3 802.8L407.4 802.8L406.8 802.8L388.8 802.7L387.8 802.7L386.7 802.7L385.9 802.6L384.7 802.6L383.7 763.0L451.4 762.2L464.9 762.4L502.9 761.4L502.4 802.0L500.8 802.0Z"},"01067":{"n":"Henry","d":"M576.8 697.9L573.2 715.9L569.9 739.7L554.5 739.9L514.4 738.4L514.5 677.5L514.6 660.1L548.3 661.0L563.7 648.8L564.6 654.9L564.1 656.9L563.4 658.1L563.5 662.4L570.0 673.2L573.7 676.6L574.7 677.1L575.0 677.7L577.7 693.2L576.8 697.9Z"},"01071":{"n":"Jackson","d":"M439.2 3.9L445.1 3.9L445.8 3.9L482.7 4.6L484.4 16.7L484.4 16.7L486.5 29.5L452.4 76.6L415.6 105.5L406.5 106.3L392.7 94.9L391.2 81.7L388.0 81.7L387.1 81.7L386.9 81.7L386.7 81.7L386.2 81.7L386.1 81.7L385.4 81.6L385.4 81.6L382.6 81.6L379.5 81.6L379.4 81.6L379.4 81.6L379.0 81.6L378.5 81.6L376.9 81.5L376.6 81.5L376.3 81.5L374.9 81.5L374.9 81.5L374.1 81.5L373.7 81.5L373.4 81.5L372.8 81.5L371.4 81.5L370.9 81.5L369.8 81.5L369.4 81.5L369.2 81.5L368.3 81.5L365.6 81.6L364.8 81.6L363.7 81.6L363.0 81.6L363.0 81.6L362.8 81.6L362.6 81.6L362.6 81.6L361.2 81.6L361.2 81.6L361.2 81.6L355.8 75.0L363.8 3.3L439.2 3.9Z"},"01081":{"n":"Lee","d":"M571.2 480.8L571.2 480.9L573.0 484.7L577.2 489.6L580.9 492.9L583.5 496.7L584.5 498.9L584.5 499.4L584.5 499.4L574.7 506.9L528.4 507.7L529.1 519.3L511.6 519.5L510.8 502.0L502.3 502.1L467.5 482.3L467.3 462.0L484.8 455.8L536.7 455.3L561.6 452.2L561.6 452.4L565.4 464.3L567.0 473.0L570.8 480.1L571.2 480.8Z"},"01085":{"n":"Lowndes","d":"M271.8 609.0L272.0 591.8L263.5 591.9L263.3 556.4L279.8 556.5L270.7 546.5L279.0 533.3L295.3 520.9L332.6 532.6L347.4 553.3L347.8 591.3L340.8 608.5L271.8 609.0Z"},"01087":{"n":"Macon","d":"M435.4 502.9L450.4 502.6L450.2 485.2L467.5 482.3L502.3 502.1L510.8 502.0L511.6 519.5L511.7 554.5L440.5 555.1L429.8 546.6L412.4 517.5L434.0 511.9L435.4 502.9Z"},"01089":{"n":"Madison","d":"M284.3 3.2L302.1 3.1L302.3 3.1L302.7 3.1L303.2 3.1L305.1 3.2L308.2 3.2L315.2 3.3L317.0 3.3L320.0 3.3L322.6 3.3L327.2 3.4L337.4 3.4L343.2 3.3L349.3 3.2L362.6 3.3L363.8 3.3L355.8 75.0L361.2 81.6L359.3 99.5L344.8 105.6L326.4 101.0L323.6 92.3L300.1 84.2L283.2 91.4L284.3 3.2Z"},"01093":{"n":"Marion","d":"M45.1 184.2L49.6 142.7L49.7 141.1L50.1 137.3L140.9 140.1L140.7 201.1L140.7 218.5L87.5 217.5L81.6 191.1L44.5 189.8L45.1 184.2Z"},"01095":{"n":"Marshall","d":"M323.6 92.3L326.4 101.0L344.8 105.6L359.3 99.5L361.2 81.6L361.2 81.6L361.2 81.6L362.6 81.6L362.6 81.6L362.8 81.6L363.0 81.6L363.0 81.6L363.7 81.6L364.8 81.6L365.6 81.6L368.3 81.5L369.2 81.5L369.4 81.5L369.8 81.5L370.9 81.5L371.4 81.5L372.8 81.5L373.4 81.5L373.7 81.5L374.1 81.5L374.9 81.5L374.9 81.5L376.3 81.5L376.6 81.5L376.9 81.5L378.5 81.6L379.0 81.6L379.4 81.6L379.4 81.6L379.5 81.6L382.6 81.6L385.4 81.6L385.4 81.6L386.1 81.7L386.2 81.7L386.7 81.7L386.9 81.7L387.1 81.7L388.0 81.7L391.2 81.7L392.7 94.9L406.5 106.3L397.7 116.0L398.4 161.4L381.5 167.0L365.1 181.7L339.9 149.7L318.2 140.6L323.6 92.3Z"},"01097":{"n":"Mobile","d":"M58.4 944.7L64.7 949.4L66.8 951.6L66.6 952.2L66.1 952.4L60.9 953.0L59.1 952.2L56.3 951.6L51.3 951.5L44.2 952.4L32.1 955.3L28.0 955.8L26.6 955.4L27.2 954.7L28.9 955.0L32.1 954.6L35.9 953.5L41.5 952.3L50.2 950.9L52.7 950.9L55.6 950.4L57.4 949.0L58.4 946.7L58.4 944.7ZM78.0 864.4L77.3 864.8L75.7 866.6L74.9 869.1L73.5 870.7L71.9 870.9L68.9 872.4L69.3 877.6L70.3 878.9L68.4 883.7L66.8 885.6L65.0 888.8L65.6 892.1L65.4 895.7L64.1 896.7L62.4 899.5L61.9 901.2L62.0 902.8L63.1 907.2L62.4 909.2L61.4 910.9L61.8 915.9L61.3 925.9L59.9 930.1L58.4 933.1L57.8 933.7L56.4 937.3L53.1 936.0L50.4 936.5L47.1 938.0L46.4 937.1L46.0 933.6L46.3 932.7L47.6 932.4L47.6 931.8L45.7 928.9L44.9 929.0L35.5 924.9L31.8 924.8L30.4 927.2L26.9 927.6L26.1 927.4L25.5 925.3L23.4 923.7L21.9 923.5L18.1 923.8L16.3 924.3L12.8 927.5L11.6 899.2L11.4 894.8L11.3 892.7L11.3 892.4L10.7 876.9L10.7 875.1L10.6 874.0L10.4 867.7L10.1 860.1L10.0 858.8L9.9 855.3L9.9 855.1L9.9 854.3L7.7 801.8L7.7 801.4L7.6 801.2L6.6 778.6L23.8 772.7L75.6 772.6L83.9 768.9L89.3 791.8L82.5 824.0L88.7 836.0L74.9 850.7L78.0 864.4Z"},"01101":{"n":"Montgomery","d":"M347.0 519.5L376.3 502.5L383.9 514.2L412.4 517.5L429.8 546.6L416.4 551.3L416.8 591.2L417.0 607.9L384.0 608.2L365.3 608.4L365.1 591.1L347.8 591.3L347.4 553.3L332.6 532.6L347.0 519.5Z"},"01117":{"n":"Shelby","d":"M243.8 352.2L276.3 335.1L302.6 308.2L314.4 308.1L329.2 292.3L335.1 301.0L352.5 301.0L352.5 323.3L356.1 342.1L331.5 365.7L333.5 380.9L329.1 397.4L313.5 387.5L267.7 387.1L267.8 391.5L243.5 368.3L243.3 352.2L243.8 352.2Z"},"01119":{"n":"Sumter","d":"M11.4 511.5L11.4 511.5L13.9 485.8L14.9 476.1L14.9 476.1L20.8 415.7L22.0 403.2L50.4 402.3L44.5 416.5L66.0 446.9L60.9 447.3L69.7 482.8L91.4 475.0L106.2 480.5L96.6 481.5L104.1 495.0L74.0 514.7L71.6 526.0L91.0 539.3L8.4 539.7L11.4 511.5Z"},"01125":{"n":"Tuscaloosa","d":"M202.8 298.9L192.1 303.2L215.0 332.9L217.5 332.9L217.5 335.9L217.5 337.3L220.5 337.3L220.5 340.2L226.4 340.3L226.5 343.3L233.1 343.4L233.1 345.6L235.2 345.6L235.2 346.3L236.7 346.3L236.7 352.1L214.3 362.2L214.2 375.4L200.3 374.9L194.2 400.2L176.7 400.8L127.3 400.1L107.6 398.0L106.6 374.1L106.7 370.8L106.2 296.5L135.5 297.2L141.4 279.5L176.4 281.1L194.2 284.0L202.8 298.9Z"},"01131":{"n":"Wilcox","d":"M163.4 635.6L143.4 636.0L135.4 609.8L135.3 603.2L142.9 600.4L142.7 575.0L159.9 574.9L159.6 550.5L168.3 548.5L203.5 572.1L217.8 591.9L263.5 591.9L272.0 591.8L271.8 609.0L263.1 609.1L263.5 635.3L163.4 635.6Z"},"01007":{"n":"Bibb","d":"M176.9 426.6L177.0 421.0L176.7 400.8L194.2 400.2L200.3 374.9L214.2 375.4L214.3 362.2L236.7 352.1L243.3 352.2L243.5 368.3L267.8 391.5L268.7 434.2L244.6 434.1L194.0 435.2L194.0 426.5L176.9 426.6Z"},"01011":{"n":"Bullock","d":"M515.6 572.1L512.5 598.5L485.8 602.0L473.9 625.4L451.4 625.4L451.6 608.0L435.7 608.0L434.2 592.0L416.8 591.2L416.4 551.3L429.8 546.6L440.5 555.1L511.7 554.5L512.7 572.1L515.6 572.1Z"},"01015":{"n":"Calhoun","d":"M391.7 265.7L408.8 248.8L405.0 233.7L405.1 233.3L405.2 233.1L408.0 233.2L408.0 231.0L412.7 231.2L412.6 228.3L417.1 228.5L417.1 225.6L418.5 225.7L418.5 222.8L421.4 222.9L421.4 218.6L460.2 207.8L495.5 210.3L495.4 213.2L495.0 223.7L477.2 246.8L477.1 271.8L450.6 290.3L450.8 284.4L417.1 284.2L407.7 266.6L391.7 265.7Z"},"01003":{"n":"Baldwin","d":"M146.9 801.9L147.7 806.1L146.5 814.2L143.0 821.9L140.9 828.2L142.7 832.3L158.1 852.7L163.1 856.9L164.0 857.4L166.8 858.1L172.1 861.6L179.2 867.0L180.9 870.7L181.4 873.1L181.4 876.4L172.0 898.5L172.0 898.5L172.3 898.8L175.3 903.2L177.2 919.4L175.8 919.7L173.6 923.1L171.8 928.0L171.8 932.1L172.0 939.2L171.6 941.4L160.5 945.3L156.1 946.3L153.8 946.5L149.9 947.5L137.2 951.5L123.9 953.3L113.0 955.5L106.6 956.0L91.8 955.3L85.7 955.5L79.4 956.2L76.9 956.9L74.6 957.2L74.4 956.9L75.3 955.3L85.0 954.3L88.0 950.1L90.1 949.1L93.1 950.7L93.9 951.8L96.1 953.1L97.4 953.5L99.7 953.7L102.9 953.3L110.1 950.5L112.7 950.8L115.1 950.5L118.7 948.9L120.6 945.9L120.6 943.2L117.6 939.1L113.6 936.6L111.5 934.9L108.0 930.6L106.8 927.5L105.5 925.9L104.0 925.7L102.1 924.7L95.1 919.5L94.7 918.6L93.8 912.2L92.8 907.3L92.1 906.2L90.8 905.2L90.6 903.9L94.3 896.2L95.3 893.9L95.9 891.2L95.5 888.2L94.9 886.8L94.3 886.2L93.7 884.2L94.1 878.2L93.0 874.2L91.0 870.9L90.0 869.9L86.8 869.6L82.5 866.4L78.0 864.4L74.9 850.7L88.7 836.0L82.5 824.0L89.3 791.8L83.9 768.9L88.8 769.2L88.4 762.8L93.9 764.0L118.9 742.0L144.1 752.5L144.1 801.9L146.9 801.9Z"},"01027":{"n":"Clay","d":"M441.2 301.7L435.1 307.6L452.8 307.6L455.8 301.8L476.3 302.3L474.6 380.2L420.5 380.4L414.7 383.4L386.9 380.6L387.1 362.3L395.9 362.6L396.3 342.2L419.6 342.7L420.2 325.1L429.1 322.3L432.3 301.8L441.2 301.7Z"},"01041":{"n":"Crenshaw","d":"M383.6 713.4L369.6 710.3L369.1 695.7L349.1 711.2L348.9 696.0L332.2 696.4L332.1 670.4L340.7 670.3L340.8 608.5L347.8 591.3L365.1 591.1L365.3 608.4L384.0 608.2L382.7 643.4L391.3 643.3L391.7 677.9L392.0 693.9L383.4 695.4L383.6 713.4Z"},"01057":{"n":"Fayette","d":"M87.5 217.5L140.7 218.5L140.7 227.1L158.3 228.0L158.8 263.1L176.4 263.7L176.4 281.1L141.4 279.5L135.5 297.2L106.2 296.5L103.2 296.4L88.4 296.7L87.5 217.5Z"},"01073":{"n":"Jefferson","d":"M243.8 352.2L243.3 352.2L236.7 352.1L236.7 346.3L235.2 346.3L235.2 345.6L233.1 345.6L233.1 343.4L226.5 343.3L226.4 340.3L220.5 340.2L220.5 337.3L217.5 337.3L217.5 335.9L217.5 332.9L215.0 332.9L192.1 303.2L202.8 298.9L216.5 290.3L217.6 278.7L238.1 270.2L246.8 244.1L255.6 238.4L288.4 233.4L318.9 248.4L324.8 248.5L329.2 292.3L314.4 308.1L302.6 308.2L276.3 335.1L243.8 352.2Z"},"01091":{"n":"Marengo","d":"M135.3 603.2L88.8 603.5L67.0 603.4L67.5 589.1L78.2 564.4L76.1 544.4L91.0 539.3L71.6 526.0L74.0 514.7L104.1 495.0L105.5 492.1L109.3 492.7L109.1 497.4L110.9 496.6L125.1 505.3L159.5 505.1L159.5 540.0L168.1 539.9L168.3 548.5L159.6 550.5L159.9 574.9L142.7 575.0L142.9 600.4L135.3 603.2Z"},"01103":{"n":"Morgan","d":"M229.3 138.8L230.0 84.0L230.1 64.3L257.4 81.9L283.2 91.4L300.1 84.2L323.6 92.3L318.2 140.6L232.3 139.1L229.3 138.8Z"},"01115":{"n":"St. Clair","d":"M405.2 233.1L405.1 233.3L405.0 233.7L408.8 248.8L391.7 265.7L376.6 302.6L368.7 299.5L352.5 323.3L352.5 301.0L335.1 301.0L329.2 292.3L324.8 248.5L318.9 248.4L319.0 241.1L352.7 229.2L361.4 213.5L382.7 203.7L405.2 233.1Z"},"01129":{"n":"Washington","d":"M6.6 778.6L5.6 755.4L5.6 755.2L4.4 730.3L4.4 730.2L3.8 717.3L3.8 717.2L3.7 714.3L2.0 677.1L1.9 676.6L1.1 661.9L1.1 661.8L64.5 661.6L64.7 664.2L65.8 665.9L66.1 667.5L67.2 682.5L95.2 703.1L94.9 736.8L86.2 738.2L88.4 762.8L88.8 769.2L83.9 768.9L75.6 772.6L23.8 772.7L6.6 778.6Z"},"01005":{"n":"Barbour","d":"M575.2 588.8L576.2 596.6L574.2 603.1L572.5 608.5L570.8 612.5L566.7 618.4L562.3 623.8L560.8 633.5L560.9 644.8L561.3 645.4L562.7 647.0L563.6 648.0L563.7 648.8L548.3 661.0L514.6 660.1L514.5 677.5L458.6 677.8L472.5 646.9L473.9 625.4L485.8 602.0L512.5 598.5L515.6 572.1L541.3 571.8L553.5 589.1L575.2 588.8Z"},"01013":{"n":"Butler","d":"M298.1 696.6L274.9 696.4L263.5 674.9L263.7 650.8L263.5 635.3L263.1 609.1L271.8 609.0L340.8 608.5L340.7 670.3L332.1 670.4L332.2 696.4L300.0 696.7L298.1 696.6Z"},"01019":{"n":"Cherokee","d":"M498.4 97.9L499.1 101.3L500.0 106.6L500.1 106.7L506.8 144.2L507.4 147.6L507.5 148.4L508.0 150.9L508.0 151.4L513.6 185.3L517.5 208.7L495.4 213.2L495.5 210.3L460.2 207.8L442.6 161.5L477.4 128.2L487.5 104.8L498.2 96.7L498.4 97.9Z"},"01035":{"n":"Conecuh","d":"M298.1 696.6L303.9 727.5L298.3 763.0L286.1 761.0L287.6 749.2L175.8 749.3L219.7 697.5L225.1 673.0L239.0 658.1L263.7 650.8L263.5 674.9L274.9 696.4L298.1 696.6Z"},"01039":{"n":"Covington","d":"M350.8 802.6L350.8 802.6L350.2 802.6L348.0 802.6L339.7 802.7L339.0 802.6L329.9 802.7L328.7 802.8L321.3 802.4L320.6 802.4L304.3 802.5L302.0 802.5L300.3 802.4L298.3 763.0L303.9 727.5L298.1 696.6L300.0 696.7L332.2 696.4L348.9 696.0L349.1 711.2L369.1 695.7L369.6 710.3L383.6 713.4L383.2 716.3L383.7 763.0L384.7 802.6L367.5 802.7L364.9 802.6L354.8 802.5L354.0 802.5L353.2 802.5L350.8 802.6Z"},"01049":{"n":"DeKalb","d":"M498.2 96.7L498.2 96.7L487.5 104.8L477.4 128.2L442.6 161.5L398.4 161.4L397.7 116.0L406.5 106.3L415.6 105.5L452.4 76.6L486.5 29.5L491.6 59.9L491.6 59.9L493.5 70.2L493.5 70.2L494.7 76.8L495.9 83.8L498.1 96.5L498.2 96.7Z"},"01053":{"n":"Escambia","d":"M220.3 801.6L204.9 801.8L204.8 801.8L204.5 801.8L204.4 801.8L204.1 801.8L203.9 801.8L203.1 801.8L199.1 801.7L198.8 801.7L197.0 801.7L196.6 801.8L195.2 801.7L191.6 801.8L187.9 801.8L186.5 801.8L185.8 801.8L176.1 801.8L175.0 801.8L172.0 801.8L171.0 801.8L170.6 801.7L170.0 801.8L170.0 801.8L169.2 801.8L169.2 801.8L167.2 801.8L167.0 801.8L166.9 801.8L155.4 801.8L151.6 801.8L146.9 801.9L146.9 801.9L144.1 801.9L144.1 752.5L175.8 749.3L287.6 749.2L286.1 761.0L298.3 763.0L300.3 802.4L294.1 802.0L293.7 802.0L293.6 802.1L283.9 802.0L283.9 802.0L276.4 801.9L276.1 801.9L269.2 801.9L266.6 801.9L243.2 801.6L241.7 801.5L241.1 801.5L238.8 801.6L237.0 801.6L236.2 801.6L220.4 801.6L220.3 801.6Z"},"01063":{"n":"Greene","d":"M74.8 388.8L106.7 370.8L106.6 374.1L107.6 398.0L127.3 400.1L101.2 449.0L108.2 447.7L113.7 458.3L110.8 474.7L123.7 483.6L110.9 496.6L109.1 497.4L109.3 492.7L105.5 492.1L104.1 495.0L96.6 481.5L106.2 480.5L91.4 475.0L69.7 482.8L60.9 447.3L66.0 446.9L44.5 416.5L50.4 402.3L74.8 388.8Z"},"01069":{"n":"Houston","d":"M584.3 801.3L580.6 801.3L580.0 801.3L579.6 801.3L579.4 801.3L575.9 801.3L575.5 801.3L575.0 801.3L560.1 801.3L559.1 801.2L559.0 801.3L558.7 801.3L502.4 802.0L502.9 761.4L464.9 762.4L473.5 747.2L502.8 752.2L514.4 738.4L554.5 739.9L569.9 739.7L567.6 744.8L565.8 749.7L566.6 764.1L567.8 768.3L569.2 769.4L570.6 769.5L571.8 770.0L578.7 779.8L579.7 782.2L581.0 786.3L584.8 798.6L584.3 801.3Z"},"01075":{"n":"Lamar","d":"M37.5 252.5L41.2 219.2L41.2 219.2L41.2 218.9L44.5 189.8L81.6 191.1L87.5 217.5L88.4 296.7L33.1 294.7L33.9 287.3L34.0 286.9L34.0 286.1L34.2 284.5L34.4 283.1L34.4 282.7L36.2 265.1L36.2 264.9L36.5 262.3L36.5 261.7L37.5 252.5Z"},"01077":{"n":"Lauderdale","d":"M48.6 0.0L81.9 0.3L99.9 0.4L100.0 0.4L100.8 0.4L104.0 0.4L104.1 0.4L104.3 0.4L117.5 0.6L118.5 0.6L120.0 0.6L128.3 0.7L129.5 0.8L129.8 0.7L130.4 0.8L134.7 0.8L135.9 0.8L145.7 0.9L175.6 1.0L176.8 1.0L177.5 1.0L181.9 1.1L183.6 1.1L187.3 1.2L189.0 1.2L197.4 1.4L202.3 1.5L209.0 1.6L210.1 1.7L211.3 1.7L212.3 1.7L211.6 38.3L203.9 49.8L176.0 41.5L159.5 35.1L107.0 53.3L83.9 25.0L62.9 23.1L58.3 21.1L45.7 2.4L48.6 0.0Z"},"01105":{"n":"Perry","d":"M159.5 505.1L159.3 470.3L168.0 470.3L168.3 435.4L176.9 426.6L194.0 426.5L194.0 435.2L244.6 434.1L244.8 455.6L228.2 503.9L176.5 504.9L176.8 539.8L168.1 539.9L159.5 540.0L159.5 505.1Z"},"01111":{"n":"Randolph","d":"M476.3 302.3L533.4 304.9L535.2 315.9L544.8 375.6L545.5 379.9L484.8 380.0L474.6 380.2L476.3 302.3Z"},"01113":{"n":"Russell","d":"M586.8 525.1L586.8 525.2L583.3 534.1L583.5 535.8L584.4 537.1L595.0 541.3L598.7 545.2L600.0 548.7L597.9 554.8L597.5 555.1L590.6 562.5L585.4 564.5L576.6 573.0L575.2 588.8L553.5 589.1L541.3 571.8L515.6 572.1L512.7 572.1L511.7 554.5L511.6 519.5L529.1 519.3L528.4 507.7L574.7 506.9L584.5 499.4L584.5 500.2L585.0 507.5L587.4 512.3L588.1 519.0L586.8 525.1Z"},"01123":{"n":"Tallapoosa","d":"M435.4 502.9L436.5 450.6L415.0 450.5L414.7 383.4L420.5 380.4L474.6 380.2L484.8 380.0L484.8 455.8L467.3 462.0L467.5 482.3L450.2 485.2L450.4 502.6L435.4 502.9Z"},"01127":{"n":"Walker","d":"M176.4 281.1L176.4 263.7L158.8 263.1L158.3 228.0L140.7 227.1L140.7 218.5L140.7 201.1L222.4 202.9L232.3 223.5L254.0 229.9L254.0 232.5L255.5 232.5L255.6 238.4L246.8 244.1L238.1 270.2L217.6 278.7L216.5 290.3L202.8 298.9L194.2 284.0L176.4 281.1Z"},"01133":{"n":"Winston","d":"M140.9 140.1L158.6 140.6L229.3 141.7L228.9 203.0L222.4 202.9L140.7 201.1L140.9 140.1Z"},"01043":{"n":"Cullman","d":"M229.3 141.7L229.3 138.8L232.3 139.1L318.2 140.6L339.9 149.7L329.5 150.6L315.2 177.5L299.7 183.0L300.8 189.7L282.5 211.1L260.5 219.7L254.0 229.9L232.3 223.5L222.4 202.9L228.9 203.0L229.3 141.7Z"},"01109":{"n":"Pike","d":"M458.6 677.8L458.4 677.9L451.8 677.8L391.7 677.9L391.3 643.3L382.7 643.4L384.0 608.2L417.0 607.9L416.8 591.2L434.2 592.0L435.7 608.0L451.6 608.0L451.4 625.4L473.9 625.4L472.5 646.9L458.6 677.8Z"}}};
+
+const fmtN=v=>v==null?'—':Math.round(v).toLocaleString();
+const fmt1=v=>v==null?'—':v.toFixed(1);
+const fmtM=v=>v==null?'—':'$'+Math.round(v).toLocaleString();
+const fmtP=v=>v==null?'—':(v*100).toFixed(1)+'%';
+
+const M=[
+ {k:'enroll',   g:'Demand', l:'Enrollees',         sh:'Enrollees', f:fmtN, mode:'seq', d:'Total Medicare enrollees, 2025'},
+ {k:'a75',      g:'Demand', l:'Aged 75+',          sh:'75+',       f:fmtN, mode:'seq', d:'Enrollees aged 75 and over'},
+ {k:'a85',      g:'Demand', l:'Aged 85+',          sh:'85+',       f:fmtN, mode:'seq', d:'Enrollees aged 85 and over'},
+ {k:'ma_pct',   g:'Demand', l:'MA share',          sh:'MA %',      f:fmtP, mode:'div', d:'Share enrolled in Medicare Advantage'},
+ {k:'dual_pct', g:'Demand', l:'Dual eligible',     sh:'Dual %',    f:fmtP, mode:'div', d:'Share also covered by Medicaid'},
+ {k:'pc',       g:'Cost',   l:'FFS $ per bene',    sh:'$/bene',    f:fmtM, mode:'div', d:'Total Original Medicare payment per FFS beneficiary, 2024'},
+ {k:'home_pc',  g:'Cost',   l:'Home & community',  sh:'Home $',    f:fmtM, mode:'div', d:'Home health, office visits, DME, labs, imaging, clinics and Part B drugs'},
+ {k:'acute_pc', g:'Cost',   l:'Acute hospital',    sh:'Acute $',   f:fmtM, mode:'div', d:'Inpatient, outpatient, ambulatory surgery, procedures, ambulance, dialysis'},
+ {k:'inst_pc',  g:'Cost',   l:'Institutional PAC', sh:'Inst $',    f:fmtM, mode:'div', d:'Skilled nursing, inpatient rehab and long-term care hospital'},
+ {k:'eol_pc',   g:'Cost',   l:'Hospice',           sh:'Hospice $', f:fmtM, mode:'div', d:'Hospice payment per FFS beneficiary'},
+ {k:'ip_stays', g:'Use',    l:'IP stays / 1k',     sh:'IP/1k',     f:fmt1, mode:'div', d:'Inpatient covered stays per 1,000 beneficiaries'},
+ {k:'readmit',  g:'Use',    l:'Readmissions',      sh:'Readmit',   f:fmtP, mode:'div', d:'Acute hospital readmission rate'},
+ {k:'er',       g:'Use',    l:'ER visits / 1k',    sh:'ER/1k',     f:fmt1, mode:'div', d:'Emergency department visits per 1,000 beneficiaries'},
+ {k:'snf_days', g:'Use',    l:'SNF days / 1k',     sh:'SNF d/1k',  f:fmt1, mode:'div', d:'Medicare-covered skilled nursing days per 1,000 beneficiaries'},
+ {k:'snf_pct',  g:'Use',    l:'Used SNF',          sh:'SNF %',     f:fmtP, mode:'div', d:'Share with any Medicare-covered SNF stay'},
+ {k:'hh_pct',   g:'Use',    l:'Used home health',  sh:'HH %',      f:fmtP, mode:'div', d:'Share with any home health episode'},
+ {k:'hospc_pct',g:'Use',    l:'Used hospice',      sh:'Hospice %', f:fmtP, mode:'div', d:'Share with any hospice stay'},
+ {k:'alf_bed',  g:'Supply', l:'AL beds',           sh:'AL beds',   f:fmtN, mode:'seq', d:'Licensed assisted living beds'},
+ {k:'mc_bed',   g:'Supply', l:'Memory care beds',  sh:'MC beds',   f:fmtN, mode:'seq', d:'Licensed specialty care (memory care) beds'},
+ {k:'nh_res',   g:'Supply', l:'NH residents',      sh:'NH res',    f:fmtN, mode:'seq', d:'Average daily nursing home residents'},
+ {k:'sl_per1k', g:'Supply', l:'AL+MC / 1k 75+',    sh:'AL+MC/1k',  f:fmt1, mode:'div', d:'Licensed assisted living and memory care beds per 1,000 enrollees aged 75+'},
+ {k:'nh_per1k', g:'Supply', l:'NH res / 1k 75+',   sh:'NH/1k',     f:fmt1, mode:'div', d:'Nursing home residents per 1,000 enrollees aged 75+'},
+];
+const MK=Object.fromEntries(M.map(m=>[m.k,m]));
+const GROUPS=['Demand','Cost','Use','Supply'];
+const GLAB={Demand:'Demand',Cost:'Cost',Use:'Utilization',Supply:'Supply'};
+
+D.forEach(r=>{
+  r.sl_bed=r.alf_bed+r.mc_bed;
+  r.sl_per1k=r.a75?r.sl_bed/r.a75*1000:0;
+  r.nh_per1k=r.a75?r.nh_res/r.a75*1000:0;
+  r.ma_pct=r.ma/r.enroll;
+  r.dual_pct=r.dual/r.enroll;
+});
+const T=k=>D.reduce((s,r)=>s+(r[k]||0),0);
+const ST={};
+M.forEach(m=>{
+  const k=m.k;
+  if(['enroll','a75','a85','alf_bed','mc_bed','nh_res'].includes(k)){ST[k]=T(k)/D.length;return}
+  if(k==='ma_pct'){ST[k]=T('ma')/T('enroll');return}
+  if(k==='dual_pct'){ST[k]=T('dual')/T('enroll');return}
+  if(k==='sl_per1k'){ST[k]=(T('alf_bed')+T('mc_bed'))/T('a75')*1000;return}
+  if(k==='nh_per1k'){ST[k]=T('nh_res')/T('a75')*1000;return}
+  ST[k]=D.reduce((s,r)=>s+(r[k]||0)*r.ffs_benes,0)/T('ffs_benes');
+});
+const SL_TOT=T('alf_bed')+T('mc_bed');
+const PER_BED=T('a75')/SL_TOT;
+
+const kpi=(l,v,s)=>'<div class="kpi"><div class="kpi-l">'+l+'</div><div class="kpi-v">'+v+'</div><div class="kpi-s">'+s+'</div></div>';
+document.getElementById('kpis').innerHTML=
+  kpi('Medicare enrollees',(T('enroll')/1e6).toFixed(2)+'M',Math.round(T('ma')/T('enroll')*100)+'% Medicare Advantage')+
+  kpi('Aged 75+',fmtN(T('a75')),fmtN(T('a85'))+' are 85 or older')+
+  kpi('FFS spend, 2024','$'+(T('tot_amt')/1e9).toFixed(2)+'B','$'+fmtN(T('tot_amt')/T('ffs_benes'))+' per FFS beneficiary')+
+  kpi('AL + memory care beds',fmtN(SL_TOT),T('alf_fac')+' ALFs, '+T('mc_fac')+' SCALFs')+
+  kpi('Nursing home residents',fmtN(T('nh_res')),fmtN(T('nh_bed'))+' certified beds, '+Math.round(T('nh_res')/T('nh_bed')*100)+'% full')+
+  kpi('75+ per licensed bed',PER_BED.toFixed(0),'Assisted living and memory care only');
+
+const cs=getComputedStyle(document.documentElement);
+const ramp=()=>[1,2,3,4,5,6,7].map(i=>cs.getPropertyValue('--seq'+i).trim());
+const DIV_L=['#184f95','#3987e5','#9ec5f4','#e8e9e3','#f2a9a8','#e34948','#a52322'];
+const DIV_D=['#86b6ef','#3987e5','#235a97','#33383c','#8f3231','#e34948','#f08a89'];
+const isDark=()=>{const t=document.documentElement.getAttribute('data-theme');
+  return t==='dark'||(t!=='light'&&matchMedia('(prefers-color-scheme: dark)').matches)};
+const divRamp=()=>isDark()?DIV_D:DIV_L;
+const scaleMode=()=>{const s=document.getElementById('scale').value;
+  return s!=='auto'?s:MK[document.getElementById('metric').value].mode};
+
+function binSeq(v,sorted){
+  if(!sorted.length)return 0;
+  let lo=0,hi=sorted.length;
+  while(lo<hi){const mid=(lo+hi)>>1; if(sorted[mid]<=v)lo=mid+1; else hi=mid}
+  return Math.min(6,Math.floor(lo/sorted.length*7));
+}
+function binDiv(v,avg){
+  if(!avg)return 3;
+  const r=v/avg-1, cuts=[-0.25,-0.12,-0.04,0.04,0.12,0.25];
+  let i=0; while(i<6&&r>cuts[i])i++;
+  return i;
+}
+function tint(hex,steps){
+  const a=0.10+Math.min(6,steps)/6*0.40;
+  const n=parseInt(hex.slice(1),16);
+  return 'rgba('+(n>>16&255)+','+(n>>8&255)+','+(n&255)+','+a.toFixed(3)+')';
+}
+function cellColor(m,v,sorted){
+  if(v==null)return 'transparent';
+  if(m.mode==='seq'){const b=binSeq(v,sorted);return tint(ramp()[b],b)}
+  const b=binDiv(v,ST[m.k]);return tint(divRamp()[b],Math.abs(b-3)*2);
+}
+function mapColor(m,v,sorted){
+  if(v==null)return 'var(--surface-2)';
+  return scaleMode()==='seq'?ramp()[binSeq(v,sorted)]:divRamp()[binDiv(v,ST[m.k])];
+}
+
+let sel='01073', sortK='enroll', sortD=-1;
+const active=new Set(GROUPS);
+const $=id=>document.getElementById(id);
+const byFips=Object.fromEntries(D.map(r=>[r.fips,r]));
+const sortedVals={};
+M.forEach(m=>{sortedVals[m.k]=D.map(r=>r[m.k]).filter(v=>v!=null).sort((a,b)=>a-b)});
+
+const msel=$('metric');
+GROUPS.forEach(g=>{
+  const og=document.createElement('optgroup'); og.label=GLAB[g];
+  M.filter(m=>m.g===g).forEach(m=>{
+    const o=document.createElement('option'); o.value=m.k; o.textContent=m.l; og.appendChild(o)});
+  msel.appendChild(og);
+});
+msel.value='a75';
+
+$('grpChips').innerHTML=GROUPS.map(g=>'<button class="chip" data-g="'+g+'" aria-pressed="true">'+GLAB[g]+'</button>').join('');
+$('grpChips').addEventListener('click',e=>{
+  const b=e.target.closest('.chip'); if(!b)return;
+  const g=b.dataset.g;
+  if(active.has(g)&&active.size>1)active.delete(g); else active.add(g);
+  b.setAttribute('aria-pressed',String(active.has(g)));
+  drawTable();
+});
+
+function filtered(){
+  const q=$('q').value.trim().toLowerCase(), mn=+$('minage').value;
+  return D.filter(r=>r.a75>=mn&&(!q||r.county.toLowerCase().includes(q)));
+}
+
+const svgNS='http://www.w3.org/2000/svg';
+function drawMap(){
+  const m=MK[msel.value], sorted=sortedVals[m.k];
+  const keep=new Set(filtered().map(r=>r.fips));
+  const map=$('map');
+  map.setAttribute('viewBox','0 0 '+GEO.w+' '+GEO.h);
+  map.textContent='';
+  Object.keys(GEO.c).forEach(fips=>{
+    const g=GEO.c[fips], r=byFips[fips];
+    if(!r||!g.d)return;
+    const p=document.createElementNS(svgNS,'path');
+    p.setAttribute('d',g.d);
+    p.setAttribute('fill',mapColor(m,r[m.k],sorted));
+    p.setAttribute('tabindex','0');
+    p.setAttribute('role','button');
+    p.setAttribute('aria-label',r.county+' County, '+m.l+' '+m.f(r[m.k]));
+    p.setAttribute('opacity',keep.has(fips)?'1':'0.18');
+    if(fips===sel)p.setAttribute('class','sel');
+    p.addEventListener('click',()=>{sel=fips;render()});
+    p.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();sel=fips;render()}});
+    p.addEventListener('pointerenter',e=>showTip(e,'<span class="t">'+r.county+' County</span>'+m.l+': <b>'+m.f(r[m.k])+'</b><br>Alabama average: '+m.f(ST[m.k])));
+    p.addEventListener('pointermove',moveTip);
+    p.addEventListener('pointerleave',hideTip);
+    map.appendChild(p);
+  });
+  const rp=scaleMode()==='seq'?ramp():divRamp();
+  $('lgSw').innerHTML=rp.map(c=>'<i style="background:'+c+'"></i>').join('');
+  $('lgLo').textContent=scaleMode()==='seq'?'lowest':'−25% vs AL';
+  $('lgHi').textContent=scaleMode()==='seq'?'highest':'+25% vs AL';
+}
+
+function delta(k,v){
+  const a=ST[k]; if(!a)return '';
+  const d=(v/a-1)*100, c=Math.abs(d)<3?'flat':(d>0?'up':'down');
+  return '<div class="d '+c+'">'+(d>0?'+':'')+d.toFixed(0)+'% vs AL</div>';
+}
+function drawDetail(){
+  const r=byFips[sel];
+  const st=k=>{const m=MK[k];
+    return '<div class="dstat"><div class="l">'+m.l+'</div><div class="v">'+m.f(r[k])+'</div>'+(m.mode==='div'?delta(k,r[k]):'')+'</div>'};
+  const bundles=[['home_pc','Home &amp; community'],['acute_pc','Acute hospital'],['inst_pc','Institutional PAC'],['eol_pc','Hospice']];
+  const mx=Math.max.apply(null,bundles.map(b=>Math.max(r[b[0]],ST[b[0]])))*1.06;
+  const bars=bundles.map(function(b){
+    const k=b[0],v=r[k],a=ST[k],d=(v/a-1)*100,c=Math.abs(d)<3?'flat':(d>0?'up':'down');
+    return '<div class="bar-row"><div class="nm">'+b[1]+'</div>'+
+      '<div class="bar-track"><div class="bar-fill" style="width:'+(v/mx*100).toFixed(1)+'%"></div>'+
+      '<div class="bar-avg" style="left:'+(a/mx*100).toFixed(1)+'%"></div></div>'+
+      '<div class="vl">'+fmtM(v)+' <span class="'+c+'">'+(d>0?'+':'')+d.toFixed(0)+'%</span></div></div>'}).join('');
+  $('detail').innerHTML=
+    '<div class="detail-h"><h3>'+r.county+' County</h3>'+
+    '<span class="tag">FIPS '+r.fips+' &middot; '+fmtN(r.ffs_benes)+' FFS benes &middot; avg age '+r.avg_age+'</span></div>'+
+    '<div class="dgrid">'+st('enroll')+st('a75')+st('a85')+st('ma_pct')+st('dual_pct')+st('pc')+'</div>'+
+    '<div class="blockhead">Where the Medicare dollar goes &mdash; per FFS beneficiary, 2024</div>'+
+    '<div class="bars">'+bars+'</div>'+
+    '<div class="barnote">Vertical rule marks the Alabama average.</div>'+
+    '<div class="blockhead">Licensed capacity</div>'+
+    '<div class="dgrid">'+
+      '<div class="dstat"><div class="l">Assisted living</div><div class="v">'+fmtN(r.alf_bed)+'</div><div class="d flat">'+r.alf_fac+' facilit'+(r.alf_fac===1?'y':'ies')+'</div></div>'+
+      '<div class="dstat"><div class="l">Memory care</div><div class="v">'+fmtN(r.mc_bed)+'</div><div class="d flat">'+r.mc_fac+' SCALF'+(r.mc_fac===1?'':'s')+'</div></div>'+
+      '<div class="dstat"><div class="l">Nursing home</div><div class="v">'+fmtN(r.nh_res)+'</div><div class="d flat">'+r.nh_fac+' home'+(r.nh_fac===1?'':'s')+', '+fmtN(r.nh_bed)+' beds</div></div>'+
+      st('sl_per1k')+st('nh_per1k')+
+      '<div class="dstat"><div class="l">75+ per AL/MC bed</div><div class="v">'+(r.sl_bed?(r.a75/r.sl_bed).toFixed(0):'—')+'</div><div class="d flat">AL average '+PER_BED.toFixed(0)+'</div></div>'+
+    '</div>'+
+    '<div class="blockhead">Institutional intensity</div>'+
+    '<div class="dgrid">'+st('snf_days')+st('snf_pct')+st('ip_stays')+st('readmit')+st('hh_pct')+st('hospc_pct')+'</div>';
+}
+
+function drawTable(){
+  const C=M.filter(m=>active.has(m.g));
+  $('hrow').innerHTML='<th class="cty">County</th>'+C.map(function(m,i){
+    const first=i===0||C[i-1].g!==m.g;
+    return '<th class="num'+(first?' grp':'')+'" data-k="'+m.k+'" title="'+m.d+'">'+m.sh+
+      (sortK===m.k?'<span class="dir"> '+(sortD<0?'▾':'▴')+'</span>':'')+'</th>'}).join('');
+  const rows=filtered().slice().sort((a,b)=>{
+    const av=a[sortK],bv=b[sortK];
+    return ((av==null?-1:av)-(bv==null?-1:bv))*sortD||a.county.localeCompare(b.county)});
+  $('hbody').innerHTML=rows.map(function(r){
+    return '<tr data-f="'+r.fips+'"'+(r.fips===sel?' class="sel"':'')+'>'+
+      '<td class="cty">'+r.county+'<span class="fips">'+r.fips+'</span></td>'+
+      C.map(function(m,i){
+        const first=i===0||C[i-1].g!==m.g;
+        return '<td class="num'+(first?' grp':'')+'" style="background:'+cellColor(m,r[m.k],sortedVals[m.k])+
+          '" data-k="'+m.k+'" data-f="'+r.fips+'">'+m.f(r[m.k])+'</td>'}).join('')+'</tr>'}).join('');
+}
+$('hrow').addEventListener('click',e=>{
+  const th=e.target.closest('th[data-k]'); if(!th)return;
+  const k=th.dataset.k;
+  if(sortK===k)sortD*=-1; else{sortK=k;sortD=-1}
+  drawTable();
+});
+$('hbody').addEventListener('click',e=>{
+  const tr=e.target.closest('tr[data-f]'); if(!tr)return;
+  sel=tr.dataset.f; render();
+});
+$('hbody').addEventListener('pointerover',e=>{
+  const td=e.target.closest('td[data-k]'); if(!td)return;
+  const m=MK[td.dataset.k], r=byFips[td.dataset.f];
+  showTip(e,'<span class="t">'+r.county+' &middot; '+m.l+'</span><b>'+m.f(r[m.k])+
+    '</b> &nbsp; AL average '+m.f(ST[m.k])+'<br>'+m.d);
+});
+$('hbody').addEventListener('pointermove',moveTip);
+$('hbody').addEventListener('pointerout',hideTip);
+
+function drawScatter(){
+  const W=980,H=480,P={t:30,r:34,b:62,l:80};
+  const xM=Math.max.apply(null,D.map(r=>r.sl_per1k))*1.08;
+  const ysAll=D.map(r=>r.snf_days);
+  const yMin=Math.min.apply(null,ysAll)*0.93, yM=Math.max.apply(null,ysAll)*1.05;
+  const X=v=>P.l+v/xM*(W-P.l-P.r);
+  const Y=v=>H-P.b-(v-yMin)/(yM-yMin)*(H-P.t-P.b);
+  const maxE=Math.max.apply(null,D.map(r=>r.enroll));
+  const rad=v=>4.5+Math.sqrt(v/maxE)*17;
+  const s=$('scatter');
+  s.setAttribute('viewBox','0 0 '+W+' '+H);
+  const xt=[]; for(let v=0;v<=xM;v+=10)xt.push(v);
+  const step=Math.max(100,Math.ceil((yM-yMin)/5/100)*100);
+  const yt=[]; for(let v=Math.ceil(yMin/step)*step;v<=yM;v+=step)yt.push(v);
+  let g='';
+  yt.forEach(v=>{g+='<line class="gridline" x1="'+P.l+'" y1="'+Y(v).toFixed(1)+'" x2="'+(W-P.r)+'" y2="'+Y(v).toFixed(1)+'"/>'+
+    '<text class="tick" x="'+(P.l-10)+'" y="'+(Y(v)+4).toFixed(1)+'" text-anchor="end">'+fmtN(v)+'</text>'});
+  xt.forEach(v=>{g+='<text class="tick" x="'+X(v).toFixed(1)+'" y="'+(H-P.b+20)+'" text-anchor="middle">'+v+'</text>'});
+  g+='<line class="avgline" x1="'+X(ST.sl_per1k).toFixed(1)+'" y1="'+P.t+'" x2="'+X(ST.sl_per1k).toFixed(1)+'" y2="'+(H-P.b)+'"/>'+
+     '<line class="avgline" x1="'+P.l+'" y1="'+Y(ST.snf_days).toFixed(1)+'" x2="'+(W-P.r)+'" y2="'+Y(ST.snf_days).toFixed(1)+'"/>'+
+     '<text class="quad" x="'+(P.l+8)+'" y="'+(P.t-10)+'">Few beds, heavy SNF use</text>'+
+     '<text class="quad" x="'+(W-P.r)+'" y="'+(H-P.b-12)+'" text-anchor="end">Many beds, light SNF use</text>'+
+     '<text class="axlab" x="'+(P.l+(W-P.l-P.r)/2)+'" y="'+(H-14)+'" text-anchor="middle">Assisted living + memory care beds per 1,000 aged 75+</text>'+
+     '<text class="axlab" transform="translate(22,'+(P.t+(H-P.t-P.b)/2)+') rotate(-90)" text-anchor="middle">SNF days per 1,000 beneficiaries</text>';
+  const named={'01073':1,'01097':1,'01089':1,'01003':1,'01117':1,'01081':1,'01023':1,'01047':1};
+  D.slice().sort((a,b)=>b.enroll-a.enroll).forEach(r=>{
+    const x=X(r.sl_per1k),y=Y(r.snf_days),rr=rad(r.enroll);
+    g+='<circle class="dot'+(r.sl_bed===0?' hi':'')+'" cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="'+rr.toFixed(1)+'" data-f="'+r.fips+'"/>';
+    if(named[r.fips])g+='<text class="dotlab" x="'+(x+rr+6).toFixed(1)+'" y="'+(y+4).toFixed(1)+'">'+r.county+'</text>';
+  });
+  s.innerHTML=g;
+  Array.prototype.forEach.call(s.querySelectorAll('circle'),c=>{
+    const r=byFips[c.dataset.f];
+    c.addEventListener('pointerenter',e=>showTip(e,'<span class="t">'+r.county+' County</span>'+
+      'AL+MC beds per 1k 75+: <b>'+fmt1(r.sl_per1k)+'</b><br>SNF days per 1k: <b>'+fmt1(r.snf_days)+'</b><br>'+
+      'Enrollees: '+fmtN(r.enroll)+'<br>'+(r.sl_bed?r.alf_bed+' AL + '+r.mc_bed+' MC beds':'<b>No licensed AL or memory care</b>')));
+    c.addEventListener('pointermove',moveTip);
+    c.addEventListener('pointerleave',hideTip);
+    c.addEventListener('click',()=>{sel=r.fips;render();
+      document.querySelector('.mapgrid').scrollIntoView({behavior:'smooth',block:'center'})});
+  });
+}
+
+const tip=$('tip');
+function showTip(e,html){tip.innerHTML=html;tip.style.opacity='1';moveTip(e)}
+function moveTip(e){
+  const b=tip.getBoundingClientRect();
+  let x=e.clientX+14,y=e.clientY+14;
+  if(x+b.width>innerWidth-8)x=e.clientX-b.width-14;
+  if(y+b.height>innerHeight-8)y=e.clientY-b.height-14;
+  tip.style.left=x+'px';tip.style.top=y+'px';
+}
+function hideTip(){tip.style.opacity='0'}
+
+function render(){drawMap();drawDetail();drawTable()}
+msel.addEventListener('change',drawMap);
+$('scale').addEventListener('change',()=>{drawMap();drawTable()});
+$('q').addEventListener('input',()=>{drawMap();drawTable()});
+$('minage').addEventListener('input',()=>{
+  const v=+$('minage').value;
+  $('minageV').textContent=v?fmtN(v):'all';
+  drawMap();drawTable();
+});
+$('minageV').textContent='all';
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{render();drawScatter()});
+new MutationObserver(()=>{render();drawScatter()}).observe(
+  document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+render();drawScatter();
+</script>
+
+<script>
+(function(){
+  var root=document.documentElement, btn=document.getElementById('themeToggle');
+  var saved=null;
+  try{saved=localStorage.getItem('atlas-theme')}catch(e){}
+  if(saved==='dark'||saved==='light')root.setAttribute('data-theme',saved);
+  function dark(){
+    var t=root.getAttribute('data-theme');
+    return t==='dark'||(t!=='light'&&matchMedia('(prefers-color-scheme: dark)').matches);
+  }
+  function label(){btn.textContent=dark()?'Light':'Dark';
+    btn.setAttribute('aria-label','Switch to '+(dark()?'light':'dark')+' theme')}
+  btn.addEventListener('click',function(){
+    var next=dark()?'light':'dark';
+    root.setAttribute('data-theme',next);
+    try{localStorage.setItem('atlas-theme',next)}catch(e){}
+    label();
+  });
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change',label);
+  label();
+})();
+</script>
+</body>
+</html>

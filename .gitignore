@@ -1,0 +1,13 @@
+# Raw upstream downloads — regenerate with: python scripts/fetch_data.py
+data/raw/
+
+# Local working files, not part of the atlas
+Market-sep26.xls
+Alabama Patient Density Heat Map*/
+alabama_medicare_by_county.csv
+alabama_medicare_senior_living_by_county.csv
+
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
