@@ -25,9 +25,12 @@ DATA = os.path.join(ROOT, "data")
 DIST = os.path.join(ROOT, "dist")
 
 SITE = "https://patrickrutledge.github.io/alabama-communities/"
+REPO = "https://github.com/PatrickRutledge/alabama-communities"
 
 # Absolute links so the nav works from a published artifact as well as from the site.
-NAV = [("index.html", "County atlas"), ("facilities.html", "Bed map")]
+# The last entry leaves the site for the data dictionary, so it is an absolute repo URL.
+NAV = [("index.html", "County atlas"), ("facilities.html", "Bed map"),
+       (REPO + "#readme", "Data &amp; sources")]
 
 PAGES = [
     {
@@ -101,10 +104,13 @@ def load(name):
 
 
 def nav_html(current):
-    links = "".join(
-        f'<a href="{SITE}{href}"{" aria-current=\"page\"" if href == current else ""}>{label}</a>'
-        for href, label in NAV)
-    return f'<nav class="nav">{links}</nav>'
+    parts = []
+    for href, label in NAV:
+        url = href if href.startswith("http") else SITE + href
+        mark = ' aria-current="page"' if href == current else ""
+        ext = ' target="_blank" rel="noopener"' if href.startswith("http") else ""
+        parts.append(f'<a href="{url}"{mark}{ext}>{label}</a>')
+    return f'<nav class="nav">{"".join(parts)}</nav>'
 
 
 def build(page, artifact):
