@@ -96,7 +96,11 @@ pip install pandas xlrd
 python scripts/fetch_data.py     # pull all five sources into data/raw/
 python scripts/build_master.py   # merge to data/alabama_master.{json,csv} + al_geo.json
 python scripts/build_site.py     # inline the data into index.html
+python scripts/build_site.py --artifact   # same page without the document shell
 ```
+
+The `--artifact` form writes `dist/atlas.artifact.html` for hosts that supply their own
+`<head>` and theme stamp (a Claude Artifact, for instance). Same page, same data.
 
 `data/raw/` is gitignored; the derived outputs are committed so the site builds without
 a network round trip. To move to a newer CMS vintage, bump `GEOVAR_YEAR` in
@@ -110,7 +114,7 @@ src/atlas.template.html     page source with /*__DATA__*/ placeholders
 scripts/fetch_data.py       downloads the five upstream sources
 scripts/build_master.py     joins them into one row per county
 scripts/build_site.py       inlines data, adds document shell and theme toggle
-data/alabama_master.csv     67 counties x 50 fields, for spreadsheets
+data/alabama_master.csv     67 counties x 93 fields, for spreadsheets
 data/alabama_master.json    same, as the site consumes it
 data/al_geo.json            county boundaries projected to SVG paths
 ```

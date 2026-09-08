@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """Build index.html from src/atlas.template.html plus the merged data.
 
+Pass --artifact to write dist/atlas.artifact.html instead: the same page with the
+data inlined but no document shell, for a host that supplies its own <head> and
+light/dark theme stamp.
+
 The template is authored to run both as a Claude Artifact (where the host supplies
 the document shell and the light/dark theme stamp) and as a standalone page. This
 script supplies what the host would otherwise provide: a document shell, a base
@@ -11,11 +15,13 @@ Run:  python scripts/build_site.py
 """
 import json
 import os
+import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE = os.path.join(ROOT, "src", "atlas.template.html")
 DATA = os.path.join(ROOT, "data")
 OUT = os.path.join(ROOT, "index.html")
+OUT_ARTIFACT = os.path.join(ROOT, "dist", "atlas.artifact.html")
 
 TITLE = "Alabama Senior Care Atlas"
 DESCRIPTION = ("Medicare demand, cost and licensed senior-housing supply for all 67 Alabama "
@@ -83,6 +89,14 @@ def main():
     slim = rows if FIELDS is None else [{k: r[k] for k in FIELDS} for r in rows]
     tpl = tpl.replace("/*__DATA__*/ null", json.dumps(slim, separators=(",", ":")))
     tpl = tpl.replace("/*__GEO__*/ null", json.dumps(geo, separators=(",", ":")))
+
+    if "--artifact" in sys.argv:
+        os.makedirs(os.path.dirname(OUT_ARTIFACT), exist_ok=True)
+        with open(OUT_ARTIFACT, "w", encoding="utf-8") as f:
+            f.write(tpl)
+        print(f"dist/atlas.artifact.html  {os.path.getsize(OUT_ARTIFACT)/1024:.0f} KB "
+              f"({len(slim)} counties)")
+        return
 
     # The template's own <style> ends the head material; everything after it is body.
     split = tpl.index("</style>") + len("</style>")

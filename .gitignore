@@ -11,3 +11,6 @@ __pycache__/
 *.pyc
 .DS_Store
 Thumbs.db
+
+# Built artifact variant — regenerate with: python scripts/build_site.py --artifact
+dist/
