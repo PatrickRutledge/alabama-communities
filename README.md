@@ -59,12 +59,21 @@ institutional post-acute 7.6%, hospice 5.6%.
 
 ## The bed map
 
-Every licensed assisted living and memory care community in Alabama on one zoomable map.
+Every licensed assisted living and memory care community in Alabama on one zoomable map,
+running the full width of the page with the legend in the gutter beside the state outline.
 Counties shade by total beds (or AL beds, memory care beds, community count, beds per 1,000
 aged 75+, or bed gap); each community is a dot sized by licensed beds and coloured by licence
-type. Scroll to zoom, drag to pan, click a county to fly to it. Community names appear once
-you pass 2.4× zoom, placed with collision detection so they stay readable. Click any dot for
-the full record — licence class, administrator, phone, address, licensee type and facility ID.
+type. Scroll to zoom, drag to pan, click a county to fly to it, or use +/−/arrow keys with the
+map focused. Community names appear past 2.5×, placed with collision detection so they stay
+readable. Click any dot for the full record — licence class, administrator, phone, address,
+licensee type and facility ID. The community record and the ranked list sit below the map.
+
+**Dots hold their size on screen as you zoom** (radius divided by zoom^0.78) rather than
+scaling with the map, so the gap between clustered communities grows while the dots do not —
+which is what actually pulls a cluster apart. On top of that, 156 facilities across 71
+addresses share exact coordinates, because a campus commonly holds both an ALF and a SCALF
+licence. Those would stay permanently stacked at any zoom, so co-located licences are nudged
+onto a small ring and each carries a badge saying how many licences share the address.
 
 Filter by type, minimum bed count, county, or free text across name, city, county and
 administrator. The ranked list beside the map follows the same filters and zooms to whatever
