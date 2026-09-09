@@ -247,6 +247,60 @@ def load_missouri(raw):
     })
 
 
+
+# --------------------------------------------------------------------- North Carolina
+
+def load_north_carolina(raw):
+    """Three DHSR listings from the Adult Care Licensure Section.
+
+    Adult care homes (7+ residents) and family care homes (2-6) are separate licence
+    classes but the same quantity -- licensed beds under one licensure section -- so both
+    count toward supply and are kept apart only as map categories.
+
+    Memory care needs care. The special-care listing's "# Beds" column is the FACILITY's
+    total bed count, identical to the adult care listing for all 274 rows; the memory-care
+    figure is the separate "Alz. Lic." column, and it is a SUBSET of the facility's beds.
+    Reading "# Beds" as memory care would turn 9,603 Alzheimer-licensed beds into 21,180.
+    """
+    def read(name):
+        df = pd.read_excel(os.path.join(raw, name), header=2)
+        df.columns = [str(c).strip() for c in df.columns]
+        return df[df["RowNo."].notna()].copy()
+
+    scu = read("nc_special_care.xlsx")
+    alz = {str(r["License Number"]).strip(): int(pd.to_numeric(r["Alz. Lic."], errors="coerce") or 0)
+           for _, r in scu.iterrows()}
+
+    frames = []
+    for name, kind, cls in [
+        ("nc_adult_care_homes.xlsx", "AL", "Adult care home (7 or more residents)"),
+        ("nc_family_care_homes.xlsx", "FCH", "Family care home (2 to 6 residents)"),
+    ]:
+        df = read(name)
+        lic = df["License #"].astype(str).str.strip()
+        beds = pd.to_numeric(df["Bed Count"], errors="coerce").fillna(0).astype(int)
+        mc = lic.map(lambda x: alz.get(x, 0)).astype(int)
+        frames.append(pd.DataFrame({
+            "fac_id": lic,
+            "name": df["DBA Name"].fillna(df["Name of Licensee Legal Name"]).astype(str).str.strip(),
+            "kind": kind,
+            "cls": cls,
+            "beds": beds,
+            # clip: an Alzheimer licence cannot exceed the facility it sits inside
+            "mc_beds": mc.where(mc <= beds, beds),
+            "addr": df["Site Address"].fillna("").astype(str).str.strip(),
+            "city": df["Site City"].fillna("").astype(str).str.strip(),
+            "zip": df["Site Zip"].astype(str).str.split(".").str[0].str.split("-").str[0],
+            "county": df["County"].fillna("").astype(str).str.strip().str.title(),
+            "admin": df["Facility Contact Name"].fillna("").astype(str).str.strip(),
+            "phone": df["Facility Contact Number"].fillna("").astype(str).str.strip(),
+            "owner": df["Name of Licensee Legal Name"].fillna("").astype(str).str.strip(),
+            "status": df["Star Rating"].fillna("").astype(str).str.strip(),
+            "lat": None, "lon": None,
+        }))
+    return pd.concat(frames, ignore_index=True)
+
+
 STATES = {
     "AL": {
         "name": "Alabama",
@@ -341,6 +395,31 @@ STATES = {
         },
         "geocode": True,
         "source": "Missouri DHSS Long-Term Care Directory",
+    },
+    "NC": {
+        "name": "North Carolina",
+        "fips": "37",
+        "counties": 100,
+        "county_word": "County",
+        "raw": "data/raw-nc",
+        "out_prefix": "nc/",
+        "load_supply": load_north_carolina,
+        # "Alz. Lic." beds sit inside the facility's licensed beds, as in Texas and Missouri.
+        "mc_mode": "subset",
+        "capacity_word": "beds",
+        "labels": {
+            "total": "Licensed beds",
+            "mc": "Alzheimer-licensed beds",
+            "mc_share": "Alzheimer share of beds",
+            "per1k": "Licensed beds / 1k 75+",
+            "licence": "Alzheimer licence (a subset of the facility's beds)",
+        },
+        "types": [
+            {"k": "AL", "label": "Adult care home (7+ beds)"},
+            {"k": "FCH", "label": "Family care home (2-6 beds)", "c": "teal-soft"},
+        ],
+        "geocode": True,
+        "source": "NC DHSR Adult Care Licensure Section facility listings",
     },
     "TX": {
         "name": "Texas",
