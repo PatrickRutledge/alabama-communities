@@ -18,6 +18,7 @@ The two rules that differ most, and that silently corrupt any cross-state total:
 Alabama also counts beds; Kentucky, when it lands, counts units. Do not sum across
 states without deciding what the sum means.
 """
+import json
 import os
 import re
 
@@ -71,7 +72,7 @@ def load_texas(raw):
     return pd.DataFrame({
         "fac_id": df["Facility ID"].astype(str),
         "name": df["Facility Name"].astype(str).str.strip(),
-        "kind": "ALF",
+        "kind": "AL",
         "cls": df["Service  Type"].fillna("").astype(str).str.strip(),   # TYPE A / B / C
         "beds": cap,
         "mc_beds": az,                      # subset of `beds`, never added to it
@@ -189,6 +190,63 @@ def load_kentucky(raw):
     return pd.concat([alc, pch], ignore_index=True)
 
 
+
+# -------------------------------------------------------------------------- Missouri
+
+# The asterisks in Missouri's level-of-care codes denote evacuation capability, not
+# memory care: an RCF's residents must reach safety unassisted, while an ALF option 2
+# (ALF**) may admit people who need help evacuating. Memory care is recorded separately
+# as a special care unit with its own capacity.
+MO_LEVELS = {
+    "RCF":   ("RC", "Residential care facility"),
+    "RCF*":  ("RC", "Residential care facility, licensed administrator required"),
+    "ALF":   ("AL", "Assisted living facility, option 1"),
+    "ALF**": ("AL", "Assisted living facility, option 2 (may admit residents needing "
+                    "evacuation assistance)"),
+}
+
+
+def load_missouri(raw):
+    """Missouri's LTC Directory, via the state open-data API.
+
+    The file also carries skilled nursing and intermediate care facilities; those are
+    dropped here because nursing homes come from CMS Care Compare for every state, and
+    counting them twice would inflate the residential supply.
+
+    `scucapacity` is the special care unit's capacity and is a SUBSET of `capacity`,
+    verified against the file: no row reports more SCU capacity than total capacity.
+    """
+    with open(os.path.join(raw, "mo_ltc_directory.json"), encoding="utf-8") as f:
+        rows = json.load(f)
+
+    def num(v):
+        v = str(v or "").strip()
+        return int(v) if v.isdigit() else 0
+
+    rows = [r for r in rows if r.get("level_of_care") in MO_LEVELS]
+    cap = [num(r.get("capacity")) for r in rows]
+    scu = [min(num(r.get("scucapacity")), c) for r, c in zip(rows, cap)]
+    return pd.DataFrame({
+        "fac_id": [str(r.get("facility_number") or "").strip() for r in rows],
+        "name": [str(r.get("facility_name") or "").strip().title() for r in rows],
+        "kind": [MO_LEVELS[r["level_of_care"]][0] for r in rows],
+        "cls": [MO_LEVELS[r["level_of_care"]][1] for r in rows],
+        "beds": cap,
+        "mc_beds": scu,                     # subset of `beds`, never added to it
+        "addr": [str(r.get("address") or "").strip().title() for r in rows],
+        "city": [str(r.get("city") or "").strip().title() for r in rows],
+        "zip": [str(r.get("zip_code") or "").split("-")[0] for r in rows],
+        "county": [str(r.get("county") or "").strip().title() for r in rows],
+        "admin": [f"{r.get('first_name_administrator','')} "
+                  f"{r.get('last_name_administrator','')}".strip().title() for r in rows],
+        "phone": [str(r.get("facility_phone_number") or "").strip() for r in rows],
+        "owner": [str(r.get("definition") or "").strip().title() for r in rows],
+        "status": "Licensed",
+        "mgmt": [str(r.get("entity_name") or "").strip().title() for r in rows],
+        "lat": None, "lon": None,
+    })
+
+
 STATES = {
     "AL": {
         "name": "Alabama",
@@ -246,6 +304,43 @@ STATES = {
         ],
         "geocode": True,
         "source": "Kentucky Cabinet for Health and Family Services directories",
+    },
+    "MO": {
+        "name": "Missouri",
+        "fips": "29",
+        "counties": 115,
+        "county_word": "County",
+        "raw": "data/raw-mo",
+        "out_prefix": "mo/",
+        "load_supply": load_missouri,
+        # scucapacity sits inside capacity, exactly as Texas's Alzheimer capacity does.
+        "mc_mode": "subset",
+        "capacity_word": "licensed capacity",
+        "labels": {
+            "total": "Licensed capacity",
+            "mc": "Special care unit capacity",
+            "mc_share": "Special care unit share",
+            "per1k": "Licensed capacity / 1k 75+",
+            "licence": "special care unit (a subset of the facility's licence)",
+        },
+        "types": [
+            {"k": "AL", "label": "Assisted living (ALF)"},
+            {"k": "RC", "label": "Residential care (RCF)", "c": "teal-soft"},
+        ],
+        # The state directory writes "Saint" where the Census and CMS write "St." /
+        # "Ste.", and appends "County" to two of them. Independent City of St. Louis is
+        # a county equivalent and CMS carries it as "St. Louis City", separate from the
+        # surrounding "St. Louis" county -- keep the two apart.
+        "county_fixes": {
+            "saintlouiscounty": "St. Louis",
+            "saintlouiscity": "St. Louis City",
+            "saintcharles": "St. Charles",
+            "saintclair": "St. Clair",
+            "saintfrancois": "St. Francois",
+            "saintegenevieve": "Ste. Genevieve",
+        },
+        "geocode": True,
+        "source": "Missouri DHSS Long-Term Care Directory",
     },
     "TX": {
         "name": "Texas",

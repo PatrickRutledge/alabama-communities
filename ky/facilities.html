@@ -225,7 +225,7 @@ footer dd{margin:0}
   <div class="eyebrow"><b>Kentucky</b><span>294 licensed communities</span><span>9,915 units</span><span>Licensure Sep 2026</span></div>
   <h1>Kentucky Senior Living Bed Map</h1>
   <p class="dek">Every licensed assisted living and memory care community in Kentucky, placed on the map and sized by licensed beds. Counties are shaded by total capacity. Zoom into a hotspot to read community names, bed counts, licence class and administrator.</p>
-  <nav class="nav"><a href="https://patrickrutledge.github.io/alabama-communities/index.html">Alabama</a><a href="https://patrickrutledge.github.io/alabama-communities/ky/index.html">Kentucky</a><a href="https://patrickrutledge.github.io/alabama-communities/tx/index.html">Texas</a><a href="https://patrickrutledge.github.io/alabama-communities/ky/facilities.html" aria-current="page">Kentucky bed map</a><a href="https://github.com/PatrickRutledge/alabama-communities#readme" target="_blank" rel="noopener">Data &amp; sources</a></nav>
+  <nav class="nav"><a href="https://patrickrutledge.github.io/alabama-communities/index.html">Alabama</a><a href="https://patrickrutledge.github.io/alabama-communities/ky/index.html">Kentucky</a><a href="https://patrickrutledge.github.io/alabama-communities/mo/index.html">Missouri</a><a href="https://patrickrutledge.github.io/alabama-communities/tx/index.html">Texas</a><a href="https://patrickrutledge.github.io/alabama-communities/ky/facilities.html" aria-current="page">Kentucky bed map</a><a href="https://github.com/PatrickRutledge/alabama-communities#readme" target="_blank" rel="noopener">Data &amp; sources</a></nav>
 </header>
 
 <div class="kpis" id="kpis"></div>
@@ -379,14 +379,21 @@ function shadeColor(k,v){
 /* ---------- state ---------- */
 let sel=FAC[0].id, k=1, tx=0, ty=0, VW=600, VH=957;
 const TYPES=CFG.types||[{k:'AL',label:'Assisted living'},{k:'MC',label:'Memory care'}];
-const TLAB={}, TCSS={};
-TYPES.forEach(function(t){TLAB[t.k]=t.label; TCSS[t.k]=t.k.toLowerCase()});
+// Each state declares its own categories; a state may name a colour, otherwise fall
+// back to the first three categorical slots by position.
+const SLOTS=['accent-soft','clay-soft','teal-soft'];
+const TLAB={}, TCSS={}, TCOL={};
+TYPES.forEach(function(t,i){
+  TLAB[t.k]=t.label;
+  TCSS[t.k]=t.k.toLowerCase();
+  TCOL[t.k]=t.c||(t.k==='MC'?'clay-soft':t.k==='PCH'?'teal-soft':SLOTS[i%SLOTS.length]);
+});
 const types=new Set(TYPES.map(t=>t.k));
 $('typeChips').innerHTML=TYPES.map(t=>'<button class="chip" data-t="'+t.k+
   '" aria-pressed="true">'+t.label+'</button>').join('');
 $('typeKey').innerHTML=TYPES.map(t=>'<span class="k"><i class="sw" style="background:var(--'+
-  (t.k==='MC'?'clay-soft':t.k==='PCH'?'teal-soft':'accent-soft')+')"></i> '+t.label+'</span>').join('');
-const tvar=k=>'var(--'+(k==='MC'?'clay-soft':k==='PCH'?'teal-soft':'accent-soft')+')';
+  TCOL[t.k]+')"></i> '+t.label+'</span>').join('');
+const tvar=k=>'var(--'+(TCOL[k]||'accent-soft')+')';
 const svg=$('map');
 
 function shown(){
@@ -455,7 +462,8 @@ function drawDots(){
     const c=document.createElementNS(NS,'circle');
     c.setAttribute('cx',f.x.toFixed(1)); c.setAttribute('cy',f.y.toFixed(1));
     c.setAttribute('r',RK(f.beds).toFixed(3));
-    c.setAttribute('class','dot '+(TCSS[f.type]||'al')+(f.id===sel?' on':''));
+    c.setAttribute('class','dot'+(f.id===sel?' on':''));
+    c.setAttribute('fill',tvar(f.type));
     c.setAttribute('stroke-width',(1.2/k).toFixed(3));
     c.setAttribute('tabindex','0');
     c.setAttribute('role','button');
@@ -587,7 +595,8 @@ function drawDetail(){
   $('detail').innerHTML=
     '<h3>Community record</h3>'+
     '<div class="nm">'+f.name+'</div>'+
-    '<div class="badges"><span class="badge '+(TCSS[f.type]||'al')+'">'+
+    '<div class="badges"><span class="badge" style="background:'+
+      tvar(f.type).replace('-soft',')').replace('var(--','var(--')+'">'+
       (TLAB[f.type]||f.type)+'</span>'+
       '<span class="badge ghost">'+f.status+'</span>'+
       (f.stacked?'<span class="badge ghost">'+f.stacked+' licences here</span>':'')+

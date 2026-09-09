@@ -256,8 +256,11 @@ def main():
         lat, lon = r.get("lat"), r.get("lon")
         facs.append({
             "id": str(r["fac_id"]), "name": r["name"], "kind": r["kind"],
-            "type": ("PCH" if r["kind"] == "PCH"
-                     else "MC" if (additive and r["kind"] == "MC") else "AL"),
+            # The map category is the loader's `kind` as-is, so a state can declare
+            # categories the others do not have (Missouri's residential care, Kentucky's
+            # personal care homes). Only an additive state's memory care is special:
+            # elsewhere memory care is a subset column, not a category of its own.
+            "type": r["kind"] if (additive or r["kind"] != "MC") else "AL",
             "cls": r["cls"], "beds": int(r["beds"]), "mc_beds": int(r["mc_beds"]),
             "addr": r["addr"], "city": r["city"], "zip": r["zip"],
             "county": r["county"], "fips": fips_by_ck.get(r["ckey"]),

@@ -13,6 +13,7 @@ themselves do not recognise. See [How the states differ](#how-the-states-differ)
 | --- | --- | --- |
 | **Alabama** | [67 counties](https://patrickrutledge.github.io/alabama-communities/) | [292 licences, 10,819 beds](https://patrickrutledge.github.io/alabama-communities/facilities.html) |
 | **Kentucky** | [120 counties](https://patrickrutledge.github.io/alabama-communities/ky/) | [247 certifications, 9,915 units](https://patrickrutledge.github.io/alabama-communities/ky/facilities.html) |
+| **Missouri** | [115 counties](https://patrickrutledge.github.io/alabama-communities/mo/) | [601 facilities, 27,948 capacity](https://patrickrutledge.github.io/alabama-communities/mo/facilities.html) |
 | **Texas** | [254 counties](https://patrickrutledge.github.io/alabama-communities/tx/) | [2,000 licences, 82,378 beds](https://patrickrutledge.github.io/alabama-communities/tx/facilities.html) |
 
 Each atlas carries 85 measures on an interactive county heat map, a filterable table, a
@@ -66,14 +67,14 @@ penetration have a correspondingly smaller share of their care visible here.
 The single most important thing to understand before comparing anything across these
 sites: **the categories are not the same, and this project does not pretend they are.**
 
-| | Alabama | Kentucky | Texas |
-| --- | --- | --- | --- |
-| Licence structure | Two licences: ALF and Specialty Care ALF (SCALF) | Three DAIL certifications: ALC, ALC-BH, ALC-DC — plus a separate OIG personal care home licence | One ALF licence, with an Alzheimer certification |
-| Memory care maths | **Additive** — an ALF bed and a SCALF bed are different beds | **Additive** — ALC-DC is a separately certified secured unit | **Subset** — Alzheimer capacity is part of the facility's licensed capacity, never added |
-| Size / service classes | Family / Group / Congregate | Social model / basic health / dementia care | Type A / Type B / Type C |
-| **What is counted** | Licensed **beds** | Licensed **units** — an apartment, which may hold more than one person | Licensed **capacity** |
-| Coordinates | None published; geocoded here | None published; geocoded here | Published with the directory |
-| Counties | 67 | 120 | 254 |
+| | Alabama | Kentucky | Missouri | Texas |
+| --- | --- | --- | --- | --- |
+| Licence structure | Two licences: ALF and Specialty Care ALF (SCALF) | Three DAIL certifications: ALC, ALC-BH, ALC-DC — plus a separate OIG personal care home licence | Two tiers: residential care (RCF, RCF\*) and assisted living (ALF, ALF\*\*), plus an optional special care unit | One ALF licence, with an Alzheimer certification |
+| Memory care maths | **Additive** — an ALF bed and a SCALF bed are different beds | **Additive** — ALC-DC is a separately certified secured unit | **Subset** — special care unit capacity sits inside the facility's licensed capacity | **Subset** — Alzheimer capacity is part of the facility's licensed capacity, never added |
+| Size / service classes | Family / Group / Congregate | Social model / basic health / dementia care | Evacuation capability (the asterisk tiers) | Type A / Type B / Type C |
+| **What is counted** | Licensed **beds** | Licensed **units** — an apartment, which may hold more than one person | Licensed **capacity** | Licensed **capacity** |
+| Coordinates | None published; geocoded here | None published; geocoded here | None published; geocoded here | Published with the directory |
+| Counties | 67 | 120 | 115 | 254 |
 
 **`ALC-BH` means "basic health services", not behavioural health** — [902 KAR 20:480](https://www.law.cornell.edu/regulations/kentucky/902-KAR-20-480)
 defines the three certifications as social model (`ALC`), basic health and health-related
@@ -114,6 +115,29 @@ it will not be comparable to either on a per-1,000 basis without an explicit ass
 
 More than half of Kentucky's counties — 68 of 120 — have no licensed
 assisted living community at all, the highest share of the three states so far.
+
+## Missouri at a glance
+
+| Measure | Value |
+| --- | --- |
+| Medicare enrollees (2025) | 1,354,621 — 53.8% Medicare Advantage |
+| Aged 75+ / aged 85+ | 528,372 / 132,609 |
+| Original Medicare spend (2024) | $6.76B over 534,339 FFS beneficiaries |
+| Assisted living (ALF, ALF\*\*) | 332 facilities, 19,984 capacity |
+| Residential care (RCF, RCF\*) | 269 facilities, 7,964 capacity |
+| Special care unit capacity | 4,736 (**a subset of the above**) |
+| Nursing homes | 487 facilities, 35,486 residents |
+| Capacity per 1,000 aged 75+ | **52.9** — the best supplied of the four |
+| Counties with **no** licensed capacity | 15 of 115 |
+| Counties below the state rate | **66**, 4,080 short |
+
+Missouri's asterisks denote **evacuation capability, not memory care**: an RCF's residents
+must reach safety unassisted, while an ALF option 2 (ALF\*\*) may admit people who need help
+evacuating. Memory care is recorded separately as a special care unit with its own capacity,
+which sits *inside* the facility's licensed capacity.
+
+Missouri is also the only state so far to publish its directory through an open-data API, so
+it needs no scraping and refreshes with a single request.
 
 ## Texas at a glance
 
