@@ -1,4 +1,4 @@
-<title>Alabama Senior Living Bed Map</title>
+<title><!--TITLE--></title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
@@ -194,9 +194,9 @@ footer dd{margin:0}
 
 <div class="wrap">
 <header class="mast">
-  <div class="eyebrow"><b>Alabama</b><span>292 licensed communities</span><span>10,819 beds</span><span>ADPH Sep 2026</span></div>
-  <h1>Alabama Senior Living Bed Map</h1>
-  <p class="dek">Every licensed assisted living and memory care community in Alabama, placed on the map and sized by licensed beds. Counties are shaded by total capacity. Zoom into a hotspot to read community names, bed counts, licence class and administrator.</p>
+  <div class="eyebrow"><!--EYEBROW--></div>
+  <h1><!--H1--></h1>
+  <p class="dek"><!--DEK--></p>
   <!--NAV-->
 </header>
 
@@ -243,7 +243,7 @@ footer dd{margin:0}
       </div>
     </div>
     <div class="mapcanvas">
-      <svg id="map" role="img" tabindex="0" aria-label="Map of licensed assisted living and memory care communities in Alabama"></svg>
+      <svg id="map" role="img" tabindex="0" aria-label="Map of licensed senior living communities"></svg>
       <div class="zlevel" id="zlevel"></div>
       <div class="zoombar">
         <button type="button" id="zin" aria-label="Zoom in">+</button>
@@ -263,23 +263,14 @@ footer dd{margin:0}
   </div>
 </section>
 
-<div class="note">
-  <b>On the dots.</b> 262 of the 292 communities geocode to a street address. The remaining 30 sit on newer streets the Census address file does not yet carry; those are placed at the centre of their own city (24) or county (6) and are drawn with a hollow ring rather than a solid fill. Bed counts, names, licence class and administrators are exact in every case &mdash; only the pin position is approximate.
-  <b>On the licence classes.</b> Alabama licenses memory care separately as a Specialty Care Assisted Living Facility, and many campuses hold both an ALF and a SCALF licence at one address &mdash; two licences with two separate bed counts. Rather than stack one dot invisibly on top of the other, co-located licences are nudged onto a tiny ring, so zooming in pulls them apart and both stay clickable. The record for each carries a badge saying how many licences share the address.
-</div>
+<!--NOTE-->
 
-<footer>
-  <h3>Sources &amp; vintage</h3>
-  <dl>
-    <dt>Communities</dt><dd>Alabama Department of Public Health Facilities Directory &mdash; 185 licensed Assisted Living Facilities and 107 Specialty Care Assisted Living Facilities, retrieved September 2026</dd>
-    <dt>Coordinates</dt><dd>US Census Bureau geocoder, Public_AR_Current benchmark</dd>
-    <dt>County context</dt><dd>Enrollees aged 75+ from CMS Medicare Monthly Enrollment, annual 2025. Bed gap is the beds needed to reach Alabama's statewide rate of 25.7 per 1,000 aged 75+.</dd>
-  </dl>
-</footer>
+<!--FOOTER-->
 </div>
 <div id="tip" role="status" aria-live="polite"></div>
 
 <script>
+const CFG = /*__CFG__*/ null;
 const FAC = /*__FAC__*/ null;
 const GEO = /*__GEO__*/ null;
 const CNTY = /*__CNTY__*/ null;
@@ -298,9 +289,13 @@ FAC.forEach(f=>{f.x=PX(f.lon); f.y=PY(f.lat)});
    permanently under another, which no amount of zoom fixes. Nudge each cluster onto
    a small ring -- invisible at statewide zoom, cleanly separated once you zoom in. */
 (function(){
+  // Group on the ORIGINAL coordinates, not the projected ones. Rounding projected
+  // units groups by a distance that depends on the state's width -- 0.1 unit is ~60 m
+  // across Alabama but ~190 m across Texas, which would nudge apart communities that
+  // are genuinely in different places.
   const at={};
   FAC.forEach(function(f){
-    const key=f.x.toFixed(1)+','+f.y.toFixed(1);
+    const key=f.lon+','+f.lat;
     (at[key]=at[key]||[]).push(f);
   });
   Object.keys(at).forEach(function(key){
@@ -309,8 +304,8 @@ FAC.forEach(f=>{f.x=PX(f.lon); f.y=PY(f.lat)});
     g.sort((a,b)=>b.beds-a.beds);
     g.forEach(function(f,i){
       const a=i/g.length*Math.PI*2-Math.PI/2;
-      f.x+=Math.cos(a)*1.5;
-      f.y+=Math.sin(a)*1.5;
+      f.x+=Math.cos(a)*1.0;
+      f.y+=Math.sin(a)*1.0;
       f.stacked=g.length;
     });
   });
@@ -343,8 +338,9 @@ $('kpis').innerHTML=
 /* ---------- colour ---------- */
 const cs=getComputedStyle(document.documentElement);
 const ramp=()=>[1,2,3,4,5,6,7].map(i=>cs.getPropertyValue('--seq'+i).trim());
-const SHADE={beds:'Total licensed beds',albeds:'Assisted living beds',mcbeds:'Memory care beds',
-  fac:'Communities',per1k:'Beds per 1,000 aged 75+',gap:'Bed gap to state rate'};
+const SHADE=Object.assign({beds:'Total licensed beds',albeds:'Assisted living beds',
+  mcbeds:'Memory care beds',fac:'Communities',per1k:'Beds per 1,000 aged 75+',
+  gap:'Bed gap to state rate'}, CFG.shade||{});
 function shadeVals(k){return CNTY.map(c=>c[k]).filter(v=>v!=null).sort((a,b)=>a-b)}
 function shadeColor(k,v){
   if(k==='none')return 'var(--nodata)';

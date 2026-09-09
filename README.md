@@ -1,13 +1,23 @@
-# Alabama Senior Care Atlas — data, terms and sources
+# Senior Care Atlas — data, terms and sources
 
-What the numbers on these two pages mean, where each one comes from, and what they
-cannot tell you. If you arrived here from a link on either page, this is the reference
-for everything you saw there.
+What the numbers on these pages mean, where each one comes from, and what they cannot
+tell you. If you arrived here from a link on any page, this is the reference for
+everything you saw there.
 
-| Page | What it shows |
-| --- | --- |
-| **[County atlas](https://patrickrutledge.github.io/alabama-communities/)** | 85 measures on an interactive county heat map, a filterable table, a profile for each county, and a supply-versus-institutional-intensity scatter |
-| **[Bed map](https://patrickrutledge.github.io/alabama-communities/facilities.html)** | All 292 licensed assisted living and memory care communities as points sized by beds, zoomable to community name, bed count, licence class and administrator |
+**Each state is its own site, built on that state's own definitions.** There is no
+regional roll-up and there deliberately never will be: states license senior housing on
+incompatible terms, and a combined total would have to invent equivalences the states
+themselves do not recognise. See [How the states differ](#how-the-states-differ).
+
+| State | County atlas | Bed map |
+| --- | --- | --- |
+| **Alabama** | [67 counties](https://patrickrutledge.github.io/alabama-communities/) | [292 licences, 10,819 beds](https://patrickrutledge.github.io/alabama-communities/facilities.html) |
+| **Texas** | [254 counties](https://patrickrutledge.github.io/alabama-communities/tx/) | [2,000 licences, 82,378 beds](https://patrickrutledge.github.io/alabama-communities/tx/facilities.html) |
+
+Each atlas carries 85 measures on an interactive county heat map, a filterable table, a
+profile for each county, and a supply-versus-institutional-intensity scatter. Each bed
+map places every licensed community as a point sized by capacity, zoomable to community
+name, bed count, licence class and administrator.
 
 Building and rebuilding the site, the data pipeline and the scripts are documented
 separately in **[docs/BUILDING.md](docs/BUILDING.md)**.
@@ -50,7 +60,51 @@ penetration have a correspondingly smaller share of their care visible here.
 
 ---
 
-## Statewide, at a glance
+## How the states differ
+
+The single most important thing to understand before comparing anything across these
+sites: **the categories are not the same, and this project does not pretend they are.**
+
+| | Alabama | Texas |
+| --- | --- | --- |
+| Licence structure | Two separate licences: ALF and Specialty Care ALF (SCALF) | One ALF licence, with an Alzheimer certification |
+| Memory care maths | **Additive** — an ALF bed and a SCALF bed are different beds | **Subset** — Alzheimer capacity is part of the facility's licensed capacity, never added to it |
+| Size classes | Family / Group / Congregate | Type A / Type B / Type C |
+| What is counted | Licensed beds | Total licensed capacity |
+| Coordinates | None published; geocoded here | Published with the directory |
+| Counties | 67 | 254 |
+
+A Texas community with 80 licensed beds of which 30 are Alzheimer-certified has **80
+beds, not 110**. Adding Texas's Alzheimer capacity to its licensed capacity inflates the
+state by 21,655 beds. Alabama's two counts genuinely do add. This is why the two sites
+compute their bed gaps separately and why nothing here sums across states.
+
+Kentucky, when it lands, counts *units* rather than beds — an apartment, not a bed — so
+it will not be comparable to either on a per-1,000 basis without an explicit assumption.
+
+## Texas at a glance
+
+| Measure | Value |
+| --- | --- |
+| Medicare enrollees (2025) | 4,914,050 — 54.0% Medicare Advantage |
+| Aged 75+ / aged 85+ | 1,917,309 / 455,169 |
+| Original Medicare spend (2024) | $25.77B over 1,788,828 FFS beneficiaries |
+| Assisted living | 2,000 licences, 82,378 licensed capacity |
+| Alzheimer-certified capacity | 21,655 (**a subset of the above**) |
+| Nursing homes | 1,177 facilities, 88,704 residents |
+| Licensed capacity per 1,000 aged 75+ | 43.0 (Alabama: 25.7) |
+| Counties with **no** licensed capacity | **103 of 254** |
+| Counties below the state rate | **204**, 15,299 beds short |
+
+Texas is far better supplied than Alabama — 43 beds per 1,000 aged 75+ against Alabama's
+25.7 — but its gaps are concentrated: Hidalgo is 1,736 beds short of the state's own
+rate, El Paso 1,555, Cameron 918, Webb 663.
+
+Coordinates come with the HHSC directory, so 1,995 of 2,000 communities sit at a
+published position; the 5 without one were geocoded through the Census
+geocoder.
+
+## Alabama, at a glance
 
 | Measure | Value |
 | --- | --- |

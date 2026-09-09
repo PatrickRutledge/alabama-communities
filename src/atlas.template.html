@@ -1,4 +1,4 @@
-<title>Alabama Senior Care Atlas</title>
+<title><!--TITLE--></title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
@@ -221,27 +221,16 @@ footer dd{margin:0}
 
 <div class="wrap">
 <header class="mast">
-  <div class="eyebrow"><b>Alabama</b><span>67 counties</span><span>Enrollment 2025</span><span>Claims 2024</span><span>Licensure Sep 2026</span></div>
-  <h1>Alabama Senior Care Atlas</h1>
-  <p class="dek">Medicare demand, cost and licensed senior-housing supply for every county in Alabama &mdash; built to show where independent living, assisted living and memory care have room to grow, and what Medicare actually spends where they don't.</p>
-  <div class="mast-rule">
-    <span>CMS Monthly Enrollment</span><span>CMS Geographic Variation PUF</span><span>CMS Care Compare</span><span>ADPH Facilities Directory</span>
-  </div>
+  <div class="eyebrow"><!--EYEBROW--></div>
+  <h1><!--H1--></h1>
+  <p class="dek"><!--DEK--></p>
+  <div class="mast-rule"><!--SOURCES--></div>
   <!--NAV-->
 </header>
 
 <div class="kpis" id="kpis"></div>
 
-<div class="caveat">
-  <h3>Read this before you read the numbers</h3>
-  <ul>
-    <li><b>Medicare does not record where a beneficiary lives.</b> Claims identify the <i>service</i> billed, never the residence. Someone in independent living, in assisted living, or in their own house is indistinguishable in this data, and no public CMS file splits spend by residential setting. So the residence measures here come from state licensure, and the spend measures are county-wide.</li>
-    <li><b>Independent living is invisible on purpose.</b> Alabama does not license IL &mdash; it is housing, not care, so there is no registry and no bed count. The closest honest proxy is the <b>75+ and 85+ enrollee counts</b> set against licensed AL and memory-care beds: that gap is your addressable population.</li>
-    <li><b>&ldquo;Skilled nursing&rdquo; here means post-acute SNF, not the nursing home.</b> Medicare covers up to 100 days after a qualifying hospital stay. Long-term custodial care is paid by Medicaid and out of pocket and never appears in these dollars &mdash; which means most of the savings from keeping someone out of a nursing home accrue to <b>Medicaid</b>, not Medicare.</li>
-    <li class="ok"><b>What Medicare savings do look like is on this page:</b> fewer inpatient stays, lower readmission rates, fewer ER visits, fewer SNF days per 1,000, and a heavier tilt toward home health and hospice. Those five are the measurable case for aging in place, and they vary by more than two-fold across Alabama counties.</li>
-    <li><b>Spend is Original Medicare only, and Alabama is 60% Medicare Advantage.</b> CMS publishes no county-level MA spending, so the $4.67B here is roughly a third of true Medicare spend in the state. Per-capita figures are per fee-for-service beneficiary with full Part A and B &mdash; not per enrollee.</li>
-  </ul>
-</div>
+<!--CAVEAT-->
 
 <section>
   <h2>County heat map</h2>
@@ -253,12 +242,12 @@ footer dd{margin:0}
     <div class="ctl"><label for="scale">Shading</label><select id="scale">
       <option value="auto">Auto (fits the measure)</option>
       <option value="seq">Magnitude, low to high</option>
-      <option value="div">Compared to Alabama average</option>
+      <option value="div">Compared to '+CFG.name+' average</option>
     </select></div>
   </div>
   <div class="explorer">
     <div class="mapbox">
-      <svg id="map" role="img" aria-label="Alabama counties shaded by the selected measure"></svg>
+      <svg id="map" role="img" aria-label="Counties shaded by the selected measure"></svg>
       <div class="legend">
         <div class="swatches" id="lgSw"></div>
         <div class="breaks" id="lgBreaks"></div>
@@ -274,7 +263,7 @@ footer dd{margin:0}
         </div>
         <div class="mstats" id="mStats"></div>
         <div class="dist"><svg id="dist" role="img" aria-label="Distribution of the selected measure across the 67 counties"></svg></div>
-        <div class="distcap">Each mark is one county. The dashed rule is the Alabama average.</div>
+        <div class="distcap">Each mark is one county. The dashed rule is the '+CFG.name+' average.</div>
       </div>
       <div class="railcard" style="padding-top:16px">
         <div class="mhead" style="border-bottom-width:1px;padding-bottom:8px;margin-bottom:0">
@@ -294,7 +283,7 @@ footer dd{margin:0}
 
 <section>
   <h2>Every measure, side by side</h2>
-  <p class="sub">The same data as a table. Rates and dollars are shaded against the Alabama average; counts are shaded low to high. Click a column header to sort. The category chips above control which columns appear here too.</p>
+  <p class="sub">The same data as a table. Rates and dollars are shaded against the '+CFG.name+' average; counts are shaded low to high. Click a column header to sort. The category chips above control which columns appear here too.</p>
   <div class="controls">
     <div class="ctl"><label for="q">Filter counties</label><input type="search" id="q" placeholder="Jefferson, Baldwin&hellip;" autocomplete="off"></div>
     <div class="ctl"><label for="minage">Min. enrollees 75+ <span id="minageV" class="mono"></span></label><input type="range" id="minage" min="0" max="20000" step="500" value="0"></div>
@@ -305,25 +294,16 @@ footer dd{margin:0}
 
 <section>
   <h2>Supply against institutional intensity</h2>
-  <p class="sub">Horizontal axis: licensed assisted-living and memory-care capacity per 1,000 enrollees aged 75 and over. Vertical axis: Medicare-covered SNF days per 1,000 fee-for-service beneficiaries &mdash; how heavily a county leans on institutional post-acute care. Circle size is total Medicare enrollment; dashed lines mark the Alabama average. Counties in clay have no licensed assisted living or memory care at all.</p>
+  <p class="sub">Horizontal axis: licensed assisted-living and memory-care capacity per 1,000 enrollees aged 75 and over. Vertical axis: Medicare-covered SNF days per 1,000 fee-for-service beneficiaries &mdash; how heavily a county leans on institutional post-acute care. Circle size is total Medicare enrollment; dashed lines mark the '+CFG.name+' average. Counties in clay have no licensed assisted living or memory care at all.</p>
   <div class="chartbox"><svg id="scatter" role="img" aria-label="Scatter plot of senior living beds per 1,000 aged 75 plus against SNF days per 1,000 beneficiaries"></svg></div>
 </section>
 
-<footer>
-  <h3>Sources &amp; vintage</h3>
-  <dl>
-    <dt>Enrollment</dt><dd>CMS Medicare Monthly Enrollment, annual 2025 &mdash; dataset d7fabe1e-d19b-4333-9eff-e80e0643f2fd. Growth measures compare 2025 with 2020.</dd>
-    <dt>Spend &amp; use</dt><dd>CMS Medicare Geographic Variation by National, State &amp; County, 2024 &mdash; dataset 6219697b-8f6c-4164-bed4-cd9317c58ebc, Original Medicare only</dd>
-    <dt>Nursing homes</dt><dd>CMS Care Compare Provider Information &mdash; 224 Alabama facilities, certified beds and average daily residents</dd>
-    <dt>AL &amp; memory care</dt><dd>Alabama Department of Public Health Facilities Directory &mdash; 185 licensed Assisted Living Facilities and 107 Specialty Care Assisted Living Facilities, retrieved September 2026</dd>
-    <dt>Bed gap</dt><dd>Beds required to reach Alabama's own statewide rate of 25.7 assisted living and memory care beds per 1,000 enrollees aged 75+. Benchmarked against the state average rather than an outside industry target, so the measure needs no assumption beyond this data.</dd>
-    <dt>On SCALF</dt><dd>Specialty Care Assisted Living Facility is Alabama's license class for dementia and Alzheimer's care, counted here as memory care. Many SCALFs share an address with an ALF and are licensed separately, so facility counts exceed the number of distinct campuses.</dd>
-  </dl>
-</footer>
+<!--FOOTER-->
 </div>
 <div id="tip" role="status" aria-live="polite"></div>
 
 <script>
+const CFG = /*__CFG__*/ null;
 const D = /*__DATA__*/ null;
 const GEO = /*__GEO__*/ null;
 
@@ -340,7 +320,7 @@ const F={
 
 /* ---------- measure catalogue ----------
    [key, label, format, shading mode, description]
-   'seq' shades low to high; 'div' shades against the Alabama average.       */
+   'seq' shades low to high; 'div' shades against the '+CFG.name+' average.       */
 const CAT=[
  ['Demand', [
   ['enroll','Medicare enrollees','n','seq','Total Medicare enrollees, 2025'],
@@ -358,7 +338,7 @@ const CAT=[
   ['hsp_pct','Hispanic','p','div','Share Hispanic'],
  ]],
  ['Opportunity', [
-  ['bed_gap','Bed gap to state rate','sn','div','Assisted living and memory care beds needed to reach Alabama’s statewide rate of 25.7 per 1,000 aged 75+. Positive means under-supplied.'],
+  ['bed_gap','Bed gap to state rate','sn','div','Beds needed to reach the statewide rate. Positive means under-supplied.'],
   ['per_bed','People 75+ per bed','n1','div','Enrollees aged 75+ for every licensed assisted living or memory care bed. Higher means thinner supply.'],
   ['sl_per1k','AL + memory care beds / 1k 75+','n1','div','Licensed assisted living and memory care beds per 1,000 enrollees aged 75 and over'],
   ['sl_bed','AL + memory care beds','n','seq','Total licensed assisted living and memory care beds'],
@@ -450,6 +430,13 @@ CAT.forEach(function(c){
     M.push({k:m[0],l:m[1],f:F[m[2]],mode:m[3],d:m[4],g:c[0],
             sh:m[1].length>16?m[1].slice(0,15)+'…':m[1]});
   });
+});
+M.forEach(function(m){
+  const o=CFG.overrides&&CFG.overrides[m.k];
+  if(!o)return;
+  if(o.l)m.l=o.l;
+  if(o.d)m.d=o.d;
+  m.sh=m.l.length>16?m.l.slice(0,15)+'…':m.l;
 });
 const MK={}; M.forEach(function(m){MK[m.k]=m});
 
@@ -589,7 +576,7 @@ function drawMap(){
       if(e.key==='Enter'||e.key===' '){e.preventDefault();sel=fips;render()}});
     p.addEventListener('pointerenter',function(e){showTip(e,
       '<span class="t">'+r.county+' County</span>'+m.l+': <b>'+m.f(r[m.k])+
-      '</b><br>Alabama average: '+m.f(ST[m.k]))});
+      '</b><br>'+CFG.name+' average: '+m.f(ST[m.k]))});
     p.addEventListener('pointermove',moveTip);
     p.addEventListener('pointerleave',hideTip);
     map.appendChild(p);
@@ -625,7 +612,7 @@ function drawRail(){
   $('mDesc').textContent=m.d;
   const med=s.length%2?s[(s.length-1)/2]:(s[s.length/2-1]+s[s.length/2])/2;
   $('mStats').innerHTML=
-    ['Alabama average',m.f(ST[m.k]),'Median county',m.f(med),
+    [''+CFG.name+' average',m.f(ST[m.k]),'Median county',m.f(med),
      'Lowest',m.f(s[0]),'Highest',m.f(s[s.length-1])]
     .reduce(function(a,v,i,arr){
       return i%2?a+'<div><div class="l">'+arr[i-1]+'</div><div class="v">'+v+'</div></div>':a},'');
@@ -676,7 +663,7 @@ function delta(k,v){
   const a=ST[k];
   if(a==null||!a||v==null)return '';
   const d=(v/a-1)*100, c=Math.abs(d)<3?'flat':(d>0?'up':'down');
-  return '<div class="d '+c+'">'+(d>0?'+':'')+d.toFixed(0)+'% vs AL</div>';
+  return '<div class="d '+c+'">'+(d>0?'+':'')+d.toFixed(0)+'% vs '+CFG.abbr+'</div>';
 }
 function drawDetail(){
   const r=byFips[sel];
@@ -698,7 +685,7 @@ function drawDetail(){
     '<div class="dgrid">'+st('enroll')+st('a75')+st('a85')+st('g5_a75')+st('ma_pct')+st('dual_pct')+'</div>'+
     '<div class="blockhead">Where the Medicare dollar goes &mdash; per FFS beneficiary, 2024</div>'+
     '<div class="bars">'+bars+'</div>'+
-    '<div class="barnote">Vertical rule marks the Alabama average. Total '+F.d(r.pc)+' per beneficiary.</div>'+
+    '<div class="barnote">Vertical rule marks the '+CFG.name+' average. Total '+F.d(r.pc)+' per beneficiary.</div>'+
     '<div class="blockhead">Licensed capacity and the gap</div>'+
     '<div class="dgrid">'+
       '<div class="dstat"><div class="l">Assisted living</div><div class="v">'+F.n(r.alf_bed)+
@@ -752,7 +739,7 @@ $('hbody').addEventListener('pointerover',function(e){
   const td=e.target.closest('td[data-k]'); if(!td)return;
   const m=MK[td.dataset.k], r=byFips[td.dataset.f];
   showTip(e,'<span class="t">'+r.county+' &middot; '+m.l+'</span><b>'+m.f(r[m.k])+
-    '</b> &nbsp; AL average '+m.f(ST[m.k])+'<br>'+m.d);
+    '</b> &nbsp; '+CFG.name+' average '+m.f(ST[m.k])+'<br>'+m.d);
 });
 $('hbody').addEventListener('pointermove',moveTip);
 $('hbody').addEventListener('pointerout',hideTip);

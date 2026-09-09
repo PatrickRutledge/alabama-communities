@@ -7,6 +7,26 @@ Alabama Patient Density Heat Map*/
 alabama_medicare_by_county.csv
 alabama_medicare_senior_living_by_county.csv
 bhm-metro-beds.*
+*.xlsx
+*.xls
+
+# State licensure downloads kept locally for research, not republished here.
+# Each is public data from that state, but redistributing it is the state's call.
+Alabama/
+Arkansas/
+Florida/
+Georgia/
+Kentucky/
+Louisiana/
+Mississippi/
+Missouri/
+North-Carolina/
+South-Carolina/
+Tennessee/
+Texas/
+
+# Raw upstream downloads for every state
+data/raw*/
 
 __pycache__/
 *.pyc

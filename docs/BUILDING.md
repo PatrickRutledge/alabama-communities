@@ -1,6 +1,6 @@
-# Building the Alabama Senior Care Atlas
+# Building the Senior Care Atlas
 
-How the site is generated, what each script does, and the decisions that are easy to
+How the sites are generated, what each script does, and the decisions that are easy to
 undo by accident. For what the data *means*, see the [main README](../README.md).
 
 ## Quick start
@@ -8,11 +8,43 @@ undo by accident. For what the data *means*, see the [main README](../README.md)
 ```bash
 pip install pandas xlrd openpyxl
 
-python scripts/fetch_data.py          # pull the upstream sources into data/raw/
-python scripts/build_master.py        # merge to data/alabama_master.{json,csv} + al_geo.json
-python scripts/geocode_facilities.py  # geocode communities to data/al_facilities.json
-python scripts/build_site.py          # inline data into index.html + facilities.html
+python scripts/fetch_data.py                        # Alabama's upstream sources
+python scripts/build_state.py --state AL            # merge to data/alabama_*.json
+python scripts/geocode_facilities.py --state AL     # fill any missing coordinates
+python scripts/build_site.py --all                  # build every configured state
 ```
+
+Every script except `fetch_data.py` takes `--state XX`. `build_site.py --all` builds all
+configured states in one pass.
+
+## Adding a state
+
+Four things, in this order:
+
+1. **Get the licensure file.** State health departments publish these as Excel, CSV or
+   an Access database, usually behind an interactive portal rather than a plain link.
+   Put it in `data/raw-<state>/`.
+2. **Fetch the CMS half.** Enrollment, spend and nursing homes are national files
+   filtered by FIPS — identical work for every state, no state-specific code.
+3. **Write a loader in `scripts/states.py`.** One function returning a normalised frame,
+   plus a config entry declaring the state's own vocabulary and its `mc_mode`.
+4. **Build.** `build_state.py --state XX`, then `geocode_facilities.py --state XX` if the
+   state publishes no coordinates, then `build_site.py --state XX`.
+
+The templates carry no state-specific prose, so nothing in `src/` needs touching.
+
+### `mc_mode` is the decision that matters
+
+It declares how a state's memory care relates to its total capacity, and getting it
+wrong silently corrupts every capacity figure on the site:
+
+- `"additive"` (Alabama) — memory care is a **separate licence** with its own beds, so
+  total capacity is assisted living plus memory care.
+- `"subset"` (Texas) — memory care is a **certification covering some of an existing
+  licence's beds**, so it is already inside total capacity and must never be added.
+
+Under `subset`, a community with 80 beds of which 30 are Alzheimer-certified has 80
+beds. Treating Texas as additive would invent 21,655 beds that do not exist.
 
 Nothing needs an API key. `fetch_data.py` takes a few minutes, mostly waiting on the
 3 MB county GeoJSON and the two ADPH report exports.
@@ -28,26 +60,45 @@ network.
 ## Repository layout
 
 ```
-index.html                     county atlas — built, single file, no runtime fetches
-facilities.html                bed map — built, single file, no runtime fetches
-README.md                      data dictionary, terms and sources (linked from both pages)
+index.html                     Alabama atlas (the site root, for URL stability)
+facilities.html                Alabama bed map
+tx/index.html                  Texas atlas
+tx/facilities.html             Texas bed map
+README.md                      data dictionary, terms and sources (linked from every page)
 docs/BUILDING.md               this file
 
-src/atlas.template.html        county atlas source, with /*__DATA__*/ placeholders
-src/facilities.template.html   bed map source
+src/atlas.template.html        county atlas source — state-neutral, placeholder-driven
+src/facilities.template.html   bed map source — state-neutral
 
-scripts/fetch_data.py          downloads the five upstream sources
-scripts/build_master.py        joins them into one row per county, projects the geometry
-scripts/geocode_facilities.py  geocodes communities via the US Census geocoder
-scripts/build_site.py          inlines data, adds document shell, nav and theme toggle
+scripts/states.py              per-state config and licensure loaders
+scripts/fetch_data.py          downloads Alabama's upstream sources
+scripts/build_state.py         joins one state into county rows, projects its geometry
+scripts/geocode_facilities.py  fills missing coordinates via the US Census geocoder
+scripts/build_site.py          generates each state's prose, inlines data, writes pages
 
-data/alabama_master.csv        67 counties × 93 fields
-data/alabama_master.json       the same rows, as the atlas consumes them
-data/al_facilities.json        292 communities with coordinates and precision flags
-data/al_geo.json               county SVG paths plus the shared projection bounds
-data/raw/                      upstream downloads (gitignored, regenerate with fetch_data)
+data/<state>_master.{json,csv} one row per county, 93 fields
+data/<state>_facilities.json   one row per licence, with coordinates and precision flags
+data/<state>_geo.json          county SVG paths plus that state's projection bounds
+data/raw/, data/raw-tx/        upstream downloads (gitignored)
 dist/                          artifact-flavoured builds (gitignored)
 ```
+
+The Texas output directory is , not . On a case-insensitive filesystem
+ folds into a  research folder sitting beside it, and the built pages end
+up mixed in with the source spreadsheet. GitHub Pages is case-sensitive, so that mismatch
+would 404 in production while looking fine locally.
+
+### Prose is generated, not written
+
+Every figure in a page's copy — totals, rates, the Medicare Advantage share, the bed
+gap benchmark — is computed in `build_site.py` from that state's own master data and
+injected through `<!--CAVEAT-->`, `<!--FOOTER-->`, `<!--EYEBROW-->` and friends. This
+replaced hand-written numbers in the templates, which was the one maintenance hazard
+the earlier Alabama build carried: copy that could quietly disagree with its own data.
+
+Measure labels follow the same rule. `CFG.overrides` in the injected config renames
+supply measures per state, so Texas shows "Alzheimer-certified capacity" where Alabama
+shows "Memory care beds", from one template.
 
 ## The pipeline
 
@@ -227,9 +278,5 @@ gutter is space the map cannot use anyway. Below 960px the shell flips to
 3. Check the `build_master.py` summary output against the previous run. The county count
    should stay 67; a change in facility counts is real, a change in *unjoined* counties
    is a bug.
-4. Update the hard-coded figures in `README.md` and in the two templates' prose — the
-   caveat panel, the masthead eyebrow and the footer carry literal numbers that the build
-   does not compute.
-
-Point 4 is the one that bites. Search the templates for the current totals before
-publishing.
+4. Update the figures quoted in `README.md`. The pages themselves regenerate their own
+   numbers, so only the README needs a human pass.
