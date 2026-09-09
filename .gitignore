@@ -25,6 +25,12 @@ South-Carolina/
 Tennessee/
 Texas/
 
+# ReferenceUSA is a licensed commercial subscription product (Data Axle). The exports
+# and anything derived from them stay local -- redistributing them in a public repo
+# would almost certainly breach the subscription terms. The scripts that read them are
+# ours and are tracked; the data is not.
+reference-usa/
+
 # Raw upstream downloads for every state
 data/raw*/
 
