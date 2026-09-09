@@ -1,0 +1,594 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Licensed assisted living and memory care supply against the 75+ population across the 7 counties of the Birmingham-Hoover Metropolitan Statistical Area: 2,573 beds, 60 communities, and the gap to the metro's own rate.">
+<meta property="og:title" content="Birmingham-Hoover Senior Living Market">
+<meta property="og:description" content="Licensed assisted living and memory care supply against the 75+ population across the 7 counties of the Birmingham-Hoover Metropolitan Statistical Area: 2,573 beds, 60 communities, and the gap to the metro's own rate.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8F%A1%3C/text%3E%3C/svg%3E">
+<title>Birmingham-Hoover Senior Living Market</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  color-scheme: light;
+  --paper:#f2f3ef; --surface:#fbfbf9; --surface-2:#eceee7;
+  --ink:#12171c; --ink-2:#4a5560; --ink-3:#78838d;
+  --rule:#d6d9d0; --rule-2:#c2c6ba;
+  --accent:#1c5cab; --accent-soft:#2a78d6; --clay:#c1502a; --clay-soft:#eb6834;
+  --teal:#158a60; --teal-soft:#1baf7a;
+  --pos:#184f95; --neg:#a52322; --nodata:#e2e4dd;
+  --seq1:#cde2fb;--seq2:#9ec5f4;--seq3:#6da7ec;--seq4:#3987e5;--seq5:#256abf;--seq6:#184f95;--seq7:#0d366b;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --paper:#14171a; --surface:#1b1f23; --surface-2:#22272c;
+    --ink:#e9ece6; --ink-2:#a4afb8; --ink-3:#7b868f;
+    --rule:#2c3237; --rule-2:#3b434a;
+    --accent:#3987e5; --accent-soft:#5598e7; --clay:#d95926; --clay-soft:#eb6834;
+    --teal:#199e70; --teal-soft:#22c98c;
+    --pos:#5598e7; --neg:#e66767; --nodata:#22272c;
+    --seq1:#16304f;--seq2:#1c4573;--seq3:#235a97;--seq4:#2a78d6;--seq5:#5598e7;--seq6:#86b6ef;--seq7:#b7d3f6;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --paper:#14171a; --surface:#1b1f23; --surface-2:#22272c;
+  --ink:#e9ece6; --ink-2:#a4afb8; --ink-3:#7b868f;
+  --rule:#2c3237; --rule-2:#3b434a;
+  --accent:#3987e5; --accent-soft:#5598e7; --clay:#d95926; --clay-soft:#eb6834;
+  --teal:#199e70; --teal-soft:#22c98c;
+  --pos:#5598e7; --neg:#e66767; --nodata:#22272c;
+  --seq1:#16304f;--seq2:#1c4573;--seq3:#235a97;--seq4:#2a78d6;--seq5:#5598e7;--seq6:#86b6ef;--seq7:#b7d3f6;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);
+  font-family:"Source Serif 4",Georgia,"Times New Roman",serif;
+  font-size:15.5px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px 72px}
+h1,h2,h3,.ui{font-family:"Libre Franklin","Helvetica Neue",Arial,sans-serif}
+.mono,.kpi-v,td.num,th.num{font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  font-variant-numeric:tabular-nums}
+
+header.mast{border-bottom:3px solid var(--ink);margin-top:28px;padding-bottom:16px}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-2);display:flex;flex-wrap:wrap;gap:8px 18px}
+.eyebrow b{color:var(--accent);font-weight:600}
+h1{font-size:clamp(30px,5.4vw,54px);font-weight:800;letter-spacing:-.024em;line-height:1.02;
+  margin:12px 0 10px;text-wrap:balance}
+.dek{font-size:18px;color:var(--ink-2);max-width:62ch;margin:0}
+.nav{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}
+.nav a{font-family:"Libre Franklin",sans-serif;font-size:11.5px;font-weight:600;letter-spacing:.06em;
+  text-transform:uppercase;text-decoration:none;color:var(--ink-2);border:1px solid var(--rule-2);
+  padding:6px 12px;border-radius:2px;background:var(--surface)}
+.nav a:hover{color:var(--accent);border-color:var(--accent)}
+.nav a[aria-current=page]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));
+  border-bottom:1px solid var(--rule);margin:26px 0 34px}
+.kpi{padding:18px 18px 16px 0;border-right:1px solid var(--rule)}
+.kpi:last-child{border-right:0}
+.kpi-l{font-family:"Libre Franklin",sans-serif;font-size:10.5px;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3);margin-bottom:6px}
+.kpi-v{font-size:27px;font-weight:600;letter-spacing:-.02em;line-height:1}
+.kpi-s{font-size:12.5px;color:var(--ink-2);margin-top:5px;font-family:"Libre Franklin",sans-serif}
+
+section{margin:0 0 52px}
+h2{font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);
+  margin:0 0 6px;display:flex;align-items:center;gap:10px}
+h2::after{content:"";flex:1;height:2px;background:var(--ink);opacity:.16}
+.sub{font-size:15px;color:var(--ink-2);margin:0 0 22px;max-width:76ch}
+.lede{font-size:17px;color:var(--ink);max-width:70ch;margin:0 0 22px}
+.lede b{font-weight:600}
+
+.findings{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px;margin:0 0 34px}
+.finding{background:var(--surface);border:1px solid var(--rule);border-top:3px solid var(--clay);
+  padding:18px 20px}
+.finding.good{border-top-color:var(--accent)}
+.finding .n{font-family:"IBM Plex Mono",monospace;font-size:30px;font-weight:600;
+  letter-spacing:-.02em;line-height:1;margin-bottom:8px}
+.finding .t{font-family:"Libre Franklin",sans-serif;font-size:12.5px;font-weight:700;
+  margin-bottom:6px}
+.finding p{margin:0;font-size:13.5px;color:var(--ink-2)}
+
+.card{background:var(--surface);border:1px solid var(--rule);padding:22px 24px}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.axlab{font-family:"Libre Franklin",sans-serif;font-size:10.5px;font-weight:600;letter-spacing:.08em;
+  text-transform:uppercase;fill:var(--ink-3)}
+.tick{font-family:"IBM Plex Mono",monospace;font-size:11.5px;fill:var(--ink-3)}
+.clab{font-family:"Libre Franklin",sans-serif;font-size:13px;font-weight:600;fill:var(--ink)}
+.vlab{font-family:"IBM Plex Mono",monospace;font-size:12px;fill:var(--ink-2)}
+.gridline{stroke:var(--rule);stroke-width:1}
+.zeroline{stroke:var(--ink);stroke-width:1.5}
+.note{font-family:"Libre Franklin",sans-serif;font-size:12px;color:var(--ink-3);margin-top:12px}
+
+.maprow{display:grid;grid-template-columns:1.25fr 1fr;gap:26px;align-items:start}
+@media(max-width:880px){.maprow{grid-template-columns:1fr}}
+.mapbox{background:var(--surface);border:1px solid var(--rule);padding:16px}
+.mapbox svg{display:block;width:100%;height:auto;max-height:70vh}
+#map .cty{stroke:var(--surface);stroke-width:1.2;cursor:pointer}
+#map .cty:hover{stroke:var(--ink);stroke-width:2}
+#map .dot{stroke:var(--surface);stroke-width:1.2;cursor:pointer}
+#map .dot.mc{fill:var(--clay-soft)}
+#map .dot.al{fill:var(--accent-soft)}
+#map .clbl{font-family:"Libre Franklin",sans-serif;font-size:11px;font-weight:700;
+  fill:var(--ink);paint-order:stroke;stroke:var(--surface);stroke-width:3;stroke-linejoin:round;
+  pointer-events:none;text-anchor:middle}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:14px;
+  font-family:"Libre Franklin",sans-serif;font-size:11.5px;color:var(--ink-2)}
+.legend .k{display:flex;align-items:center;gap:7px}
+.legend .sw{width:12px;height:12px;border-radius:50%}
+.ramp{display:flex;height:10px;flex:1;min-width:110px}
+.ramp i{flex:1}
+
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:13.5px}
+.tablewrap{overflow-x:auto;border:1px solid var(--rule);background:var(--surface)}
+th,td{padding:8px 11px;white-space:nowrap;text-align:right}
+th{position:sticky;top:0;z-index:2;background:var(--surface);font-family:"Libre Franklin",sans-serif;
+  font-size:9.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-2);
+  border-bottom:2px solid var(--ink);vertical-align:bottom;cursor:pointer}
+th:hover{color:var(--accent)}
+th.l,td.l{text-align:left}
+td{border-bottom:1px solid var(--rule)}
+td.name{font-family:"Libre Franklin",sans-serif;font-weight:600}
+td.num{font-variant-numeric:tabular-nums}
+tbody tr:hover{background:var(--surface-2)}
+.pill{font-family:"Libre Franklin",sans-serif;font-size:10px;font-weight:700;letter-spacing:.06em;
+  text-transform:uppercase;padding:3px 7px;border-radius:2px;color:var(--paper)}
+.pill.al{background:var(--accent)}
+.pill.mc{background:var(--clay)}
+.short{color:var(--neg);font-weight:600}
+.surp{color:var(--pos)}
+.controls{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;margin:0 0 14px}
+.ctl{display:flex;flex-direction:column;gap:5px}
+.ctl label{font-family:"Libre Franklin",sans-serif;font-size:10px;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3)}
+select,input[type=search]{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--ink);
+  background:var(--surface);border:1px solid var(--rule-2);padding:7px 10px;border-radius:2px;min-width:170px}
+select:focus-visible,input:focus-visible,th:focus-visible,path:focus-visible,circle:focus-visible{
+  outline:2px solid var(--accent);outline-offset:2px}
+
+.caveat{background:var(--surface);border:1px solid var(--rule);border-left:4px solid var(--clay);
+  padding:20px 22px;margin:0 0 46px}
+.caveat h3{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
+  margin:0 0 12px;color:var(--clay)}
+.caveat ul{margin:0;padding-left:0;list-style:none;display:grid;gap:10px}
+.caveat li{padding-left:20px;position:relative;font-size:14.5px;max-width:96ch}
+.caveat li::before{content:"";position:absolute;left:2px;top:.66em;width:7px;height:2px;background:var(--clay)}
+
+#tip{position:fixed;z-index:60;pointer-events:none;background:var(--ink);color:var(--paper);
+  padding:9px 12px;font-family:"IBM Plex Mono",monospace;font-size:11.5px;line-height:1.5;
+  border-radius:2px;max-width:290px;opacity:0;box-shadow:0 4px 14px rgba(0,0,0,.22)}
+#tip .t{font-family:"Libre Franklin",sans-serif;font-weight:700;font-size:12.5px;
+  display:block;margin-bottom:4px}
+
+footer{border-top:2px solid var(--ink);padding-top:18px;font-size:12.5px;color:var(--ink-2)}
+footer h3{font-family:"Libre Franklin",sans-serif;font-size:10px;font-weight:800;letter-spacing:.14em;
+  text-transform:uppercase;margin:0 0 10px;color:var(--ink)}
+footer dl{display:grid;grid-template-columns:auto 1fr;gap:5px 16px;margin:0;
+  font-family:"IBM Plex Mono",monospace;font-size:11.5px}
+footer dt{color:var(--ink-3)}
+footer dd{margin:0}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+<style>
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0}
+  img{max-width:100%}
+  [hidden]{display:none!important}
+  #themeToggle{position:fixed;top:14px;right:14px;z-index:80;
+    font-family:"Libre Franklin","Helvetica Neue",Arial,sans-serif;font-size:11px;font-weight:600;
+    letter-spacing:.08em;text-transform:uppercase;padding:7px 12px;cursor:pointer;border-radius:2px;
+    background:var(--surface);color:var(--ink-2);border:1px solid var(--rule-2)}
+  #themeToggle:hover{color:var(--accent);border-color:var(--accent)}
+  @media print{#themeToggle{display:none}}
+</style>
+</head>
+<body>
+<button id="themeToggle" type="button">Dark</button>
+
+
+<div class="wrap">
+<header class="mast">
+  <div class="eyebrow"><b>Birmingham-Hoover metro</b><span>7 counties</span><span>60 communities</span><span>2,573 licensed beds</span><span>Licensure Sep 2026</span></div>
+  <h1>Birmingham-Hoover Senior Living Market</h1>
+  <p class="dek">The seven counties the Census Bureau defines as the Birmingham-Hoover Metropolitan Statistical Area. 93,882 Medicare beneficiaries aged 75 and over, 2,573 licensed assisted living and memory care beds, and where the two do not line up.</p>
+  <nav class="nav"><a href="https://patrickrutledge.github.io/alabama-communities/index.html">Alabama</a><a href="https://patrickrutledge.github.io/alabama-communities/ky/index.html">Kentucky</a><a href="https://patrickrutledge.github.io/alabama-communities/mo/index.html">Missouri</a><a href="https://patrickrutledge.github.io/alabama-communities/nc/index.html">North Carolina</a><a href="https://patrickrutledge.github.io/alabama-communities/tx/index.html">Texas</a><a href="https://patrickrutledge.github.io/alabama-communities/bhm/index.html" aria-current="page">Birmingham-Hoover metro</a><a href="https://github.com/PatrickRutledge/alabama-communities#readme" target="_blank" rel="noopener">Data &amp; sources</a></nav>
+</header>
+
+<div class="kpis" id="kpis"></div>
+
+<section>
+  <h2>What the numbers say</h2>
+  <p class="lede" id="lede"></p>
+  <div class="findings" id="findings"></div>
+</section>
+
+<section>
+  <h2>The gap, county by county</h2>
+  <p class="sub">Beds each county would need to reach the metro's own rate of <b id="rateTxt"></b> licensed beds per 1,000 residents aged 75 and over. Bars to the right are short of that rate; bars to the left already exceed it. Benchmarking against the metro rather than the state is deliberate &mdash; a Birmingham county competes with the rest of the metro, not with the rural end of Alabama.</p>
+  <div class="card chart"><svg id="gap" role="img" aria-label="Bed gap by county against the metro average"></svg></div>
+  <div class="note" id="gapNote"></div>
+</section>
+
+<section>
+  <h2>Supply on the ground</h2>
+  <p class="sub">Counties shaded by licensed beds per 1,000 aged 75+. Every licensed assisted living and memory care community in the metro is a dot, sized by beds. Hover for detail.</p>
+  <div class="maprow">
+    <div class="mapbox">
+      <svg id="map" role="img" aria-label="Birmingham metro counties and licensed communities"></svg>
+      <div class="legend">
+        <span class="k"><i class="sw" style="background:var(--accent-soft)"></i> Assisted living</span>
+        <span class="k"><i class="sw" style="background:var(--clay-soft)"></i> Memory care</span>
+        <span class="k" style="flex:1;min-width:150px">Beds per 1,000 aged 75+
+          <span class="ramp" id="ramp"></span></span>
+      </div>
+    </div>
+    <div class="card chart">
+      <svg id="rate" role="img" aria-label="Licensed beds per 1,000 aged 75+ by county"></svg>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Where demand is heading</h2>
+  <p class="sub">Growth in the 75+ population since 2020, against each county's current supply rate. The counties growing fastest are not the ones with the most room.</p>
+  <div class="card chart"><svg id="growth" role="img" aria-label="Growth in the 75-plus population by county"></svg></div>
+</section>
+
+<section>
+  <h2>County detail</h2>
+  <p class="sub">Click a column to sort. Medicare measures are for Original Medicare beneficiaries only; the metro is <b id="maTxt"></b> Medicare Advantage, and CMS publishes no county-level MA spending.</p>
+  <div class="tablewrap"><table id="ctab"><thead><tr id="chead"></tr></thead><tbody id="cbody"></tbody></table></div>
+</section>
+
+<section>
+  <h2>Every licensed community</h2>
+  <div class="controls">
+    <div class="ctl"><label for="cf">County</label><select id="cf"></select></div>
+    <div class="ctl"><label for="tf">Type</label><select id="tf">
+      <option value="all">Assisted living and memory care</option>
+      <option value="AL">Assisted living only</option>
+      <option value="MC">Memory care only</option>
+    </select></div>
+    <div class="ctl"><label for="q">Search name, city or administrator</label><input type="search" id="q" placeholder="Riverchase, Hoover, Smith&hellip;" autocomplete="off"></div>
+  </div>
+  <div class="tablewrap"><table id="ftab"><thead><tr id="fhead"></tr></thead><tbody id="fbody"></tbody></table></div>
+  <div class="note" id="fcount"></div>
+</section>
+
+<div class="caveat">
+  <h3>How to read this</h3>
+  <ul>
+    <li><b>Medicare does not record where a beneficiary lives.</b> Claims identify the service billed, never the residence, and no public CMS file splits spend by residential setting. The supply figures here come from Alabama licensure; the Medicare figures are county-wide. They are joined by county, never by person.</li>
+    <li><b>Independent living is not licensed in Alabama</b> and has no registry, so it appears nowhere in the bed counts. The 75+ and 85+ populations set against licensed beds are the closest available proxy for that market.</li>
+    <li><b>&ldquo;Bed gap&rdquo; is a relative measure, not a demand forecast.</b> It is the arithmetic to reach the metro's own current rate &mdash; a benchmark drawn from this data, not a projection of need. A county at the metro rate is not necessarily well served; it is average.</li>
+    <li><b>Memory care beds are a separate Alabama licence</b> (Specialty Care Assisted Living Facility) and are counted in addition to assisted living beds, not inside them. A campus holding both licences appears twice, correctly, with two bed counts.</li>
+  </ul>
+</div>
+
+<footer><h3>Sources &amp; definitions</h3><dl><dt>Geography</dt><dd>Birmingham-Hoover Metropolitan Statistical Area as defined by the US Census Bureau: Jefferson, Shelby, St. Clair, Blount, Bibb, Walker, Chilton.</dd><dt>Communities</dt><dd>Alabama Department of Public Health Facilities Directory &mdash; 60 active licences, 2,573 beds, retrieved September 2026</dd><dt>Enrollment</dt><dd>CMS Medicare Monthly Enrollment, annual 2025 &mdash; dataset d7fabe1e-d19b-4333-9eff-e80e0643f2fd. Growth compares 2025 with 2020.</dd><dt>Spend &amp; use</dt><dd>CMS Medicare Geographic Variation by National, State &amp; County, 2024 &mdash; dataset 6219697b-8f6c-4164-bed4-cd9317c58ebc, Original Medicare only</dd><dt>Bed gap</dt><dd>Beds required to reach the metro's own rate of 27.4 per 1,000 residents aged 75+. Benchmarked against the metro rather than Alabama (25.7 per 1,000) because a metro county competes with the rest of its metro.</dd><dt>Full state data</dt><dd>Every Alabama county and all 85 measures are on the <a href="https://patrickrutledge.github.io/alabama-communities/index.html">Alabama atlas</a>.</dd></dl></footer>
+</div>
+<div id="tip" role="status" aria-live="polite"></div>
+
+<script>
+const REG = {"name":"Birmingham-Hoover","long":"Birmingham-Hoover Metropolitan Statistical Area","state":"Alabama","rate":27.4067,"stateRate":25.7187,"shortN":5,"shortBeds":222};
+const D   = [{"county":"Jefferson","fips":"01073","enroll":139021,"ma":92016,"om":47006,"dual":27496,"a75":52038,"a85":12838,"ffs_benes":34085,"nh_fac":34,"nh_bed":3963,"nh_res":3326.4,"sl_bed":1466,"mc_bed":552,"alf_bed":914,"alf_fac":15,"mc_fac":13,"sl_fac":28,"pch_bed":0,"pch_fac":0,"ma_pct":0.6619,"dual_pct":0.1978,"enroll_p":132494,"a75_p":43630,"g5_enroll":0.0493,"g5_a75":0.1927,"avg_age":73.0,"feml_pct":0.5584,"wht_pct":0.6998,"blk_pct":0.2597,"hsp_pct":0.0091,"pc":13521.24,"pc_std":13901.91,"tot_amt":460871345.0,"ip_pct":0.1534,"ip_stays":242.5994,"ip_days":1447.4989,"ip_per_user":23935.81,"readmit":0.1842,"er":599.0025,"er_pct":0.3084,"op_pct":0.6047,"op_visits":3262.3735,"snf_pct":0.0303,"snf_stays":40.135,"snf_days":1115.7987,"snf_per_user":15579.43,"irf_pct":0.02,"irf_stays":23.1774,"ltch_pct":0.0009,"ltch_stays":1.0562,"hh_pct":0.1065,"hh_eps":351.0342,"hh_visits":2621.417,"hh_per_user":5388.61,"hospc_pct":0.0422,"hospc_stays":44.9758,"hospc_days":3954.0267,"em_pct":0.89,"em_events":16425.2604,"dme_pct":0.2545,"dme_events":1466.5102,"tests_pct":0.7998,"imgng_pct":0.7581,"fqhc_pct":0.0348,"fqhc_visits":272.7593,"amblnc_pct":0.1308,"amblnc_events":312.8649,"pc_ip":3670.6,"pc_op":2080.45,"pc_asc":144.04,"pc_snf":472.62,"pc_irf":514.65,"pc_ltch":51.94,"pc_hh":574.04,"pc_hospc":648.17,"pc_em":1153.89,"pc_prcdrs":486.05,"pc_tests":394.93,"pc_imgng":300.04,"pc_dme":775.5,"pc_op_dlys":268.99,"pc_fqhc_rhc":60.81,"pc_amblnc":118.96,"pc_trtmnts":1655.53,"home_pc":4914.74,"acute_pc":6769.09,"inst_pc":1039.21,"eol_pc":648.17,"sl_per1k":28.17,"nh_per1k":63.92,"per_bed":35.5,"mc_share":0.3765,"nh_occ":0.8394,"bed_gap":-40,"bed_gap_state":-128},{"county":"Shelby","fips":"01117","enroll":44320,"ma":26925,"om":17395,"dual":3724,"a75":18201,"a85":4055,"ffs_benes":13370,"nh_fac":3,"nh_bed":392,"nh_res":372.4,"sl_bed":681,"mc_bed":250,"alf_bed":431,"alf_fac":10,"mc_fac":7,"sl_fac":17,"pch_bed":0,"pch_fac":0,"ma_pct":0.6075,"dual_pct":0.084,"enroll_p":38904,"a75_p":13710,"g5_enroll":0.1392,"g5_a75":0.3276,"avg_age":74.0,"feml_pct":0.5663,"wht_pct":0.8907,"blk_pct":0.0637,"hsp_pct":0.0132,"pc":13156.05,"pc_std":13898.12,"tot_amt":175896385.0,"ip_pct":0.147,"ip_stays":224.3082,"ip_days":1193.7921,"ip_per_user":20961.23,"readmit":0.1739,"er":557.7412,"er_pct":0.2951,"op_pct":0.6071,"op_visits":3020.4188,"snf_pct":0.0217,"snf_stays":27.3747,"snf_days":660.6582,"snf_per_user":13239.9,"irf_pct":0.0275,"irf_stays":31.264,"ltch_pct":null,"ltch_stays":null,"hh_pct":0.1046,"hh_eps":317.1279,"hh_visits":2352.0568,"hh_per_user":4972.24,"hospc_pct":0.0413,"hospc_stays":44.1286,"hospc_days":3750.187,"em_pct":0.936,"em_events":17441.3613,"dme_pct":0.2769,"dme_events":1548.2423,"tests_pct":0.8597,"imgng_pct":0.8093,"fqhc_pct":0.0185,"fqhc_visits":101.4959,"amblnc_pct":0.1276,"amblnc_events":268.736,"pc_ip":3080.69,"pc_op":2034.55,"pc_asc":195.43,"pc_snf":287.18,"pc_irf":626.79,"pc_ltch":null,"pc_hh":519.91,"pc_hospc":613.63,"pc_em":1234.66,"pc_prcdrs":621.57,"pc_tests":444.16,"pc_imgng":354.61,"pc_dme":811.4,"pc_op_dlys":130.37,"pc_fqhc_rhc":19.27,"pc_amblnc":111.23,"pc_trtmnts":1903.03,"home_pc":5287.04,"acute_pc":6173.84,"inst_pc":913.97,"eol_pc":613.63,"sl_per1k":37.42,"nh_per1k":20.46,"per_bed":26.7,"mc_share":0.3671,"nh_occ":0.95,"bed_gap":-182,"bed_gap_state":-213},{"county":"St. Clair","fips":"01115","enroll":20948,"ma":13913,"om":7035,"dual":3326,"a75":7635,"a85":1667,"ffs_benes":5498,"nh_fac":4,"nh_bed":374,"nh_res":319.6,"sl_bed":140,"mc_bed":0,"alf_bed":140,"alf_fac":3,"mc_fac":0,"sl_fac":3,"pch_bed":0,"pch_fac":0,"ma_pct":0.6642,"dual_pct":0.1588,"enroll_p":19295,"a75_p":6231,"g5_enroll":0.0857,"g5_a75":0.2253,"avg_age":73.0,"feml_pct":0.5353,"wht_pct":0.9172,"blk_pct":0.0547,"hsp_pct":0.0065,"pc":13370.53,"pc_std":13995.59,"tot_amt":73511187.0,"ip_pct":0.1732,"ip_stays":281.5569,"ip_days":1549.8363,"ip_per_user":22441.76,"readmit":0.1936,"er":602.9465,"er_pct":0.3114,"op_pct":0.5946,"op_visits":2739.5417,"snf_pct":0.0295,"snf_stays":40.0146,"snf_days":918.5158,"snf_per_user":13784.91,"irf_pct":0.0155,"irf_stays":18.7341,"ltch_pct":null,"ltch_stays":null,"hh_pct":0.1111,"hh_eps":358.3121,"hh_visits":2525.6457,"hh_per_user":5198.48,"hospc_pct":0.0435,"hospc_stays":46.9262,"hospc_days":3641.506,"em_pct":0.9163,"em_events":15944.7072,"dme_pct":0.2885,"dme_events":1768.4613,"tests_pct":0.8456,"imgng_pct":0.7947,"fqhc_pct":0.038,"fqhc_visits":355.2201,"amblnc_pct":0.1457,"amblnc_events":401.6006,"pc_ip":3885.88,"pc_op":2109.74,"pc_asc":177.75,"pc_snf":406.18,"pc_irf":406.26,"pc_ltch":null,"pc_hh":577.71,"pc_hospc":599.03,"pc_em":1140.13,"pc_prcdrs":593.2,"pc_tests":459.84,"pc_imgng":357.63,"pc_dme":606.1,"pc_op_dlys":199.2,"pc_fqhc_rhc":83.43,"pc_amblnc":178.57,"pc_trtmnts":1470.51,"home_pc":4695.35,"acute_pc":7144.34,"inst_pc":812.44,"eol_pc":599.03,"sl_per1k":18.34,"nh_per1k":41.86,"per_bed":54.5,"mc_share":0.0,"nh_occ":0.8545,"bed_gap":69,"bed_gap_state":56},{"county":"Walker","fips":"01127","enroll":17156,"ma":11469,"om":5687,"dual":3929,"a75":6137,"a85":1434,"ffs_benes":4946,"nh_fac":5,"nh_bed":526,"nh_res":473.0,"sl_bed":148,"mc_bed":30,"alf_bed":118,"alf_fac":4,"mc_fac":2,"sl_fac":6,"pch_bed":0,"pch_fac":0,"ma_pct":0.6685,"dual_pct":0.229,"enroll_p":17537,"a75_p":5564,"g5_enroll":-0.0217,"g5_a75":0.103,"avg_age":72.0,"feml_pct":0.5299,"wht_pct":0.9424,"blk_pct":0.0408,"hsp_pct":0.0051,"pc":13716.42,"pc_std":14279.36,"tot_amt":67841428.0,"ip_pct":0.1799,"ip_stays":285.8876,"ip_days":1487.869,"ip_per_user":22696.95,"readmit":0.1795,"er":600.6874,"er_pct":0.3031,"op_pct":0.6227,"op_visits":2384.7554,"snf_pct":0.0364,"snf_stays":50.7481,"snf_days":1132.0259,"snf_per_user":12653.22,"irf_pct":0.0133,"irf_stays":14.7594,"ltch_pct":null,"ltch_stays":null,"hh_pct":0.1231,"hh_eps":460.7764,"hh_visits":3060.6551,"hh_per_user":5134.88,"hospc_pct":0.0574,"hospc_stays":64.4966,"hospc_days":7057.218,"em_pct":0.9064,"em_events":15317.0239,"dme_pct":0.2796,"dme_events":1530.3275,"tests_pct":0.8712,"imgng_pct":0.7865,"fqhc_pct":0.2046,"fqhc_visits":1562.2725,"amblnc_pct":0.1531,"amblnc_events":372.4222,"pc_ip":4084.17,"pc_op":1769.96,"pc_asc":61.37,"pc_snf":460.49,"pc_irf":344.03,"pc_ltch":null,"pc_hh":632.26,"pc_hospc":1104.79,"pc_em":1123.84,"pc_prcdrs":559.15,"pc_tests":505.65,"pc_imgng":361.6,"pc_dme":604.0,"pc_op_dlys":141.84,"pc_fqhc_rhc":240.59,"pc_amblnc":240.51,"pc_trtmnts":1322.1,"home_pc":4790.04,"acute_pc":6857.0,"inst_pc":804.52,"eol_pc":1104.79,"sl_per1k":24.12,"nh_per1k":77.07,"per_bed":41.5,"mc_share":0.2027,"nh_occ":0.8992,"bed_gap":20,"bed_gap_state":10},{"county":"Blount","fips":"01009","enroll":12430,"ma":8338,"om":4092,"dual":2082,"a75":4731,"a85":992,"ffs_benes":3470,"nh_fac":2,"nh_bed":223,"nh_res":200.8,"sl_bed":122,"mc_bed":66,"alf_bed":56,"alf_fac":2,"mc_fac":3,"sl_fac":5,"pch_bed":0,"pch_fac":0,"ma_pct":0.6708,"dual_pct":0.1675,"enroll_p":13184,"a75_p":4400,"g5_enroll":-0.0572,"g5_a75":0.0752,"avg_age":73.0,"feml_pct":0.532,"wht_pct":0.9504,"blk_pct":0.011,"hsp_pct":0.0236,"pc":13119.81,"pc_std":13861.0,"tot_amt":45525756.0,"ip_pct":0.1646,"ip_stays":253.0259,"ip_days":1313.5447,"ip_per_user":19551.45,"readmit":0.1418,"er":594.2363,"er_pct":0.3121,"op_pct":0.6,"op_visits":3010.3746,"snf_pct":0.0378,"snf_stays":48.9914,"snf_days":1063.4006,"snf_per_user":17579.85,"irf_pct":0.0133,"irf_stays":14.121,"ltch_pct":null,"ltch_stays":null,"hh_pct":0.1205,"hh_eps":423.3429,"hh_visits":3237.1758,"hh_per_user":5693.6,"hospc_pct":0.0438,"hospc_stays":45.8213,"hospc_days":4497.1182,"em_pct":0.8839,"em_events":14164.5533,"dme_pct":0.3084,"dme_events":1935.1585,"tests_pct":0.8032,"imgng_pct":0.755,"fqhc_pct":0.2741,"fqhc_visits":1726.513,"amblnc_pct":0.1447,"amblnc_events":326.513,"pc_ip":3217.26,"pc_op":1953.33,"pc_asc":132.69,"pc_snf":663.68,"pc_irf":308.05,"pc_ltch":null,"pc_hh":685.86,"pc_hospc":725.5,"pc_em":998.56,"pc_prcdrs":517.73,"pc_tests":396.3,"pc_imgng":312.58,"pc_dme":955.62,"pc_op_dlys":137.98,"pc_fqhc_rhc":267.58,"pc_amblnc":175.09,"pc_trtmnts":1524.08,"home_pc":5140.58,"acute_pc":6134.08,"inst_pc":971.73,"eol_pc":725.5,"sl_per1k":25.79,"nh_per1k":42.44,"per_bed":38.8,"mc_share":0.541,"nh_occ":0.9004,"bed_gap":8,"bed_gap_state":0},{"county":"Chilton","fips":"01021","enroll":9948,"ma":7160,"om":2788,"dual":2055,"a75":3490,"a85":733,"ffs_benes":2278,"nh_fac":1,"nh_bed":201,"nh_res":95.9,"sl_bed":16,"mc_bed":0,"alf_bed":16,"alf_fac":1,"mc_fac":0,"sl_fac":1,"pch_bed":0,"pch_fac":0,"ma_pct":0.7197,"dual_pct":0.2066,"enroll_p":9668,"a75_p":3019,"g5_enroll":0.029,"g5_a75":0.156,"avg_age":72.0,"feml_pct":0.543,"wht_pct":0.9183,"blk_pct":0.0549,"hsp_pct":0.0136,"pc":13822.71,"pc_std":14438.31,"tot_amt":31488131.0,"ip_pct":0.1435,"ip_stays":221.6857,"ip_days":1147.0588,"ip_per_user":24567.47,"readmit":0.2126,"er":645.7419,"er_pct":0.3191,"op_pct":0.6247,"op_visits":2687.4451,"snf_pct":0.0184,"snf_stays":24.144,"snf_days":534.2406,"snf_per_user":12814.28,"irf_pct":0.0237,"irf_stays":27.2169,"ltch_pct":null,"ltch_stays":null,"hh_pct":0.1054,"hh_eps":310.7989,"hh_visits":2237.489,"hh_per_user":4782.67,"hospc_pct":0.0492,"hospc_stays":51.3608,"hospc_days":4638.7182,"em_pct":0.9074,"em_events":16487.2695,"dme_pct":0.2608,"dme_events":1693.5909,"tests_pct":0.856,"imgng_pct":0.7717,"fqhc_pct":0.1255,"fqhc_visits":553.1168,"amblnc_pct":0.1326,"amblnc_events":288.8499,"pc_ip":3526.59,"pc_op":2124.82,"pc_asc":170.4,"pc_snf":236.26,"pc_irf":559.53,"pc_ltch":null,"pc_hh":503.88,"pc_hospc":752.52,"pc_em":1123.21,"pc_prcdrs":621.46,"pc_tests":457.42,"pc_imgng":410.88,"pc_dme":641.22,"pc_op_dlys":121.18,"pc_fqhc_rhc":77.02,"pc_amblnc":156.05,"pc_trtmnts":2195.56,"home_pc":5409.19,"acute_pc":6720.5,"inst_pc":795.79,"eol_pc":752.52,"sl_per1k":4.58,"nh_per1k":27.48,"per_bed":218.1,"mc_share":0.0,"nh_occ":0.4771,"bed_gap":80,"bed_gap_state":74},{"county":"Bibb","fips":"01007","enroll":4830,"ma":3323,"om":1507,"dual":1117,"a75":1650,"a85":391,"ffs_benes":1227,"nh_fac":1,"nh_bed":131,"nh_res":108.3,"sl_bed":0,"mc_bed":0,"alf_bed":0,"alf_fac":0,"mc_fac":0,"sl_fac":0,"pch_bed":0,"pch_fac":0,"ma_pct":0.688,"dual_pct":0.2313,"enroll_p":4736,"a75_p":1420,"g5_enroll":0.0198,"g5_a75":0.162,"avg_age":71.0,"feml_pct":0.5232,"wht_pct":null,"blk_pct":null,"hsp_pct":null,"pc":11629.87,"pc_std":11909.65,"tot_amt":14269845.0,"ip_pct":0.163,"ip_stays":254.2787,"ip_days":1564.7922,"ip_per_user":22357.1,"readmit":0.1357,"er":625.1019,"er_pct":0.3227,"op_pct":0.6683,"op_visits":3365.1182,"snf_pct":0.053,"snf_stays":70.9046,"snf_days":2193.154,"snf_per_user":16883.95,"irf_pct":0.013,"irf_stays":14.6699,"ltch_pct":null,"ltch_stays":null,"hh_pct":0.0937,"hh_eps":351.2632,"hh_visits":2295.8435,"hh_per_user":5807.48,"hospc_pct":0.0399,"hospc_stays":40.7498,"hospc_days":3638.9568,"em_pct":0.8215,"em_events":11696.8215,"dme_pct":0.22,"dme_events":1576.2021,"tests_pct":0.7416,"imgng_pct":0.7074,"fqhc_pct":0.4784,"fqhc_visits":3488.1826,"amblnc_pct":0.1157,"amblnc_events":261.6137,"pc_ip":3644.19,"pc_op":1559.35,"pc_asc":133.22,"pc_snf":894.42,"pc_irf":353.46,"pc_ltch":null,"pc_hh":544.3,"pc_hospc":588.04,"pc_em":821.87,"pc_prcdrs":414.43,"pc_tests":337.65,"pc_imgng":244.0,"pc_dme":484.19,"pc_op_dlys":null,"pc_fqhc_rhc":358.35,"pc_amblnc":121.94,"pc_trtmnts":769.23,"home_pc":3559.59,"acute_pc":5873.13,"inst_pc":1247.88,"eol_pc":588.04,"sl_per1k":0.0,"nh_per1k":65.64,"per_bed":null,"mc_share":null,"nh_occ":0.8267,"bed_gap":45,"bed_gap_state":42}];
+const FAC = [{"id":"D3785","name":"Bluffs at Greystone I, The","kind":"AL","type":"AL","cls":"Congregate Assisted Living Facility","beds":87,"mc_beds":0,"addr":"6328 Farley Lane","city":"Birmingham","zip":"35242","county":"Shelby","fips":"01117","admin":"Will Devening","phone":"(205) 882-8700","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":33.40253,"lon":-86.66422,"prec":"street"},{"id":"D3768","name":"Brookdale University Park ALF (AL)","kind":"AL","type":"AL","cls":"Congregate Assisted Living Facility","beds":60,"mc_beds":0,"addr":"400 University Park Drive","city":"Birmingham","zip":"35209","county":"Jefferson","fips":"01073","admin":"Brandon Bornstein","phone":"(205) 870-0786","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":33.45742,"lon":-86.79972,"prec":"street"},{"id":"D5917","name":"Bungalows at Riverchase","kind":"AL","type":"AL","cls":"Congregate Assisted Living Facility","beds":38,"mc_beds":0,"addr":"2184 Parkway Lake Dr.","city":"Birmingham","zip":"35244","county":"Shelby","fips":"01117","admin":"Danielle Moore","phone":"(205) 403-7400","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":33.35992,"lon":-86.78905,"prec":"street"},{"id":"D5908","name":"Chelsea's Hidden Acres","kind":"AL","type":"AL","cls":"Group Assisted Living Facility","beds":16,"mc_beds":0,"addr":"245 Hidden Acres Circle","city":"Chelsea","zip":"35043","county":"Shelby","fips":"01117","admin":"Paula Elizabeth Thomas","phone":"(205) 678-8906","owner":"Sole Proprietorship","status":"Regular","mgmt":"","lat":33.28002,"lon":-86.64349,"prec":"street"},{"id":"D5809","name":"Col. Robert L. Howard State Veterans Home Freedom Court","kind":"AL","type":"AL","cls":"Congregate Assisted Living Facility","beds":80,"mc_beds":0,"addr":"7054 Veterans Parkway","city":"Pell City","zip":"35125","county":"St. Clair","fips":"01115","admin":"Matthew Goolsby","phone":"(205) 227-7985","owner":"Corporation","status":"Regular","mgmt":"","lat":33.60513,"lon":-86.30138,"prec":"street"},{"id":"D3775","name":"Covenant Place of Gardendale","kind":"AL","type":"AL","cls":"Congregate Assisted Living Facility","beds":60,"mc_beds":0,"addr":"1409 Thompson Circle","city":"Gardendale","zip":"35071","county":"Jefferson","fips":"01073","admin":"Brandi Pruett, RN ALA","phone":"(205) 531-2995","owner":"Limited Partnership","status":"Regular","mgmt":"","lat":33.66,"lon":-86.81093,"prec":"street"},{"id":"D5986","name":"Crossings at Riverchase Assisted Living, The","kind":"AL","type":"AL","cls":"Congregate Assisted Living Facility","beds":80,"mc_beds":0,"addr":"2171 Parkway Lake Drive","city":"Hoover","zip":"35244","county":"Shelby","fips":"01117","admin":"Josh Hullett","phone":"(205) 634-8200","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":33.36005,"lon":-86.78846,"prec":"street"},{"id":"D5914","name":"Danberry at Inverness","kind":"AL","type":"AL","cls":"Congregate Assisted Living Facility","beds":56,"mc_beds":0,"addr":"235 Inverness Center Dr.","city":"Hoover","zip":"35242","county":"Shelby","fips":"01117","admin":"William Lytton","phone":"(205) 443-9500","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":33.41915,"lon":-86.70251,"prec":"street"},{"id":"D3702","name":"Fair Haven - Assisted Living","kind":"AL","type":"AL","cls":"Congregate Assisted Living Facility","beds":76,"mc_beds":0,"addr":"1424 Montclair Road","city":"Birmingham","zip":"35210","county":"Jefferson","fips":"01073","admin":"Earnestine Thompson","phone":"(205) 956-4150","owner":"Nonprofit Corporation","status":"Regular","mgmt":"","lat":33.52342,"lon":-86.72705,"prec":"street"},{"id":"D3759","name":"Galleria Woods Assisted Living Facility","kind":"AL","type":"AL","cls":"Congregate Assisted Living Facility","beds":24,"mc_beds":0,"addr":"3850 Galleria Woods Drive","city":"Hoover","zip":"35244","county":"Jefferson","fips":"01073","admin":"Lynda Sullivan","phone":"(205) 985-7537","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":33.3686,"lon":-86.81683,"prec":"street"},{"id":"D1105","name":"Gardens of Clanton","kind":"AL","type":"AL","cls":"Group Assisted Living Facility","beds":16,"mc_beds":0,"addr":"850 Scott Drive","city":"Clanton","zip":"35045","county":"Chilton","fips":"01021","admin":"Vickie Moseley","phone":"(205) 280-0084","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":32.81048,"lon":-86.60531,"prec":"street"},{"id":"D5916","name":"Gardens of Pelham","kind":"AL","type":"AL","cls":"Group Assisted Living Facility","beds":16,"mc_beds":0,"addr":"2124 Old Montgomery Highway","city":"Pelham","zip":"35124","county":"Shelby","fips":"01117","admin":"Rebecca Dennis","phone":"(205) 402-9922","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":33.34348,"lon":-86.79817,"prec":"street"},{"id":"D5915","name":"Gardens of Pelham II","kind":"AL","type":"AL","cls":"Group Assisted Living Facility","beds":16,"mc_beds":0,"addr":"2124 Old Montgomery Highway","city":"Pelham","zip":"35124","county":"Shelby","fips":"01117","admin":"Rebecca Dennis","phone":"(205) 402-9922","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":33.34348,"lon":-86.79817,"prec":"street"},{"id":"D3736","name":"Greenbriar at the Altamont Assisted Living Facility","kind":"AL","type":"AL","cls":"Congregate Assisted Living Facility","beds":46,"mc_beds":0,"addr":"2831 Highland Avenue South","city":"Birmingham","zip":"35205","county":"Jefferson","fips":"01073","admin":"Jennifer Shunnarah","phone":"(205) 323-2724","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":33.50602,"lon":-86.78234,"prec":"street"},{"id":"D6412","name":"Harborchase of Jasper Assisted Living Facility","kind":"AL","type":"AL","cls":"Congregate Assisted Living Facility","beds":70,"mc_beds":0,"addr":"2100 Viking Drive","city":"Jasper","zip":"35501","county":"Walker","fips":"01127","admin":"Anita Williams","phone":"(205) 384-0660","owner":"Corporation","status":"Regular","mgmt":"","lat":33.84087,"lon":-87.25034,"prec":"street"},{"id":"D3704","name":"Kirkwood by the River","kind":"AL","type":"AL","cls":"Congregate Assisted Living Facility","beds":46,"mc_beds":0,"addr":"3605 Ratliff Road","city":"Birmingham","zip":"35210","county":"Jefferson","fips":"01073","admin":"Jeff Burchfield","phone":"(205) 956-2184","owner":"Nonprofit Corporation","status":"Regular","mgmt":"","lat":33.54002,"lon":-86.63854,"prec":"street"},{"id":"D6408","name":"Lakewood Senior Living of Jasper I, LLC","kind":"AL","type":"AL","cls":"Group Assisted Living Facility","beds":16,"mc_beds":0,"addr":"811 20th Avenue East","city":"Jasper","zip":"35501","county":"Walker","fips":"01127","admin":"Sharon Bentley","phone":"(205) 221-5579","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":33.84162,"lon":-87.25178,"prec":"street"},{"id":"D6409","name":"Lakewood Senior Living of Jasper II, LLC","kind":"AL","type":"AL","cls":"Group Assisted Living Facility","beds":16,"mc_beds":0,"addr":"2004 Viking Drive","city":"Jasper","zip":"35501","county":"Walker","fips":"01127","admin":"Sharon Bentley","phone":"(205) 221-1650","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":33.8402,"lon":-87.25176,"prec":"street"},{"id":"D3779","name":"Legacy Ridge Trussville","kind":"AL","type":"AL","cls":"Congregate Assisted Living Facility","beds":55,"mc_beds":0,"addr":"7868 Gadsden Highway","city":"Trussville","zip":"35173","county":"Jefferson","fips":"01073","admin":"Caleb Brink","phone":"(205) 661-9940","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":33.6555,"lon":-86.55464,"prec":"street"},{"id":"D0501","name":"Legacy Woods I","kind":"AL","type":"AL","cls":"Group Assisted Living Facility","beds":16,"mc_beds":0,"addr":"101 Jacobs Lane","city":"Hayden","zip":"35079","county":"Blount","fips":"01009","admin":"Allison Serena","phone":"(205) 559-2250","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":33.89557,"lon":-86.76219,"prec":"street"},{"id":"D3786","name":"Longleaf at Liberty Park","kind":"AL","type":"AL","cls":"Congregate Assisted Living Facility","beds":90,"mc_beds":0,"addr":"451 Liberty Parkway","city":"Vestavia Hills","zip":"35242","county":"Jefferson","fips":"01073","admin":"Jamie Wise","phone":"(205) 509-5323","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":33.43753,"lon":-87.0106,"prec":"county"},{"id":"D0508","name":"Magnolia House","kind":"AL","type":"AL","cls":"Congregate Assisted Living Facility","beds":40,"mc_beds":0,"addr":"100 Fourth Avenue West","city":"Oneonta","zip":"35121","county":"Blount","fips":"01009","admin":"Michele Thompson","phone":"(205) 813-7584","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":33.94573,"lon":-86.47982,"prec":"street"},{"id":"D5903","name":"Maplewood Lane Assisted Living","kind":"AL","type":"AL","cls":"Group Assisted Living Facility","beds":16,"mc_beds":0,"addr":"223 Tucker Road","city":"Helena","zip":"35080","county":"Shelby","fips":"01117","admin":"Savoyia McNeal","phone":"(205) 620-2905","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":33.28853,"lon":-86.84228,"prec":"street"},{"id":"D3728","name":"Neighborhood at Vestavia Hills, The","kind":"AL","type":"AL","cls":"Congregate Assisted Living Facility","beds":77,"mc_beds":0,"addr":"2435 Columbiana Road","city":"Birmingham","zip":"35216","county":"Jefferson","fips":"01073","admin":"Barbara Chatman","phone":"(205) 822-4773","owner":"Corporation","status":"Regular","mgmt":"","lat":33.43093,"lon":-86.81135,"prec":"street"},{"id":"D5804","name":"Oak Circle Assisted Living, LLC","kind":"AL","type":"AL","cls":"Group Assisted Living Facility","beds":16,"mc_beds":0,"addr":"605 Fifteenth Street, North","city":"Pell City","zip":"35125","county":"St. Clair","fips":"01115","admin":"Andrea St John","phone":"(205) 441-3971","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":33.59275,"lon":-86.28737,"prec":"street"},{"id":"D3773","name":"Oaks on Parkwood Assisted Living Facility","kind":"AL","type":"AL","cls":"Congregate Assisted Living Facility","beds":80,"mc_beds":0,"addr":"2651 Laurel Oak Drive","city":"Bessemer","zip":"35022","county":"Jefferson","fips":"01073","admin":"Jackie Jackson","phone":"(205) 497-4570","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":33.36144,"lon":-86.89111,"prec":"street"},{"id":"D3777","name":"Regency Retirement Village","kind":"AL","type":"AL","cls":"Congregate Assisted Living Facility","beds":48,"mc_beds":0,"addr":"285 West Oxmoor Road","city":"Birmingham","zip":"35209","county":"Jefferson","fips":"01073","admin":"Rachelle Gillespie","phone":"(205) 942-3355","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":33.43895,"lon":-86.84303,"prec":"street"},{"id":"D3771","name":"Riverchase Senior Living, LLC","kind":"AL","type":"AL","cls":"Congregate Assisted Living Facility","beds":101,"mc_beds":0,"addr":"1851 Data Drive","city":"Hoover","zip":"35244","county":"Jefferson","fips":"01073","admin":"Charles Cook","phone":"(205) 982-7000","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":33.37185,"lon":-86.7974,"prec":"street"},{"id":"D3772","name":"Salterra Senior Living at Peachtree","kind":"AL","type":"AL","cls":"Congregate Assisted Living Facility","beds":32,"mc_beds":0,"addr":"3740 Eagle Drive","city":"Trussville","zip":"35173","county":"Jefferson","fips":"01073","admin":"Kelley Self","phone":"(205) 655-1999","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":33.61153,"lon":-86.61392,"prec":"street"},{"id":"D5913","name":"Somerby at St. Vincent's One Nineteen","kind":"AL","type":"AL","cls":"Congregate Assisted Living Facility","beds":56,"mc_beds":0,"addr":"200 One Nineteen Blvd.","city":"Hoover","zip":"35242","county":"Shelby","fips":"01117","admin":"Keegan Jett","phone":"(205) 745-4600","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":33.42507,"lon":-86.66631,"prec":"street"},{"id":"D3701","name":"St. Martins in the Pines Assisted Living Facility","kind":"AL","type":"AL","cls":"Congregate Assisted Living Facility","beds":71,"mc_beds":0,"addr":"4941 Montevallo Road","city":"Irondale","zip":"35210","county":"Jefferson","fips":"01073","admin":"Courtlyn Wiggins","phone":"(205) 956-1831","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":33.5271,"lon":-86.71728,"prec":"street"},{"id":"D6411","name":"Sunrise Manor II","kind":"AL","type":"AL","cls":"Group Assisted Living Facility","beds":16,"mc_beds":0,"addr":"1609 Sunrise Road","city":"Jasper","zip":"35504","county":"Walker","fips":"01127","admin":"Eunice Renee Moore","phone":"(205) 387-7400","owner":"Corporation","status":"Regular","mgmt":"","lat":33.8627,"lon":-87.20535,"prec":"street"},{"id":"D3769","name":"The Brook","kind":"AL","type":"AL","cls":"Congregate Assisted Living Facility","beds":48,"mc_beds":0,"addr":"3776 Crosshaven Drive","city":"Birmingham","zip":"35223","county":"Jefferson","fips":"01073","admin":"Janet Gable","phone":"(205) 209-5124","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":33.4684,"lon":-86.73128,"prec":"street"},{"id":"D5987","name":"The Ridge at Meadowbrook","kind":"AL","type":"AL","cls":"Family Assisted Living Facility","beds":50,"mc_beds":0,"addr":"700 Corporate Ridge Road","city":"Birmingham","zip":"35242","county":"Shelby","fips":"01117","admin":"Joel A. Burdette","phone":"(205) 307-5500","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":33.41723,"lon":-86.68883,"prec":"street"},{"id":"D5802","name":"Village at Cook Springs Assisted Living Facility","kind":"AL","type":"AL","cls":"Congregate Assisted Living Facility","beds":44,"mc_beds":0,"addr":"415 Cook Springs Road","city":"Pell City","zip":"35125","county":"St. Clair","fips":"01115","admin":"Randolph Pickell","phone":"(205) 338-2221","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":33.59459,"lon":-86.397,"prec":"street"},{"id":"P3701","name":"Briar Glen Alzheimer's Special Care Center","kind":"MC","type":"MC","cls":"Congregate Specialty Care Assisted Living Facility","beds":90,"mc_beds":0,"addr":"570 Southland Drive","city":"Hoover","zip":"35226","county":"Jefferson","fips":"01073","admin":"Sarah Curatella","phone":"(205) 823-2393","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":33.41019,"lon":-86.81026,"prec":"street"},{"id":"P3707","name":"Brookdale University Park SCALF (AL)","kind":"MC","type":"MC","cls":"Congregate Specialty Care Assisted Living Facility","beds":70,"mc_beds":0,"addr":"400 University Park Drive","city":"Birmingham","zip":"35209","county":"Jefferson","fips":"01073","admin":"Brandon Bornstein","phone":"(205) 870-0786","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":33.45742,"lon":-86.79972,"prec":"street"},{"id":"P3720","name":"Covenant Woods of Gardendale","kind":"MC","type":"MC","cls":"Congregate Specialty Care Assisted Living Facility","beds":32,"mc_beds":0,"addr":"1411 Thompson Circle","city":"Gardendale","zip":"35071","county":"Jefferson","fips":"01073","admin":"Kayla Young, RN ALA","phone":"(205) 531-2995","owner":"Limited Partnership","status":"Regular","mgmt":"","lat":33.66087,"lon":-86.81091,"prec":"street"},{"id":"P5928","name":"Crossings at Riverchase Memory Care, The","kind":"MC","type":"MC","cls":"Congregate Specialty Care Assisted Living Facility","beds":38,"mc_beds":0,"addr":"2171 Parkway Lake Drive","city":"Hoover","zip":"35244","county":"Shelby","fips":"01117","admin":"Josh Hullett","phone":"(205) 634-8200","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":33.36005,"lon":-86.78846,"prec":"street"},{"id":"P3709","name":"Fair Haven - Specialty Care","kind":"MC","type":"MC","cls":"Congregate Specialty Care Assisted Living Facility","beds":64,"mc_beds":0,"addr":"1424 Montclair Road","city":"Birmingham","zip":"35210","county":"Jefferson","fips":"01073","admin":"Earnestine Thompson","phone":"(205) 956-4150","owner":"Nonprofit Corporation","status":"Regular","mgmt":"","lat":33.52342,"lon":-86.72705,"prec":"street"},{"id":"P6401","name":"Harborchase of Jasper Specialty Care Assisted Living Facility","kind":"MC","type":"MC","cls":"Group Specialty Care Assisted Living Facility","beds":14,"mc_beds":0,"addr":"2100 Viking Drive","city":"Jasper","zip":"35501","county":"Walker","fips":"01127","admin":"Anita Williams","phone":"(205) 384-0660","owner":"Corporation","status":"Regular","mgmt":"","lat":33.84087,"lon":-87.25034,"prec":"street"},{"id":"P3713","name":"Kirkwood by the River Specialty Care","kind":"MC","type":"MC","cls":"Congregate Specialty Care Assisted Living Facility","beds":34,"mc_beds":0,"addr":"3605 Ratliff Road","city":"Birmingham","zip":"35210","county":"Jefferson","fips":"01073","admin":"Jeff Burchfield","phone":"(205) 956-2184","owner":"Nonprofit Corporation","status":"Regular","mgmt":"","lat":33.54002,"lon":-86.63854,"prec":"street"},{"id":"P5903","name":"Lakeview Estates","kind":"MC","type":"MC","cls":"Congregate Specialty Care Assisted Living Facility","beds":76,"mc_beds":0,"addr":"2634 Valleydale Road","city":"Birmingham","zip":"35244","county":"Shelby","fips":"01117","admin":"Danielle Moore","phone":"(205) 981-0001","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":33.38231,"lon":-86.74243,"prec":"street"},{"id":"P3730","name":"Legacy Ridge Memory Care","kind":"MC","type":"MC","cls":"Group Specialty Care Assisted Living Facility","beds":16,"mc_beds":0,"addr":"7868 Gadsden Highway","city":"Trussville","zip":"35173","county":"Jefferson","fips":"01073","admin":"Caleb Brink","phone":"(205) 661-9940","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":33.6555,"lon":-86.55464,"prec":"street"},{"id":"P0501","name":"Legacy Woods II","kind":"MC","type":"MC","cls":"Group Specialty Care Assisted Living Facility","beds":16,"mc_beds":0,"addr":"101 Jacobs Lane","city":"Hayden","zip":"35079","county":"Blount","fips":"01009","admin":"Allison Serena","phone":"(205) 647-7410","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":33.89557,"lon":-86.76219,"prec":"street"},{"id":"P0504","name":"Legacy Woods III","kind":"MC","type":"MC","cls":"Group Specialty Care Assisted Living Facility","beds":16,"mc_beds":0,"addr":"101 Jacobs Lane","city":"Hayden","zip":"35079","county":"Blount","fips":"01009","admin":"Allison Serena","phone":"(205) 674-7410","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":33.89557,"lon":-86.76219,"prec":"street"},{"id":"P3726","name":"Longleaf at Liberty Park (SCALF)","kind":"MC","type":"MC","cls":"Congregate Specialty Care Assisted Living Facility","beds":30,"mc_beds":0,"addr":"451 Liberty Parkway","city":"Vestavia Hills","zip":"35242","county":"Jefferson","fips":"01073","admin":"Jamie Wise","phone":"(205) 509-5323","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":33.43753,"lon":-87.0106,"prec":"county"},{"id":"P5905","name":"Memory Care at Somerby at St. Vincent's One Nineteen","kind":"MC","type":"MC","cls":"Congregate Specialty Care Assisted Living Facility","beds":24,"mc_beds":0,"addr":"200 One Nineteen Blvd.","city":"Hoover","zip":"35242","county":"Shelby","fips":"01117","admin":"Keegan Jett","phone":"(205) 745-4600","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":33.42507,"lon":-86.66631,"prec":"street"},{"id":"P3722","name":"Metta Reflections at Redmont Ridge","kind":"MC","type":"MC","cls":"Congregate Specialty Care Assisted Living Facility","beds":32,"mc_beds":0,"addr":"285 West Oxmoor Road","city":"Birmingham","zip":"35209","county":"Jefferson","fips":"01073","admin":"Rachelle Gillespie","phone":"(205) 942-3355","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":33.43895,"lon":-86.84303,"prec":"street"},{"id":"P5927","name":"Monark Grove Greystone","kind":"MC","type":"MC","cls":"Congregate Specialty Care Assisted Living Facility","beds":32,"mc_beds":0,"addr":"6328 Farley Lane","city":"Birmingham","zip":"35242","county":"Shelby","fips":"01117","admin":"William Devening","phone":"(205) 882-8700","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":33.40253,"lon":-86.66422,"prec":"street"},{"id":"P3719","name":"Neighborhood at Vestavia Hills Specialty Care Assisted Living, The","kind":"MC","type":"MC","cls":"Congregate Specialty Care Assisted Living Facility","beds":24,"mc_beds":0,"addr":"2435 Columbiana Road","city":"Birmingham","zip":"35216","county":"Jefferson","fips":"01073","admin":"Barbara Chatman","phone":"(205) 822-4773","owner":"Corporation","status":"Regular","mgmt":"","lat":33.43093,"lon":-86.81135,"prec":"street"},{"id":"P3712","name":"Oaks on Parkwood Specialty Care Assisted Living Facility","kind":"MC","type":"MC","cls":"Congregate Specialty Care Assisted Living Facility","beds":51,"mc_beds":0,"addr":"2651 Laurel Oak Drive","city":"Bessemer","zip":"35022","county":"Jefferson","fips":"01073","admin":"Jackie Jackson","phone":"(205) 497-4570","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":33.36144,"lon":-86.89111,"prec":"street"},{"id":"P0503","name":"Olive Home, Inc.-Oneonta #2, The","kind":"MC","type":"MC","cls":"Congregate Specialty Care Assisted Living Facility","beds":34,"mc_beds":0,"addr":"1100 Second Avenue East","city":"Oneonta","zip":"35121","county":"Blount","fips":"01009","admin":"Steven Mitchell","phone":"(205) 813-7582","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":33.95759,"lon":-86.46402,"prec":"street"},{"id":"P5925","name":"Premier Assisted Living","kind":"MC","type":"MC","cls":"Group Specialty Care Assisted Living Facility","beds":16,"mc_beds":0,"addr":"155 Egg and Butter Road","city":"Columbiana","zip":"35051","county":"Shelby","fips":"01117","admin":"Sharon S. Ferguson","phone":"(205) 669-9202","owner":"Corporation","status":"Regular","mgmt":"","lat":33.17055,"lon":-86.61089,"prec":"street"},{"id":"P3725","name":"Riverchase Senior Living SCALF, LLC","kind":"MC","type":"MC","cls":"Congregate Specialty Care Assisted Living Facility","beds":24,"mc_beds":0,"addr":"1851 Data Drive","city":"Hoover","zip":"35244","county":"Jefferson","fips":"01073","admin":"Charles Cook","phone":"(205) 982-7000","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":33.37185,"lon":-86.7974,"prec":"street"},{"id":"P3724","name":"Specialty Care at Danberry at Inverness","kind":"MC","type":"MC","cls":"Congregate Specialty Care Assisted Living Facility","beds":24,"mc_beds":0,"addr":"235 Inverness Center Drive","city":"Hoover","zip":"35242","county":"Shelby","fips":"01117","admin":"Jaclyn Gardner","phone":"(205) 443-9510","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":33.41915,"lon":-86.70251,"prec":"street"},{"id":"P3706","name":"St. Martin's-In-The-Pines Specialty Care Assisted Living Facility","kind":"MC","type":"MC","cls":"Congregate Specialty Care Assisted Living Facility","beds":51,"mc_beds":0,"addr":"4941 Montevallo Road","city":"Irondale","zip":"35210","county":"Jefferson","fips":"01073","admin":"Courtlyn Wiggins","phone":"(205) 956-1831","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":33.5271,"lon":-86.71728,"prec":"street"},{"id":"P3732","name":"Summit Lifecare, LLC","kind":"MC","type":"MC","cls":"Congregate Specialty Care Assisted Living Facility","beds":34,"mc_beds":0,"addr":"300 Royal Tower Drive","city":"Homewood","zip":"35209","county":"Jefferson","fips":"01073","admin":"Tisha Bell","phone":"(205) 870-5666","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":33.43753,"lon":-87.0106,"prec":"county"},{"id":"P3733","name":"The Ridge at Meadowbrook SCALF","kind":"MC","type":"MC","cls":"Congregate Specialty Care Assisted Living Facility","beds":40,"mc_beds":0,"addr":"700 Corporate Ridge Road","city":"Birmingham","zip":"35242","county":"Shelby","fips":"01117","admin":"Joel A. Burdette","phone":"(205) 307-5500","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":33.41723,"lon":-86.68883,"prec":"street"},{"id":"P6402","name":"Water Oak Villa","kind":"MC","type":"MC","cls":"Group Specialty Care Assisted Living Facility","beds":16,"mc_beds":0,"addr":"657 Curry Hwy","city":"Jasper","zip":"35503","county":"Walker","fips":"01127","admin":"Leigh Watts","phone":"(205) 275-3367","owner":"Limited Liability Company","status":"Regular","mgmt":"","lat":33.89559,"lon":-87.27587,"prec":"street"}];
+const GEO = {"w":600,"h":722,"lon0":-87.636118,"lon1":-86.043993,"lat0":32.661732,"lat1":34.259317,"c":{"01009":{"n":"Blount","d":"M398.8 223.2L330.5 189.1L257.2 200.6L256.9 187.2L253.7 187.2L253.5 181.2L268.2 158.1L317.4 138.8L358.3 90.4L355.8 75.3L390.6 63.0L422.5 2.2L445.9 0.0L502.2 72.4L491.2 123.4L477.1 144.3L493.9 144.2L474.3 179.6L398.9 206.6L398.8 223.2Z"},"01021":{"n":"Chilton","d":"M421.6 559.6L422.1 600.8L444.4 652.9L475.3 680.2L460.8 681.5L460.9 701.0L347.4 701.8L347.7 721.7L270.8 720.6L233.1 721.0L233.0 691.0L232.5 642.5L286.4 642.8L284.5 546.3L284.3 536.4L386.7 537.2L421.6 559.6Z"},"01117":{"n":"Shelby","d":"M230.8 457.5L303.6 418.9L362.4 358.1L388.8 357.9L421.8 322.3L435.0 341.8L474.0 341.9L473.9 392.2L481.9 434.7L427.0 487.9L431.5 522.4L421.6 559.6L386.7 537.2L284.3 536.4L284.5 546.3L230.1 494.0L229.6 457.5L230.8 457.5Z"},"01007":{"n":"Bibb","d":"M81.0 625.5L81.4 612.9L80.7 567.3L119.7 566.1L133.5 508.8L164.6 509.8L164.7 480.1L215.0 457.3L229.6 457.5L230.1 494.0L284.5 546.3L286.4 642.8L232.5 642.5L119.4 645.0L119.3 625.3L81.0 625.5Z"},"01073":{"n":"Jefferson","d":"M230.8 457.5L229.6 457.5L215.0 457.3L214.9 444.2L211.6 444.2L211.6 442.5L206.7 442.5L206.8 437.6L192.0 437.5L191.8 430.6L178.7 430.4L178.6 423.9L172.0 423.8L172.0 420.7L171.9 413.9L166.3 413.9L115.1 346.8L139.1 337.2L169.7 317.8L172.1 291.6L218.0 272.4L237.5 213.2L257.2 200.6L330.5 189.1L398.8 223.2L412.0 223.2L421.8 322.3L388.8 357.9L362.4 358.1L303.6 418.9L230.8 457.5Z"},"01115":{"n":"St. Clair","d":"M592.0 188.4L591.5 188.9L591.3 189.8L600.0 223.9L561.7 262.1L527.9 345.5L510.3 338.5L473.9 392.2L474.0 341.9L435.0 341.8L421.8 322.3L412.0 223.2L398.8 223.2L398.9 206.6L474.3 179.6L493.9 144.2L541.5 122.1L592.0 188.4Z"},"01127":{"n":"Walker","d":"M80.1 296.9L80.0 257.6L40.6 256.2L39.4 176.9L0.0 175.0L0.1 155.4L0.0 116.1L182.8 120.2L205.1 166.8L253.5 181.2L253.7 187.2L256.9 187.2L257.2 200.6L237.5 213.2L218.0 272.4L172.1 291.6L169.7 317.8L139.1 337.2L119.7 303.5L80.1 296.9Z"}}};
+
+const $=id=>document.getElementById(id);
+const fmt=v=>v==null?'—':Math.round(v).toLocaleString();
+const f1=v=>v==null?'—':v.toFixed(1);
+const pct=v=>v==null?'—':(v*100).toFixed(1)+'%';
+const sgn=v=>(v>0?'+':'')+Math.round(v).toLocaleString();
+const T=k=>D.reduce((s,r)=>s+(r[k]||0),0);
+
+const PX=lon=>(lon-GEO.lon0)/(GEO.lon1-GEO.lon0)*GEO.w;
+const PY=lat=>GEO.h-(lat-GEO.lat0)/(GEO.lat1-GEO.lat0)*GEO.h;
+FAC.forEach(f=>{f.x=PX(f.lon); f.y=PY(f.lat)});
+// campuses holding both an AL and a memory care licence share an address
+(function(){const at={};
+  FAC.forEach(f=>{const k=f.lon+','+f.lat;(at[k]=at[k]||[]).push(f)});
+  Object.keys(at).forEach(k=>{const g=at[k]; if(g.length<2)return;
+    g.sort((a,b)=>b.beds-a.beds);
+    g.forEach((f,i)=>{const a=i/g.length*Math.PI*2-Math.PI/2;
+      f.x+=Math.cos(a)*3.2; f.y+=Math.sin(a)*3.2; f.stacked=g.length});});
+})();
+
+const byFips={}; D.forEach(r=>{byFips[r.fips]=r});
+const RATE=REG.rate, PERBED=T('a75')/T('sl_bed');
+$('rateTxt').textContent=f1(RATE);
+$('maTxt').textContent=Math.round(T('ma')/T('enroll')*100)+'%';
+
+/* ---------- kpis ---------- */
+const kpi=(l,v,s)=>'<div class="kpi"><div class="kpi-l">'+l+'</div><div class="kpi-v">'+v+
+  '</div><div class="kpi-s">'+s+'</div></div>';
+$('kpis').innerHTML=
+  kpi('Aged 75+',fmt(T('a75')),fmt(T('a85'))+' are 85 or older')+
+  kpi('Licensed beds',fmt(T('sl_bed')),FAC.length+' communities across '+
+      new Set(FAC.map(f=>f.city)).size+' cities')+
+  kpi('People 75+ per bed',PERBED.toFixed(0),f1(RATE)+' beds per 1,000')+
+  kpi('Memory care beds',fmt(T('mc_bed')),
+      Math.round(T('mc_bed')/T('sl_bed')*100)+'% of licensed beds')+
+  kpi('Beds short of metro rate',fmt(REG.shortBeds),REG.shortN+' of '+D.length+' counties below')+
+  kpi('Medicare enrollees',(T('enroll')/1000).toFixed(0)+'k',
+      Math.round(T('ma')/T('enroll')*100)+'% Medicare Advantage');
+
+/* ---------- findings ---------- */
+const zero=D.filter(r=>!r.sl_bed);
+const noMC=D.filter(r=>!r.mc_bed);
+const worst=D.slice().filter(r=>r.sl_bed>0).sort((a,b)=>a.sl_per1k-b.sl_per1k)[0];
+const fastest=D.slice().sort((a,b)=>(b.g5_a75||0)-(a.g5_a75||0))[0];
+const best=D.slice().sort((a,b)=>b.sl_per1k-a.sl_per1k)[0];
+const cards=[];
+if(zero.length)cards.push(['bad',fmt(zero.reduce((s,r)=>s+r.a75,0)),
+  zero.map(r=>r.county).join(', ')+': no licensed community at all',
+  'Residents aged 75+ in '+(zero.length>1?'counties':'a county')+' with zero licensed assisted living or memory care beds.']);
+cards.push(['bad',f1(worst.sl_per1k),worst.county+' is the thinnest supplied county with any beds',
+  worst.county+' has '+fmt(worst.a75)+' residents aged 75+ and '+fmt(worst.sl_bed)+
+  ' licensed beds — against a metro rate of '+f1(RATE)+' per 1,000.']);
+cards.push(['bad',fmt(noMC.reduce((s,r)=>s+r.a75,0)),
+  'aged 75+ live in counties with no memory care',
+  noMC.map(r=>r.county).join(', ')+' have no Specialty Care Assisted Living beds licensed at all.']);
+cards.push(['good','+'+Math.round((fastest.g5_a75||0)*100)+'%',
+  fastest.county+' is growing its 75+ population fastest',
+  'Since 2020, against '+Math.round((T('a75')/T('a75_p')-1)*100)+'% across the metro. '+
+  fastest.county+' currently sits at '+f1(fastest.sl_per1k)+' beds per 1,000.']);
+$('findings').innerHTML=cards.map(c=>'<div class="finding'+(c[0]==='good'?' good':'')+'">'+
+  '<div class="n">'+c[1]+'</div><div class="t">'+c[2]+'</div><p>'+c[3]+'</p></div>').join('');
+
+$('lede').innerHTML='The metro holds <b>'+fmt(T('a75'))+'</b> Medicare beneficiaries aged 75 and over '+
+  'and <b>'+fmt(T('sl_bed'))+'</b> licensed assisted living and memory care beds — <b>'+
+  PERBED.toFixed(0)+' people for every bed</b>. Supply is concentrated: '+
+  best.county+' and '+D.slice().sort((a,b)=>b.sl_bed-a.sl_bed)[0].county+
+  ' hold '+Math.round(D.slice().sort((a,b)=>b.sl_bed-a.sl_bed).slice(0,2)
+    .reduce((s,r)=>s+r.sl_bed,0)/T('sl_bed')*100)+'% of the metro’s beds, while '+
+  (zero.length?zero.map(r=>r.county).join(' and ')+' '+(zero.length>1?'have':'has')+' none.':
+   'the outer counties run well below the metro rate.');
+
+/* ---------- colour ---------- */
+const cs=getComputedStyle(document.documentElement);
+const ramp=()=>[1,2,3,4,5,6,7].map(i=>cs.getPropertyValue('--seq'+i).trim());
+const rates=D.map(r=>r.sl_per1k).sort((a,b)=>a-b);
+function rateColor(v){
+  if(v==null)return 'var(--nodata)';
+  if(v===0)return 'var(--nodata)';
+  const mx=rates[rates.length-1]||1;
+  return ramp()[Math.min(6,Math.floor(v/mx*6.999))];
+}
+$('ramp').innerHTML=ramp().map(c=>'<i style="background:'+c+'"></i>').join('');
+
+/* ---------- gap chart ---------- */
+function drawGap(){
+  const rows=D.slice().sort((a,b)=>b.bed_gap-a.bed_gap);
+  const W=980, rowH=44, P={t:34,r:150,b:34,l:150};
+  const H=P.t+P.b+rows.length*rowH;
+  const mx=Math.max(...rows.map(r=>Math.abs(r.bed_gap)))*1.15||1;
+  const mid=P.l+(W-P.l-P.r)/2;
+  const X=v=>mid+v/mx*((W-P.l-P.r)/2);
+  let g='';
+  g+='<text class="axlab" x="'+(mid-10)+'" y="18" text-anchor="end">Above the metro rate</text>';
+  g+='<text class="axlab" x="'+(mid+10)+'" y="18">Beds short of the metro rate</text>';
+  rows.forEach(function(r,i){
+    const y=P.t+i*rowH, cy=y+rowH/2;
+    const x0=Math.min(mid,X(r.bed_gap)), w=Math.abs(X(r.bed_gap)-mid);
+    g+='<text class="clab" x="'+(P.l-14)+'" y="'+(cy+4)+'" text-anchor="end">'+r.county+'</text>';
+    g+='<rect x="'+x0.toFixed(1)+'" y="'+(cy-13)+'" width="'+Math.max(w,1.5).toFixed(1)+
+       '" height="26" rx="2" fill="'+(r.bed_gap>0?'var(--clay)':'var(--accent)')+
+       '" fill-opacity="'+(r.bed_gap>0?.88:.72)+'"/>';
+    const lx=r.bed_gap>0?X(r.bed_gap)+9:X(r.bed_gap)-9;
+    g+='<text class="vlab" x="'+lx.toFixed(1)+'" y="'+(cy+4)+'" text-anchor="'+
+       (r.bed_gap>0?'start':'end')+'">'+(r.bed_gap>0?'+':'')+fmt(r.bed_gap)+' beds</text>';
+    g+='<text class="vlab" x="'+(W-P.r+96)+'" y="'+(cy+4)+'" text-anchor="end" opacity=".72">'+
+       f1(r.sl_per1k)+' / 1k</text>';
+  });
+  g+='<line class="zeroline" x1="'+mid+'" y1="'+(P.t-6)+'" x2="'+mid+'" y2="'+(H-P.b+6)+'"/>';
+  const s=$('gap'); s.setAttribute('viewBox','0 0 '+W+' '+H); s.innerHTML=g;
+  const short=D.filter(r=>r.bed_gap>0);
+  $('gapNote').textContent=short.length+' of '+D.length+' counties sit below the metro rate, '+
+    fmt(short.reduce((s,r)=>s+r.bed_gap,0))+' beds in total. Against Alabama’s statewide rate of '+
+    f1(REG.stateRate)+' per 1,000 the shortfall would be '+
+    fmt(D.filter(r=>r.bed_gap_state>0).reduce((s,r)=>s+r.bed_gap_state,0))+' beds.';
+}
+
+/* ---------- rate chart ---------- */
+function drawRate(){
+  const rows=D.slice().sort((a,b)=>b.sl_per1k-a.sl_per1k);
+  const W=460, rowH=38, P={t:30,r:64,b:26,l:96};
+  const H=P.t+P.b+rows.length*rowH;
+  const mx=Math.max(...rows.map(r=>r.sl_per1k),RATE)*1.12||1;
+  const X=v=>P.l+v/mx*(W-P.l-P.r);
+  let g='<text class="axlab" x="'+P.l+'" y="16">Beds per 1,000 aged 75+</text>';
+  rows.forEach(function(r,i){
+    const cy=P.t+i*rowH+rowH/2;
+    g+='<text class="clab" x="'+(P.l-12)+'" y="'+(cy+4)+'" text-anchor="end">'+r.county+'</text>';
+    g+='<rect x="'+P.l+'" y="'+(cy-10)+'" width="'+Math.max(X(r.sl_per1k)-P.l,1.5).toFixed(1)+
+       '" height="20" rx="2" fill="'+rateColor(r.sl_per1k)+'"/>';
+    g+='<text class="vlab" x="'+(X(r.sl_per1k)+8).toFixed(1)+'" y="'+(cy+4)+'">'+f1(r.sl_per1k)+'</text>';
+  });
+  g+='<line x1="'+X(RATE).toFixed(1)+'" y1="'+(P.t-4)+'" x2="'+X(RATE).toFixed(1)+'" y2="'+(H-P.b+2)+
+     '" stroke="var(--ink)" stroke-width="1.5" stroke-dasharray="4 3"/>'+
+     '<text class="tick" x="'+X(RATE).toFixed(1)+'" y="'+(H-P.b+16)+'" text-anchor="middle">metro '+f1(RATE)+'</text>';
+  const s=$('rate'); s.setAttribute('viewBox','0 0 '+W+' '+H); s.innerHTML=g;
+}
+
+/* ---------- growth chart ---------- */
+function drawGrowth(){
+  const rows=D.slice().sort((a,b)=>(b.g5_a75||0)-(a.g5_a75||0));
+  const W=980,H=330,P={t:34,r:26,b:64,l:60};
+  const mx=Math.max(...rows.map(r=>r.g5_a75||0))*1.15||1;
+  const bw=(W-P.l-P.r)/rows.length;
+  const Y=v=>H-P.b-(v/mx)*(H-P.t-P.b);
+  const metro=T('a75')/T('a75_p')-1;
+  let g='<text class="axlab" x="'+P.l+'" y="16">Growth in the 75+ population since 2020</text>';
+  [0,.1,.2,.3,.4].filter(v=>v<=mx).forEach(v=>{
+    g+='<line class="gridline" x1="'+P.l+'" y1="'+Y(v).toFixed(1)+'" x2="'+(W-P.r)+'" y2="'+Y(v).toFixed(1)+'"/>'+
+       '<text class="tick" x="'+(P.l-9)+'" y="'+(Y(v)+4).toFixed(1)+'" text-anchor="end">'+(v*100).toFixed(0)+'%</text>';
+  });
+  rows.forEach(function(r,i){
+    const x=P.l+i*bw, v=r.g5_a75||0;
+    g+='<rect x="'+(x+bw*0.18).toFixed(1)+'" y="'+Y(v).toFixed(1)+'" width="'+(bw*0.64).toFixed(1)+
+       '" height="'+(H-P.b-Y(v)).toFixed(1)+'" rx="2" fill="'+rateColor(r.sl_per1k)+'"/>';
+    g+='<text class="vlab" x="'+(x+bw/2).toFixed(1)+'" y="'+(Y(v)-8).toFixed(1)+'" text-anchor="middle">'+
+       (v*100).toFixed(0)+'%</text>';
+    g+='<text class="clab" x="'+(x+bw/2).toFixed(1)+'" y="'+(H-P.b+20)+'" text-anchor="middle">'+r.county+'</text>';
+    g+='<text class="tick" x="'+(x+bw/2).toFixed(1)+'" y="'+(H-P.b+36)+'" text-anchor="middle">'+
+       f1(r.sl_per1k)+' beds/1k</text>';
+  });
+  g+='<line x1="'+P.l+'" y1="'+Y(metro).toFixed(1)+'" x2="'+(W-P.r)+'" y2="'+Y(metro).toFixed(1)+
+     '" stroke="var(--ink)" stroke-width="1.5" stroke-dasharray="4 3"/>'+
+     '<text class="tick" x="'+(W-P.r)+'" y="'+(Y(metro)-7).toFixed(1)+'" text-anchor="end">metro '+
+     (metro*100).toFixed(0)+'%</text>';
+  const s=$('growth'); s.setAttribute('viewBox','0 0 '+W+' '+H); s.innerHTML=g;
+}
+
+/* ---------- map ---------- */
+const NS='http://www.w3.org/2000/svg';
+function drawMap(){
+  const m=$('map'); m.setAttribute('viewBox','0 0 '+GEO.w+' '+GEO.h); m.textContent='';
+  Object.keys(GEO.c).forEach(function(fips){
+    const g=GEO.c[fips], r=byFips[fips]; if(!g.d)return;
+    const p=document.createElementNS(NS,'path');
+    p.setAttribute('d',g.d); p.setAttribute('class','cty');
+    p.setAttribute('fill',rateColor(r?r.sl_per1k:null));
+    p.setAttribute('tabindex','0');
+    p.setAttribute('aria-label',(r?r.county:g.n)+' County');
+    if(r)p.addEventListener('pointerenter',e=>showTip(e,'<span class="t">'+r.county+' County</span>'+
+      fmt(r.a75)+' aged 75+<br>'+fmt(r.sl_bed)+' beds · '+f1(r.sl_per1k)+' per 1,000<br>'+
+      (r.bed_gap>0?'<b>'+fmt(r.bed_gap)+' beds short of the metro rate</b>':'above the metro rate')));
+    p.addEventListener('pointermove',moveTip); p.addEventListener('pointerleave',hideTip);
+    m.appendChild(p);
+  });
+  D.forEach(function(r){
+    const g=GEO.c[r.fips]; if(!g||!g.d)return;
+    const nums=g.d.match(/-?\d+\.?\d*/g).map(Number);
+    let sx=0,sy=0,n=0;
+    for(let i=0;i+1<nums.length;i+=2){sx+=nums[i];sy+=nums[i+1];n++}
+    const t=document.createElementNS(NS,'text');
+    t.setAttribute('x',(sx/n).toFixed(1)); t.setAttribute('y',(sy/n).toFixed(1));
+    t.setAttribute('class','clbl'); t.textContent=r.county;
+    m.appendChild(t);
+  });
+  const R=b=>3+Math.sqrt(b)*1.15;
+  FAC.slice().sort((a,b)=>b.beds-a.beds).forEach(function(f){
+    const c=document.createElementNS(NS,'circle');
+    c.setAttribute('cx',f.x.toFixed(1)); c.setAttribute('cy',f.y.toFixed(1));
+    c.setAttribute('r',R(f.beds).toFixed(1));
+    c.setAttribute('class','dot '+(f.type==='MC'?'mc':'al'));
+    c.setAttribute('fill-opacity',f.prec==='street'?'0.85':'0.35');
+    c.setAttribute('tabindex','0');
+    c.setAttribute('aria-label',f.name+', '+f.beds+' beds');
+    c.addEventListener('pointerenter',e=>showTip(e,'<span class="t">'+f.name+'</span><b>'+
+      f.beds+' beds</b> · '+(f.type==='MC'?'Memory care':'Assisted living')+'<br>'+
+      f.city+', '+f.county+' County<br>'+(f.admin||'')));
+    c.addEventListener('pointermove',moveTip); c.addEventListener('pointerleave',hideTip);
+    m.appendChild(c);
+  });
+}
+
+/* ---------- county table ---------- */
+const CCOLS=[['county','County','l',r=>r.county],
+  ['a75','Aged 75+','num',r=>fmt(r.a75)],
+  ['a85','Aged 85+','num',r=>fmt(r.a85)],
+  ['g5_a75','75+ growth','num',r=>((r.g5_a75||0)*100).toFixed(0)+'%'],
+  ['sl_bed','Beds','num',r=>fmt(r.sl_bed)],
+  ['mc_bed','Memory care','num',r=>fmt(r.mc_bed)],
+  ['sl_per1k','Beds / 1k 75+','num',r=>f1(r.sl_per1k)],
+  ['bed_gap','Gap to metro','num',r=>'<span class="'+(r.bed_gap>0?'short':'surp')+'">'+sgn(r.bed_gap)+'</span>'],
+  ['ma_pct','MA share','num',r=>pct(r.ma_pct)],
+  ['pc','FFS $/bene','num',r=>'$'+fmt(r.pc)],
+  ['readmit','Readmissions','num',r=>pct(r.readmit)],
+  ['snf_days','SNF days / 1k','num',r=>fmt(r.snf_days)],
+  ['hh_pct','Used home health','num',r=>pct(r.hh_pct)]];
+let csort='a75', cdir=-1;
+function drawCounties(){
+  $('chead').innerHTML=CCOLS.map(c=>'<th class="'+(c[2]==='l'?'l':'num')+'" data-k="'+c[0]+
+    '" tabindex="0">'+c[1]+(csort===c[0]?(cdir<0?' ▾':' ▴'):'')+'</th>').join('');
+  const rows=D.slice().sort((a,b)=>{
+    const x=a[csort],y=b[csort];
+    return typeof x==='string'?x.localeCompare(y)*cdir*-1:((x||0)-(y||0))*cdir});
+  $('cbody').innerHTML=rows.map(r=>'<tr>'+CCOLS.map(c=>'<td class="'+
+    (c[2]==='l'?'l name':'num')+'">'+c[3](r)+'</td>').join('')+'</tr>').join('');
+}
+$('chead').addEventListener('click',e=>{const t=e.target.closest('th[data-k]'); if(!t)return;
+  if(csort===t.dataset.k)cdir*=-1; else{csort=t.dataset.k;cdir=-1} drawCounties()});
+
+/* ---------- facility table ---------- */
+const FCOLS=[['name','Community','l',f=>f.name],
+  ['type','Licence','l',f=>'<span class="pill '+(f.type==='MC'?'mc':'al')+'">'+
+    (f.type==='MC'?'Memory care':'Assisted living')+'</span>'],
+  ['beds','Beds','num',f=>fmt(f.beds)],
+  ['city','City','l',f=>f.city],
+  ['county','County','l',f=>f.county],
+  ['admin','Administrator','l',f=>f.admin||'—'],
+  ['phone','Phone','l',f=>f.phone||'—']];
+let fsort='beds', fdir=-1;
+$('cf').innerHTML='<option value="all">All '+D.length+' counties</option>'+
+  D.slice().sort((a,b)=>b.sl_bed-a.sl_bed).map(r=>'<option value="'+r.fips+'">'+r.county+
+    ' — '+fmt(r.sl_bed)+' beds</option>').join('');
+function shownFacs(){
+  const q=$('q').value.trim().toLowerCase(), cf=$('cf').value, tf=$('tf').value;
+  return FAC.filter(f=>(cf==='all'||f.fips===cf)&&(tf==='all'||f.type===tf)&&
+    (!q||(f.name+' '+f.city+' '+f.admin+' '+f.county).toLowerCase().includes(q)));
+}
+function drawFacs(){
+  $('fhead').innerHTML=FCOLS.map(c=>'<th class="'+(c[2]==='l'?'l':'num')+'" data-k="'+c[0]+
+    '" tabindex="0">'+c[1]+(fsort===c[0]?(fdir<0?' ▾':' ▴'):'')+'</th>').join('');
+  const rows=shownFacs().sort((a,b)=>{
+    const x=a[fsort],y=b[fsort];
+    return typeof x==='string'?x.localeCompare(y)*fdir*-1:((x||0)-(y||0))*fdir});
+  $('fbody').innerHTML=rows.map(f=>'<tr>'+FCOLS.map(c=>'<td class="'+
+    (c[2]==='l'?'l'+(c[0]==='name'?' name':''):'num')+'">'+c[3](f)+'</td>').join('')+'</tr>').join('');
+  $('fcount').textContent=rows.length+' of '+FAC.length+' communities · '+
+    fmt(rows.reduce((s,f)=>s+f.beds,0))+' beds shown';
+}
+$('fhead').addEventListener('click',e=>{const t=e.target.closest('th[data-k]'); if(!t)return;
+  if(fsort===t.dataset.k)fdir*=-1; else{fsort=t.dataset.k;fdir=-1} drawFacs()});
+['cf','tf','q'].forEach(id=>$(id).addEventListener('input',drawFacs));
+
+/* ---------- tooltip ---------- */
+const tip=$('tip');
+function showTip(e,h){tip.innerHTML=h;tip.style.opacity='1';moveTip(e)}
+function moveTip(e){const b=tip.getBoundingClientRect();
+  let x=e.clientX+14,y=e.clientY+14;
+  if(x+b.width>innerWidth-8)x=e.clientX-b.width-14;
+  if(y+b.height>innerHeight-8)y=e.clientY-b.height-14;
+  tip.style.left=x+'px';tip.style.top=y+'px'}
+function hideTip(){tip.style.opacity='0'}
+
+function render(){drawGap();drawRate();drawGrowth();drawMap();drawCounties();drawFacs()}
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',render);
+new MutationObserver(render).observe(document.documentElement,
+  {attributes:true,attributeFilter:['data-theme']});
+render();
+</script>
+
+<script>
+(function(){
+  var root=document.documentElement, btn=document.getElementById('themeToggle');
+  var saved=null;
+  try{saved=localStorage.getItem('atlas-theme')}catch(e){}
+  if(saved==='dark'||saved==='light')root.setAttribute('data-theme',saved);
+  function dark(){
+    var t=root.getAttribute('data-theme');
+    return t==='dark'||(t!=='light'&&matchMedia('(prefers-color-scheme: dark)').matches);
+  }
+  function label(){btn.textContent=dark()?'Light':'Dark';
+    btn.setAttribute('aria-label','Switch to '+(dark()?'light':'dark')+' theme')}
+  btn.addEventListener('click',function(){
+    var next=dark()?'light':'dark';
+    root.setAttribute('data-theme',next);
+    try{localStorage.setItem('atlas-theme',next)}catch(e){}
+    label();
+  });
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change',label);
+  label();
+})();
+</script>
+</body>
+</html>

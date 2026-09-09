@@ -41,3 +41,6 @@ Thumbs.db
 
 # Built artifact variant — regenerate with: python scripts/build_site.py --artifact
 dist/
+
+# stray validation scratch files
+_*.js

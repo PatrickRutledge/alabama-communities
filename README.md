@@ -17,6 +17,13 @@ themselves do not recognise. See [How the states differ](#how-the-states-differ)
 | **North Carolina** | [100 counties](https://patrickrutledge.github.io/alabama-communities/nc/) | [1,083 facilities, 39,241 beds](https://patrickrutledge.github.io/alabama-communities/nc/facilities.html) |
 | **Texas** | [254 counties](https://patrickrutledge.github.io/alabama-communities/tx/) | [2,000 licences, 82,378 beds](https://patrickrutledge.github.io/alabama-communities/tx/facilities.html) |
 
+**Metro market pages** sit alongside the states, scoped to one metropolitan area and
+benchmarked against that metro rather than its state:
+
+| Metro | Page |
+| --- | --- |
+| **Birmingham-Hoover, AL** | [7 counties, 60 communities, 2,573 beds](https://patrickrutledge.github.io/alabama-communities/bhm/) |
+
 Each atlas carries 85 measures on an interactive county heat map, a filterable table, a
 profile for each county, and a supply-versus-institutional-intensity scatter. Each bed
 map places every licensed community as a point sized by capacity, zoomable to community
@@ -205,6 +212,30 @@ Where the fee-for-service dollar goes: acute hospital 50.2%, home and community 
 institutional post-acute 7.6%, hospice 5.6%.
 
 ---
+
+## Birmingham-Hoover metro at a glance
+
+The seven counties the Census Bureau defines as the Birmingham-Hoover MSA: Jefferson,
+Shelby, St. Clair, Blount, Bibb, Walker, Chilton.
+
+| Measure | Value |
+| --- | --- |
+| Aged 75+ / aged 85+ | 93,882 / 22,110 |
+| Licensed beds | 2,573 across 60 communities in 17 cities |
+| People 75+ per bed | 36 (27.4 beds per 1,000) |
+| Memory care beds | 898 (35% of licensed beds) |
+| Medicare enrollees | 248,653 — 66% Medicare Advantage |
+| Beds short of the **metro** rate | **222** across 5 of 7 counties |
+| Beds short of the **statewide** rate | 182 across 4 counties |
+
+**The bed gap here is benchmarked against the metro's own rate of 27.4 per 1,000, not
+Alabama's 25.7.** A Birmingham county competes with the rest of its metro, not with
+the rural end of the state, so the metro is the meaningful comparison. Both figures appear
+on the page.
+
+Supply is concentrated. Jefferson and Shelby hold 83% of the metro's beds. Bibb has
+no licensed community at all, and Chilton, St. Clair and Bibb have no memory care beds
+licensed between them — 12,775 residents aged 75+ across those three counties.
 
 ## Page 1 — County atlas
 

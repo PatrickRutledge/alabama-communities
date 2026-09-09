@@ -21,6 +21,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import states as S
+import build_region as R
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(ROOT, "src")
@@ -225,6 +226,115 @@ def cfg_js(cfg, T):
     }
 
 
+def region_nav(reg, current):
+    links = [f'<a href="{SITE}{c["out_prefix"]}index.html">{c["name"]}</a>'
+             for c in S.STATES.values()]
+    for code, r in R.REGIONS.items():
+        href = r["out_prefix"] + "index.html"
+        mark = ' aria-current="page"' if href == current else ""
+        links.append(f'<a href="{SITE}{href}"{mark}>{r["name"]} metro</a>')
+    links.append(f'<a href="{REPO}#readme" target="_blank" rel="noopener">Data &amp; sources</a>')
+    return f'<nav class="nav">{"".join(links)}</nav>'
+
+
+def build_region(code, artifact):
+    reg = R.get(code)
+    st = S.get(reg["state"])
+    pre = code.lower() + "_"
+    rows = load(pre + "master.json")
+    facs = load(pre + "facilities.json")
+    geo = load(pre + "geo.json")
+
+    t = lambda k: sum((r.get(k) or 0) for r in rows)
+    rate = t("sl_bed") / t("a75") * 1000 if t("a75") else 0
+    short = [r for r in rows if (r.get("bed_gap") or 0) > 0]
+    state_rows = load(st["name"].lower() + "_master.json")
+    state_rate = (sum((r.get("sl_bed") or 0) for r in state_rows) /
+                  sum((r.get("a75") or 0) for r in state_rows) * 1000)
+    RJ = {"name": reg["name"], "long": reg["long"], "state": st["name"],
+          "rate": round(rate, 4), "stateRate": round(state_rate, 4),
+          "shortN": len(short), "shortBeds": sum(r["bed_gap"] for r in short)}
+
+    title = f"{reg['name']} Senior Living Market"
+    desc = (f"Licensed assisted living and memory care supply against the 75+ population "
+            f"across the {len(rows)} counties of the {reg['long']}: "
+            f"{t('sl_bed'):,} beds, {len(facs)} communities, and the gap to the metro's "
+            f"own rate.")
+    eyebrow = (f"<b>{reg['name']} metro</b><span>{len(rows)} counties</span>"
+               f"<span>{len(facs)} communities</span><span>{t('sl_bed'):,} licensed beds</span>"
+               f"<span>Licensure Sep 2026</span>")
+    dek = (f"{reg['blurb']} {n(t('a75'))} Medicare beneficiaries aged 75 and over, "
+           f"{n(t('sl_bed'))} licensed assisted living and memory care beds, and where the "
+           f"two do not line up.")
+
+    footer_rows = [
+        ("Geography", f"{reg['long']} as defined by the US Census Bureau: "
+                      f"{', '.join(reg['counties'])}."),
+        ("Communities", f"{st['source']} &mdash; {len(facs)} active licences, "
+                        f"{t('sl_bed'):,} beds, retrieved September 2026"),
+        ("Enrollment", "CMS Medicare Monthly Enrollment, annual 2025 &mdash; dataset "
+                       "d7fabe1e-d19b-4333-9eff-e80e0643f2fd. Growth compares 2025 with 2020."),
+        ("Spend &amp; use", "CMS Medicare Geographic Variation by National, State &amp; County, "
+                            "2024 &mdash; dataset 6219697b-8f6c-4164-bed4-cd9317c58ebc, "
+                            "Original Medicare only"),
+        ("Bed gap", f"Beds required to reach the metro's own rate of {rate:.1f} per 1,000 "
+                    f"residents aged 75+. Benchmarked against the metro rather than Alabama "
+                    f"({state_rate:.1f} per 1,000) because a metro county competes with the "
+                    f"rest of its metro."),
+        ("Full state data", f"Every {st['name']} county and all 85 measures are on the "
+                            f"<a href=\"{SITE}index.html\">{st['name']} atlas</a>."),
+    ]
+    dl = "".join(f"<dt>{k}</dt><dd>{v}</dd>" for k, v in footer_rows)
+
+    with open(os.path.join(SRC, "region.template.html"), encoding="utf-8") as f:
+        tpl = f.read()
+    for token, payload in [("/*__REG__*/ null", RJ), ("/*__DATA__*/ null", rows),
+                           ("/*__FAC__*/ null", facs), ("/*__GEO__*/ null", geo)]:
+        if token not in tpl:
+            raise SystemExit(f"region.template.html is missing {token}")
+        tpl = tpl.replace(token, json.dumps(payload, separators=(",", ":")))
+    rel = reg["out_prefix"] + "index.html"
+    tpl = (tpl.replace("<!--TITLE-->", title).replace("<!--H1-->", title)
+              .replace("<!--EYEBROW-->", eyebrow).replace("<!--DEK-->", dek)
+              .replace("<!--FOOTER-->",
+                       f'<footer><h3>Sources &amp; definitions</h3><dl>{dl}</dl></footer>')
+              .replace("<!--NAV-->", region_nav(reg, rel)))
+
+    if artifact:
+        os.makedirs(DIST, exist_ok=True)
+        out = os.path.join(DIST, f"{code.lower()}-region.artifact.html")
+        body = tpl
+    else:
+        split = tpl.index("</style>") + len("</style>")
+        head, rest = tpl[:split], tpl[split:]
+        out = os.path.join(ROOT, rel)
+        os.makedirs(os.path.dirname(out) or ROOT, exist_ok=True)
+        body = f"""<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="{desc}">
+<meta property="og:title" content="{title}">
+<meta property="og:description" content="{desc}">
+<meta property="og:type" content="website">
+<link rel="icon" href="{FAVICON}">
+{head}
+<style>{SHELL_CSS}</style>
+</head>
+<body>
+<button id="themeToggle" type="button">Dark</button>
+{rest}
+<script>{THEME_JS}</script>
+</body>
+</html>
+"""
+    with open(out, "w", encoding="utf-8") as f:
+        f.write(body)
+    print(f"  {os.path.relpath(out, ROOT).replace(os.sep,'/'):40} "
+          f"{os.path.getsize(out)/1024:>4.0f} KB")
+
+
 def nav_html(cfg, current):
     items = []
     for code, c in S.STATES.items():
@@ -236,6 +346,9 @@ def nav_html(cfg, current):
     links.append(f'<a href="{SITE}{cfg["out_prefix"]}facilities.html"'
                  f'{" aria-current=\"page\"" if current.endswith("facilities.html") else ""}>'
                  f'{cfg["name"]} bed map</a>')
+    # Sub-state market pages sit alongside the states in the same nav.
+    for code, r in R.REGIONS.items():
+        links.append(f'<a href="{SITE}{r["out_prefix"]}index.html">{r["name"]} metro</a>')
     links.append(f'<a href="{REPO}#readme" target="_blank" rel="noopener">Data &amp; sources</a>')
     return f'<nav class="nav">{"".join(links)}</nav>'
 
@@ -341,15 +454,24 @@ def build(code, artifact):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--state")
+    ap.add_argument("--region")
     ap.add_argument("--all", action="store_true")
     ap.add_argument("--artifact", action="store_true")
     a = ap.parse_args()
+    if a.region:
+        print(f"{R.get(a.region)['name']}{' (artifact)' if a.artifact else ''}:")
+        build_region(a.region, a.artifact)
+        return
     codes = sorted(S.STATES) if a.all else [a.state]
     if not codes or codes == [None]:
-        raise SystemExit("pass --state XX or --all")
+        raise SystemExit("pass --state XX, --region XX or --all")
     for c in codes:
         print(f"{S.get(c)['name']}{' (artifact)' if a.artifact else ''}:")
         build(c, a.artifact)
+    if a.all:
+        for code in sorted(R.REGIONS):
+            print(f"{R.get(code)['name']}{' (artifact)' if a.artifact else ''}:")
+            build_region(code, a.artifact)
 
 
 if __name__ == "__main__":
