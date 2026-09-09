@@ -431,6 +431,14 @@ CAT.forEach(function(c){
             sh:m[1].length>16?m[1].slice(0,15)+'…':m[1]});
   });
 });
+// A state may license an adjacent category the others do not have. Those measures are
+// appended to the catalogue rather than built into it, so no state carries another's rows.
+(CFG.extra||[]).forEach(function(e){
+  const g=e[5]||'Supply';
+  M.push({k:e[0],l:e[1],f:F[e[2]],mode:e[3],d:e[4],g:g,
+          sh:e[1].length>16?e[1].slice(0,15)+'…':e[1]});
+  if(GROUPS.indexOf(g)<0)GROUPS.push(g);
+});
 M.forEach(function(m){
   const o=CFG.overrides&&CFG.overrides[m.k];
   if(!o)return;

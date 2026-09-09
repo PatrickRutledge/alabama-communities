@@ -43,6 +43,21 @@ wrong silently corrupts every capacity figure on the site:
 - `"subset"` (Texas) — memory care is a **certification covering some of an existing
   licence's beds**, so it is already inside total capacity and must never be added.
 
+Two more per-state hooks, both optional:
+
+- `types` declares the licence categories the bed map colours and filters by. Kentucky
+  uses three because its personal care homes are a different licence in a different unit;
+  omit it and the map falls back to assisted living plus memory care.
+- `extra_measures` appends measures only that state has (Kentucky's personal care home
+  beds and facility counts) to the atlas catalogue, so no state carries another's rows.
+
+Rows whose `kind` is `PCH` are aggregated separately in `build_state.py` and never enter
+`sl_bed`. That is deliberate: Kentucky's assisted living is measured in units and its
+personal care homes in beds, and adding them would sum two different quantities.
+
+`capacity_word` sets the noun used throughout a state's pages — "beds" for Alabama,
+"licensed capacity" for Texas, "units" for Kentucky.
+
 Under `subset`, a community with 80 beds of which 30 are Alzheimer-certified has 80
 beds. Treating Texas as additive would invent 21,655 beds that do not exist.
 

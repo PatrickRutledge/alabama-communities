@@ -8,7 +8,7 @@
   --paper:#f2f3ef; --surface:#fbfbf9; --surface-2:#eceee7;
   --ink:#12171c; --ink-2:#4a5560; --ink-3:#78838d;
   --rule:#d6d9d0; --rule-2:#c2c6ba;
-  --accent:#1c5cab; --accent-soft:#2a78d6; --clay:#c1502a; --clay-soft:#eb6834;
+  --accent:#1c5cab; --accent-soft:#2a78d6; --clay:#c1502a; --clay-soft:#eb6834; --teal:#158a60; --teal-soft:#1baf7a;
   --nodata:#e2e4dd;
   --seq1:#cde2fb;--seq2:#9ec5f4;--seq3:#6da7ec;--seq4:#3987e5;--seq5:#256abf;--seq6:#184f95;--seq7:#0d366b;
 }
@@ -18,7 +18,7 @@
     --paper:#14171a; --surface:#1b1f23; --surface-2:#22272c;
     --ink:#e9ece6; --ink-2:#a4afb8; --ink-3:#7b868f;
     --rule:#2c3237; --rule-2:#3b434a;
-    --accent:#3987e5; --accent-soft:#5598e7; --clay:#d95926; --clay-soft:#eb6834;
+    --accent:#3987e5; --accent-soft:#5598e7; --clay:#d95926; --clay-soft:#eb6834; --teal:#199e70; --teal-soft:#22c98c;
     --nodata:#22272c;
     --seq1:#16304f;--seq2:#1c4573;--seq3:#235a97;--seq4:#2a78d6;--seq5:#5598e7;--seq6:#86b6ef;--seq7:#b7d3f6;
   }
@@ -28,7 +28,7 @@
   --paper:#14171a; --surface:#1b1f23; --surface-2:#22272c;
   --ink:#e9ece6; --ink-2:#a4afb8; --ink-3:#7b868f;
   --rule:#2c3237; --rule-2:#3b434a;
-  --accent:#3987e5; --accent-soft:#5598e7; --clay:#d95926; --clay-soft:#eb6834;
+  --accent:#3987e5; --accent-soft:#5598e7; --clay:#d95926; --clay-soft:#eb6834; --teal:#199e70; --teal-soft:#22c98c;
   --nodata:#22272c;
   --seq1:#16304f;--seq2:#1c4573;--seq3:#235a97;--seq4:#2a78d6;--seq5:#5598e7;--seq6:#86b6ef;--seq7:#b7d3f6;
 }
@@ -108,6 +108,7 @@ select:focus-visible,input:focus-visible,button:focus-visible,circle:focus-visib
 #map .dot{cursor:pointer;stroke:var(--surface)}
 #map .dot.mc{fill:var(--clay-soft)}
 #map .dot.al{fill:var(--accent-soft)}
+#map .dot.pch{fill:var(--teal-soft)}
 #map .dot.on{stroke:var(--ink)}
 #map .lbl{font-family:"Libre Franklin",sans-serif;font-weight:600;fill:var(--ink);
   paint-order:stroke;stroke:var(--surface);stroke-linejoin:round;pointer-events:none}
@@ -148,6 +149,7 @@ select:focus-visible,input:focus-visible,button:focus-visible,circle:focus-visib
   text-transform:uppercase;padding:4px 8px;border-radius:2px;color:var(--paper)}
 .badge.al{background:var(--accent)}
 .badge.mc{background:var(--clay)}
+.badge.pch{background:var(--teal)}
 .badge.ghost{background:transparent;color:var(--ink-3);border:1px solid var(--rule-2)}
 .frow-dl{display:grid;grid-template-columns:auto 1fr;gap:7px 14px;margin:0;
   font-size:13px;align-items:baseline}
@@ -206,10 +208,7 @@ footer dd{margin:0}
   <h2>The map</h2>
   <p class="sub">Scroll or pinch to zoom, drag to pan, click a county to fly to it, or press <b>+</b> and <b>&minus;</b> with the map focused. Dots hold their size on screen as you zoom, so clustered communities pull apart instead of staying stacked. Names appear past 2.5&times;. Click any dot for the full record.</p>
   <div class="controls">
-    <div class="ctl"><label>Community type</label><div class="chips" id="typeChips">
-      <button class="chip" data-t="AL" aria-pressed="true">Assisted living</button>
-      <button class="chip" data-t="MC" aria-pressed="true">Memory care</button>
-    </div></div>
+    <div class="ctl"><label>Licence category</label><div class="chips" id="typeChips"></div></div>
     <div class="ctl"><label for="shade">Shade counties by</label><select id="shade">
       <option value="beds">Total licensed beds</option>
       <option value="albeds">Assisted living beds</option>
@@ -226,13 +225,12 @@ footer dd{margin:0}
   <div class="mapshell">
     <div class="mapside">
       <div class="legblock">
-        <div class="legttl">Community type</div>
-        <span class="k"><i class="sw" style="background:var(--accent-soft)"></i> Assisted living</span>
-        <span class="k"><i class="sw" style="background:var(--clay-soft)"></i> Memory care</span>
+        <div class="legttl">Licence category</div>
+        <div id="typeKey"></div>
         <span class="k"><i class="sw ring"></i> Approximate location</span>
       </div>
       <div class="legblock">
-        <div class="legttl">Licensed beds</div>
+        <div class="legttl">Licensed capacity</div>
         <div class="sizes" id="sizeKey"></div>
         <div class="sizecap" id="sizeCap"></div>
       </div>
@@ -354,7 +352,15 @@ function shadeColor(k,v){
 
 /* ---------- state ---------- */
 let sel=FAC[0].id, k=1, tx=0, ty=0, VW=600, VH=957;
-const types=new Set(['AL','MC']);
+const TYPES=CFG.types||[{k:'AL',label:'Assisted living'},{k:'MC',label:'Memory care'}];
+const TLAB={}, TCSS={};
+TYPES.forEach(function(t){TLAB[t.k]=t.label; TCSS[t.k]=t.k.toLowerCase()});
+const types=new Set(TYPES.map(t=>t.k));
+$('typeChips').innerHTML=TYPES.map(t=>'<button class="chip" data-t="'+t.k+
+  '" aria-pressed="true">'+t.label+'</button>').join('');
+$('typeKey').innerHTML=TYPES.map(t=>'<span class="k"><i class="sw" style="background:var(--'+
+  (t.k==='MC'?'clay-soft':t.k==='PCH'?'teal-soft':'accent-soft')+')"></i> '+t.label+'</span>').join('');
+const tvar=k=>'var(--'+(k==='MC'?'clay-soft':k==='PCH'?'teal-soft':'accent-soft')+')';
 const svg=$('map');
 
 function shown(){
@@ -423,21 +429,21 @@ function drawDots(){
     const c=document.createElementNS(NS,'circle');
     c.setAttribute('cx',f.x.toFixed(1)); c.setAttribute('cy',f.y.toFixed(1));
     c.setAttribute('r',RK(f.beds).toFixed(3));
-    c.setAttribute('class','dot '+(f.type==='MC'?'mc':'al')+(f.id===sel?' on':''));
+    c.setAttribute('class','dot '+(TCSS[f.type]||'al')+(f.id===sel?' on':''));
     c.setAttribute('stroke-width',(1.2/k).toFixed(3));
     c.setAttribute('tabindex','0');
     c.setAttribute('role','button');
     c.setAttribute('aria-label',f.name+', '+f.beds+' beds, '+f.city);
     if(f.prec!=='street'){c.setAttribute('fill-opacity','0.15');
-      c.setAttribute('stroke',f.type==='MC'?'var(--clay-soft)':'var(--accent-soft)')}
+      c.setAttribute('stroke',tvar(f.type))}
     else c.setAttribute('fill-opacity','0.82');
     c.dataset.id=f.id;
     c.addEventListener('click',function(e){e.stopPropagation();sel=f.id;render()});
     c.addEventListener('keydown',function(e){
       if(e.key==='Enter'||e.key===' '){e.preventDefault();sel=f.id;render()}});
     c.addEventListener('pointerenter',function(e){showTip(e,
-      '<span class="t">'+f.name+'</span><b>'+f.beds+' beds</b> · '+
-      (f.type==='MC'?'Memory care':'Assisted living')+'<br>'+f.city+', '+f.county+' County<br>'+
+      '<span class="t">'+f.name+'</span><b>'+f.beds+' '+CFG.unit+'</b> · '+
+      (TLAB[f.type]||f.type)+'<br>'+f.city+', '+f.county+' County<br>'+
       f.admin+
       (f.stacked?'<br><i>'+f.stacked+' licences at this address</i>':'')+
       (f.prec!=='street'?'<br><i>approximate location</i>':''))});
@@ -555,12 +561,12 @@ function drawDetail(){
   $('detail').innerHTML=
     '<h3>Community record</h3>'+
     '<div class="nm">'+f.name+'</div>'+
-    '<div class="badges"><span class="badge '+(f.type==='MC'?'mc':'al')+'">'+
-      (f.type==='MC'?'Memory care':'Assisted living')+'</span>'+
+    '<div class="badges"><span class="badge '+(TCSS[f.type]||'al')+'">'+
+      (TLAB[f.type]||f.type)+'</span>'+
       '<span class="badge ghost">'+f.status+'</span>'+
       (f.stacked?'<span class="badge ghost">'+f.stacked+' licences here</span>':'')+
       (f.prec!=='street'?'<span class="badge ghost">approx. location</span>':'')+'</div>'+
-    '<div class="bignum">'+f.beds+'<small>licensed beds</small></div>'+
+    '<div class="bignum">'+f.beds+'<small>licensed '+CFG.unit+'</small></div>'+
     '<dl class="frow-dl" style="margin-top:16px">'+
       '<dt>Licence class</dt><dd>'+(f.cls||'—')+'</dd>'+
       '<dt>Administrator</dt><dd>'+(f.admin||'—')+'</dd>'+
@@ -577,7 +583,7 @@ function drawList(){
     :byFips[$('county').value].county+' County';
   $('list').innerHTML=list.map(function(f){
     return '<div class="frow'+(f.id===sel?' on':'')+'" data-id="'+f.id+'" tabindex="0" role="button">'+
-      '<span class="d" style="background:var(--'+(f.type==='MC'?'clay-soft':'accent-soft')+')"></span>'+
+      '<span class="d" style="background:'+tvar(f.type)+'"></span>'+
       '<span><span class="n">'+f.name+'</span><br><span class="c">'+f.city+' · '+f.county+'</span></span>'+
       '<span class="b">'+f.beds+'</span></div>'}).join('');
   $('listCount').textContent=list.length+' of '+FAC.length+' communities · '+
@@ -603,7 +609,7 @@ function drawKeys(){
   $('sizeKey').innerHTML=sizes.map(function(b){
     const d=Math.max(6,Math.round(R(b)*2));
     return '<i style="width:'+d+'px;height:'+d+'px"></i>'}).join('');
-  $('sizeCap').textContent=sizes.join(' · ')+' beds';
+  $('sizeCap').textContent=sizes.join(' · ')+' '+CFG.unit;
   const sk=$('shade').value;
   const block=$('rampBlock');
   if(sk==='none'){block.hidden=true;return}

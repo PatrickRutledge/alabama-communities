@@ -216,6 +216,12 @@ def cfg_js(cfg, T):
         },
         "shade": {"beds": f"Total {cfg['capacity_word']}", "albeds": lbl.get("total"),
                   "mcbeds": lbl["mc"], "per1k": lbl["per1k"]},
+        "unit": cfg["capacity_word"],
+        "extra": cfg.get("extra_measures", []),
+        "types": cfg.get("types") or [
+            {"k": "AL", "label": "Assisted living"},
+            {"k": "MC", "label": lbl["mc"]},
+        ],
     }
 
 

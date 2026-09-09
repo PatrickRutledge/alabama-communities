@@ -160,6 +160,12 @@ def main():
     # Supply aggregated per county, under this state's own rule for memory care.
     agg = {}
     for ck, g in sup.groupby("ckey"):
+        # A state may license an adjacent category on entirely separate terms -- Kentucky's
+        # personal care homes are an OIG licence counted in beds, where assisted living is a
+        # DAIL certification counted in units. Those are tracked beside the headline supply,
+        # never inside it, because adding them would add two different quantities together.
+        other = g[g["kind"] == "PCH"]
+        g = g[g["kind"] != "PCH"]
         if additive:
             mc_bed = int(g.loc[g["kind"] == "MC", "beds"].sum())
             alf_bed = int(g.loc[g["kind"] != "MC", "beds"].sum())
@@ -173,7 +179,8 @@ def main():
             alf_fac = int(len(g))
             mc_fac = int((g["mc_beds"] > 0).sum())
         agg[ck] = dict(sl_bed=sl_bed, mc_bed=mc_bed, alf_bed=alf_bed,
-                       alf_fac=alf_fac, mc_fac=mc_fac, sl_fac=int(len(g)))
+                       alf_fac=alf_fac, mc_fac=mc_fac, sl_fac=int(len(g)),
+                       pch_bed=int(other["beds"].sum()), pch_fac=int(len(other)))
 
     rows = []
     for fips, g in geovar.items():
@@ -185,7 +192,8 @@ def main():
         total = num(e["TOT_BENES"])
         a75 = sum(num(e[c]) or 0 for c in AGE_75_PLUS)
         p = prior.get(fips)
-        a = agg.get(ck, dict(sl_bed=0, mc_bed=0, alf_bed=0, alf_fac=0, mc_fac=0, sl_fac=0))
+        a = agg.get(ck, dict(sl_bed=0, mc_bed=0, alf_bed=0, alf_fac=0, mc_fac=0, sl_fac=0,
+                             pch_bed=0, pch_fac=0))
 
         d = {"county": county, "fips": fips,
              "enroll": iv(total), "ma": iv(num(e["MA_AND_OTH_BENES"])),
@@ -248,7 +256,8 @@ def main():
         lat, lon = r.get("lat"), r.get("lon")
         facs.append({
             "id": str(r["fac_id"]), "name": r["name"], "kind": r["kind"],
-            "type": "MC" if (additive and r["kind"] == "MC") else "AL",
+            "type": ("PCH" if r["kind"] == "PCH"
+                     else "MC" if (additive and r["kind"] == "MC") else "AL"),
             "cls": r["cls"], "beds": int(r["beds"]), "mc_beds": int(r["mc_beds"]),
             "addr": r["addr"], "city": r["city"], "zip": r["zip"],
             "county": r["county"], "fips": fips_by_ck.get(r["ckey"]),
@@ -294,8 +303,12 @@ def main():
     print(f"  aged 75+ {t('a75'):,} | aged 85+ {t('a85'):,}")
     print(f"  FFS spend ${t('tot_amt')/1e9:.2f}B over {t('ffs_benes'):,} benes "
           f"= ${t('tot_amt')/t('ffs_benes'):,.0f} each")
-    print(f"  {len(sup):,} licences | {lbl['total']} {t('sl_bed'):,} | "
+    n_main = int((sup["kind"] != "PCH").sum())
+    print(f"  {n_main:,} certifications | {lbl['total']} {t('sl_bed'):,} | "
           f"{lbl['mc']} {t('mc_bed'):,} ({cfg['mc_mode']})")
+    if t("pch_fac"):
+        print(f"  {t('pch_fac'):,} personal care homes | {t('pch_bed'):,} beds "
+              f"(separate licence, tracked alongside)")
     print(f"  nursing homes {t('nh_fac'):,} | {t('nh_res'):,.0f} residents")
     print(f"  {t('a75')/t('sl_bed'):.0f} people aged 75+ per bed ({state_rate:.1f} per 1,000)")
     print(f"  {sum(1 for r in rows if r['sl_bed'] == 0)} counties with no licensed capacity")

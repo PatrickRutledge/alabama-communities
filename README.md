@@ -12,6 +12,7 @@ themselves do not recognise. See [How the states differ](#how-the-states-differ)
 | State | County atlas | Bed map |
 | --- | --- | --- |
 | **Alabama** | [67 counties](https://patrickrutledge.github.io/alabama-communities/) | [292 licences, 10,819 beds](https://patrickrutledge.github.io/alabama-communities/facilities.html) |
+| **Kentucky** | [120 counties](https://patrickrutledge.github.io/alabama-communities/ky/) | [247 certifications, 9,915 units](https://patrickrutledge.github.io/alabama-communities/ky/facilities.html) |
 | **Texas** | [254 counties](https://patrickrutledge.github.io/alabama-communities/tx/) | [2,000 licences, 82,378 beds](https://patrickrutledge.github.io/alabama-communities/tx/facilities.html) |
 
 Each atlas carries 85 measures on an interactive county heat map, a filterable table, a
@@ -65,14 +66,28 @@ penetration have a correspondingly smaller share of their care visible here.
 The single most important thing to understand before comparing anything across these
 sites: **the categories are not the same, and this project does not pretend they are.**
 
-| | Alabama | Texas |
-| --- | --- | --- |
-| Licence structure | Two separate licences: ALF and Specialty Care ALF (SCALF) | One ALF licence, with an Alzheimer certification |
-| Memory care maths | **Additive** — an ALF bed and a SCALF bed are different beds | **Subset** — Alzheimer capacity is part of the facility's licensed capacity, never added to it |
-| Size classes | Family / Group / Congregate | Type A / Type B / Type C |
-| What is counted | Licensed beds | Total licensed capacity |
-| Coordinates | None published; geocoded here | Published with the directory |
-| Counties | 67 | 254 |
+| | Alabama | Kentucky | Texas |
+| --- | --- | --- | --- |
+| Licence structure | Two licences: ALF and Specialty Care ALF (SCALF) | Three DAIL certifications: ALC, ALC-BH, ALC-DC — plus a separate OIG personal care home licence | One ALF licence, with an Alzheimer certification |
+| Memory care maths | **Additive** — an ALF bed and a SCALF bed are different beds | **Additive** — ALC-DC is a separately certified secured unit | **Subset** — Alzheimer capacity is part of the facility's licensed capacity, never added |
+| Size / service classes | Family / Group / Congregate | Social model / basic health / dementia care | Type A / Type B / Type C |
+| **What is counted** | Licensed **beds** | Licensed **units** — an apartment, which may hold more than one person | Licensed **capacity** |
+| Coordinates | None published; geocoded here | None published; geocoded here | Published with the directory |
+| Counties | 67 | 120 | 254 |
+
+**`ALC-BH` means "basic health services", not behavioural health** — [902 KAR 20:480](https://www.law.cornell.edu/regulations/kentucky/902-KAR-20-480)
+defines the three certifications as social model (`ALC`), basic health and health-related
+services (`ALC-BH`), and a secured dementia care unit (`ALC-DC`). Reading BH as
+behavioural health would misclassify 76 certifications and 4,141 units.
+
+**Kentucky counts units, not beds.** A unit is an apartment and may hold more than one
+person, so Kentucky's per-1,000 rate is not comparable to Alabama's or Texas's without
+an explicit occupancy assumption. Nothing here makes that assumption.
+
+**Kentucky's personal care homes are a separate licence** issued by the Office of
+Inspector General, counted in beds, and shown as their own category on the map and as
+their own measures in the atlas. They are never added into the assisted-living unit
+totals — that would sum two different quantities.
 
 A Texas community with 80 licensed beds of which 30 are Alzheimer-certified has **80
 beds, not 110**. Adding Texas's Alzheimer capacity to its licensed capacity inflates the
@@ -81,6 +96,24 @@ compute their bed gaps separately and why nothing here sums across states.
 
 Kentucky, when it lands, counts *units* rather than beds — an apartment, not a bed — so
 it will not be comparable to either on a per-1,000 basis without an explicit assumption.
+
+## Kentucky at a glance
+
+| Measure | Value |
+| --- | --- |
+| Medicare enrollees (2025) | 1,001,478 — 54.4% Medicare Advantage |
+| Aged 75+ / aged 85+ | 366,372 / 84,881 |
+| Original Medicare spend (2024) | $4.75B over 386,163 FFS beneficiaries |
+| Assisted living | 247 certifications, **9,915 units** across 183 campuses |
+| Dementia care (ALC-DC) | 1,980 units (a separate certification, **additive**) |
+| Personal care homes | 47 licences, 2,548 **beds** (separate licence) |
+| Nursing homes | 267 facilities, 21,783 residents |
+| Units per 1,000 aged 75+ | 27.1 |
+| Counties with **no** assisted living | **68 of 120** |
+| Counties below the state rate | **93**, 3,174 units short |
+
+More than half of Kentucky's counties — 68 of 120 — have no licensed
+assisted living community at all, the highest share of the three states so far.
 
 ## Texas at a glance
 
